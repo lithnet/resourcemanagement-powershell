@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Management;
 using System.Management.Automation;
-using Microsoft.ResourceManagement.WebServices;
 using System.Net;
-using System.ServiceModel;
-using System.Security;
 using System.Runtime.InteropServices;
+using System.Security;
 
 namespace Lithnet.ResourceManagement.Automation
 {

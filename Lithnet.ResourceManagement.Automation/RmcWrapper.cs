@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Lithnet.ResourceManagement.Client;
+using System.Reflection;
+using Microsoft.Win32;
+using System.IO;
+using System.Management.Automation;
 
 namespace Lithnet.ResourceManagement.Automation
 {

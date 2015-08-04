@@ -31,12 +31,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Lithnet.ResourceManagement.Client, Version=1.0.5694.17116, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Lithnet.ResourceManagement.Client.1.0.5694.17116\lib\net40\Lithnet.ResourceManagement.Client.dll</HintPath>
+      <HintPath>..\packages\Lithnet.ResourceManagement.Client.1.0.5694.17116\lib\net40\Lithnet.ResourceManagement.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.ResourceManagement, Version=4.1.3634.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\TFS\Monash.IdM\Monash.IdM.FimServiceClient\references\Microsoft.ResourceManagement.dll</HintPath>
+    <Reference Include="Microsoft.ResourceManagement">
+      <HintPath>..\..\lithnetrmc\lib\Microsoft.ResourceManagement.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -68,7 +68,18 @@
     <Content Include="LithnetRMA.psd1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="packages.config" />
+    <Content Include="ResourceObject.format.ps1xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="AttributeValue.format.ps1xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="RegisterResolver.ps1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

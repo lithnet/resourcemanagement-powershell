@@ -42,23 +42,22 @@ DotNetFrameworkVersion = '4.0'
 CLRVersion = ''
 
 # Processor architecture (None, X86, Amd64, IA64) required by this module
-ProcessorArchitecture = ''
+ProcessorArchitecture = 'Amd64'
 
 # Modules that must be imported into the global environment prior to importing this module
 RequiredModules = @()
 
 # Assemblies that must be loaded prior to importing this module
-RequiredAssemblies = 
-               'Microsoft.ResourceManagement.dll', 'Lithnet.ResourceManagement.Automation.dll'
+RequiredAssemblies = 'Microsoft.ResourceManagement.dll', 'Lithnet.ResourceManagement.Automation.dll'
 
 # Script files (.ps1) that are run in the caller's environment prior to importing this module
-ScriptsToProcess = @()
+ScriptsToProcess = @('RegisterResolver.ps1')
 
 # Type files (.ps1xml) to be loaded when importing this module
 TypesToProcess = @()
 
 # Format files (.ps1xml) to be loaded when importing this module
-FormatsToProcess = $null
+FormatsToProcess = @("ResourceObject.format.ps1xml", "AttributeValue.format.ps1xml")
 
 # Modules to import as nested modules of the module specified in ModuleToProcess
 NestedModules = 'Lithnet.ResourceManagement.Automation.dll'

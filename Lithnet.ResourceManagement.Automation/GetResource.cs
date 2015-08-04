@@ -11,7 +11,7 @@ using Lithnet.ResourceManagement.Client;
 namespace Lithnet.ResourceManagement.Automation
 {
     [Cmdlet(VerbsCommon.Get, "Resource", DefaultParameterSetName="GetResourceByKey")]
-    public class GetResource : Cmdlet
+    public class GetResource : PSCmdlet
     {
         [Parameter(ParameterSetName = "GetResource", ValueFromPipeline = true, Mandatory = true, Position = 1)]
         public object ID { get; set; }
@@ -34,6 +34,18 @@ namespace Lithnet.ResourceManagement.Automation
         [Parameter(ParameterSetName = "GetResource", Mandatory = false, Position = 2)]
         public string[] AttributesToGet { get; set; }
 
+        protected override void BeginProcessing()
+        {
+            string variable = this.SessionState.PSVariable.GetValue("BaseUri", null) as string;
+
+            if (variable != null)
+            {
+                
+            }
+
+            base.BeginProcessing();
+        }
+
         protected override void ProcessRecord()
         {
             UniqueIdentifier uniqueID = this.ID as UniqueIdentifier;
@@ -42,7 +54,7 @@ namespace Lithnet.ResourceManagement.Automation
                 this.WriteObject(RmcWrapper.Client.GetResource(uniqueID, this.AttributesToGet));
                 return;
             }
-
+            
             string stringID = this.ID as string;
 
             if (stringID != null)

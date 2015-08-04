@@ -1,0 +1,16 @@
+﻿<?xml version="1.0"?>
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <configSections xdt:Transform="InsertBefore(/configuration/*[1])" />
+  <configSections xdt:Locator="XPath(/configuration/configSections[last()])">
+    <section name="lithnetResourceManagementClient"
+               type="Lithnet.ResourceManagement.Client.ClientConfigurationSection, Lithnet.ResourceManagement.Client"
+               xdt:Transform="InsertIfMissing"
+               xdt:Locator="Match(name)"/>
+  </configSections>
+  <configSections xdt:Transform="RemoveAll" xdt:Locator="Condition(count(*)=0)" />
+
+  <lithnetResourceManagementClient
+    resourceManagementServiceBaseAddress="http://localhost:5725"
+    xdt:Transform="InsertIfMissing"/>
+</configuration>
+

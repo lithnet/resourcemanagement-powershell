@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Lithnet.ResourceManagement.ConfigSync>
+  <Variables import-file=".\Variables.xml">
+    <Variable name="#domain#" value="%userdomain%"/>
+  </Variables>
+  
+  <Operations>
+
+    <!-- Account Expiration notification objects -->
+
+    <ResourceOperation operation="Add Update" resourceType="Set" id="accountExpirationSet">
+      <AnchorAttributes>
+        <AnchorAttribute>DisplayName</AnchorAttribute>
+      </AnchorAttributes>
+      <AttributeOperations>
+        <AttributeOperation operation="replace" name="DisplayName">_Users pending expiration</AttributeOperation>
+        <AttributeOperation operation="replace" name="Description">Contains all accounts with elapsed RS1021 Notification dates, but have not yet expired</AttributeOperation>
+        <AttributeOperation operation="replace" name="Filter" type="filter">/Person[(rs1021NotificationDate &amp;lt; fn:current-dateTime()) and (rs1021Date &amp;gt; fn:current-dateTime()) and Email != '!Invalid!']</AttributeOperation>
+      </AttributeOperations>
+    </ResourceOperation>
+
+    <ResourceOperation operation="Add Update" resourceType="EmailTemplate" id="accountExpirationEmailTemplate">
+      <AnchorAttributes>
+        <AnchorAttribute>DisplayName</AnchorAttribute>
+      </AnchorAttributes>
+      <AttributeOperations>
+        <AttributeOperation operation="replace" name="DisplayName">_Account expiration notification to user</AttributeOperation>
+        <AttributeOperation operation="replace" name="Description">An email template used to send a notification to user that their account is about to expire</AttributeOperation>
+        <AttributeOperation operation="replace" name="EmailTemplateType">Notification</AttributeOperation>
+        <AttributeOperation operation="replace" name="EmailBody" type="file">.\Email Notifications\EmailTemplateAccountExpiry.html</AttributeOperation>
+        <AttributeOperation operation="replace" name="EmailSubject">Your IT account will expire soon</AttributeOperation>
+      </AttributeOperations>
+    </ResourceOperation>
+
+    <ResourceOperation operation="Add Update" resourceType="WorkflowDefinition" id="accountExpirationWorkflowDefinition">
+      <AnchorAttributes>
+        <AnchorAttribute>DisplayName</AnchorAttribute>
+      </AnchorAttributes>
+      <AttributeOperations>
+        <AttributeOperation operation="replace" name="DisplayName">_Account expiration notification email to user workflow</AttributeOperation>
+        <AttributeOperation operation="replace" name="Description">Sends an account expiry notification email to users email address</AttributeOperation>
+        <AttributeOperation operation="replace" name="XOML" type="file">.\Email Notifications\WFAccountExpiry.xoml</AttributeOperation>
+        <AttributeOperation operation="replace" name="RequestPhase">Action</AttributeOperation>
+        <AttributeOperation operation="replace" name="RunOnPolicyUpdate">false</AttributeOperation>
+      </AttributeOperations>
+    </ResourceOperation>
+
+    <ResourceOperation operation="Add Update" resourceType="ManagementPolicyRule" id="accountExpirationMPR">
+      <AnchorAttributes>
+        <AnchorAttribute>DisplayName</AnchorAttribute>
+      </AnchorAttributes>
+      <AttributeOperations>
+        <AttributeOperation operation="replace" name="DisplayName">_Notification - Send account expiration notification email to accounts within the expiration window</AttributeOperation>
+        <AttributeOperation operation="replace" name="Description">Triggers the "##xmlref:accountExpirationWorkflowDefinition:DisplayName##" workflow when a user account transitions into the "##xmlref:accountExpirationSet:DisplayName##" set</AttributeOperation>
+        <AttributeOperation operation="replace" name="ActionParameter">*</AttributeOperation>
+        <AttributeOperation operation="replace" name="ActionType">TransitionIn</AttributeOperation>
+        <AttributeOperation operation="replace" name="ActionWorkflowDefinition" type="xmlref">accountExpirationWorkflowDefinition</AttributeOperation>
+        <AttributeOperation operation="replace" name="Disabled">false</AttributeOperation>
+        <AttributeOperation operation="replace" name="GrantRight">false</AttributeOperation>
+        <AttributeOperation operation="replace" name="ManagementPolicyRuleType">SetTransition</AttributeOperation>
+        <AttributeOperation operation="replace" name="ResourceFinalSet" type="xmlref">accountExpirationSet</AttributeOperation>
+      </AttributeOperations>
+    </ResourceOperation>
+    
+
+    <!-- Update the change log -->
+
+    <ResourceOperation operation="Add Update" resourceType="changeLogEntry" id="changeLogEntryEmailNotifications">
+      <AnchorAttributes>
+        <AnchorAttribute>DisplayName</AnchorAttribute>
+      </AnchorAttributes>
+      <AttributeOperations>
+        <AttributeOperation operation="replace" name="DisplayName">FIM Service: Email Notifications</AttributeOperation>
+        <AttributeOperation operation="replace" name="version">1.5</AttributeOperation>
+        <AttributeOperation operation="replace" name="Description">RN 05/04/2015</AttributeOperation>
+        <AttributeOperation operation="replace" name="details">Added DEV5 URL</AttributeOperation>
+      </AttributeOperations>
+    </ResourceOperation>
+  </Operations>
+  
+</Lithnet.ResourceManagement.ConfigSync>

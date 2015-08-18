@@ -1,0 +1,10 @@
+﻿<ns0:SequentialWorkflow
+ActorId="00000000-0000-0000-0000-000000000000"
+RequestId="00000000-0000-0000-0000-000000000000"
+x:Name="SequentialWorkflow"
+TargetId="00000000-0000-0000-0000-000000000000"
+WorkflowDefinitionId="00000000-0000-0000-0000-000000000000"
+xmlns="http://schemas.microsoft.com/winfx/2006/xaml/workflow" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+xmlns:ns0="clr-namespace:Microsoft.ResourceManagement.Workflow.Activities;Assembly=Microsoft.ResourceManagement, Version=4.1.3559.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+  <ns0:EmailNotificationActivity x:Name="emailNotificationActivity1" To="[//Target/Email];" CC="{x:Null}" EmailTemplate="##xmlref:accountExpirationEmailTemplate:ObjectID##" SuppressException="False" Bcc="{x:Null}" />
+</ns0:SequentialWorkflow>

@@ -23,7 +23,7 @@ namespace Lithnet.ResourceManagement.Automation
         public Guid ObjectIDGuid { get; set; }
 
         [Parameter(Mandatory = true, Position = 1, ValueFromPipeline = true, ParameterSetName = "ResourceObject")]
-        public ResourceObject ResourceObject { get; set; }
+        public RmaObject ResourceObject { get; set; }
                 
         protected override void ProcessRecord()
         {
@@ -37,7 +37,7 @@ namespace Lithnet.ResourceManagement.Automation
             }
             else if (this.ResourceObject != null)
             {
-                RmcWrapper.Client.DeleteResource(this.ResourceObject);
+                RmcWrapper.Client.DeleteResource(this.ResourceObject.InternalObject);
             }
             else if (this.ObjectIDGuid != Guid.Empty)
             {

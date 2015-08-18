@@ -33,25 +33,13 @@ namespace Lithnet.ResourceManagement.Automation
         [Parameter(ParameterSetName = "GetResourceByKeys", Mandatory = false, Position = 3)]
         [Parameter(ParameterSetName = "GetResource", Mandatory = false, Position = 2)]
         public string[] AttributesToGet { get; set; }
-
-        protected override void BeginProcessing()
-        {
-            string variable = this.SessionState.PSVariable.GetValue("BaseUri", null) as string;
-
-            if (variable != null)
-            {
-                
-            }
-
-            base.BeginProcessing();
-        }
-
+        
         protected override void ProcessRecord()
         {
             UniqueIdentifier uniqueID = this.ID as UniqueIdentifier;
             if (uniqueID != null)
             {
-                this.WriteObject(RmcWrapper.Client.GetResource(uniqueID, this.AttributesToGet));
+                this.WriteObject(new RmaObject(RmcWrapper.Client.GetResource(uniqueID, this.AttributesToGet)));
                 return;
             }
             
@@ -59,7 +47,7 @@ namespace Lithnet.ResourceManagement.Automation
 
             if (stringID != null)
             {
-                this.WriteObject(RmcWrapper.Client.GetResource(stringID, this.AttributesToGet));
+                this.WriteObject(new RmaObject(RmcWrapper.Client.GetResource(stringID, this.AttributesToGet)));
                 return;
             }
 
@@ -67,18 +55,18 @@ namespace Lithnet.ResourceManagement.Automation
 
             if (guidID != null)
             {
-                this.WriteObject(RmcWrapper.Client.GetResource(guidID, this.AttributesToGet));
+                this.WriteObject(new RmaObject(RmcWrapper.Client.GetResource(guidID, this.AttributesToGet)));
                 return;
             }
 
             if (this.AttributeValuePairs != null)
             {
-                this.WriteObject(RmcWrapper.Client.GetResourceByKey(this.ObjectType, this.HashTableToDictionary(this.AttributeValuePairs), this.AttributesToGet));
+                this.WriteObject(new RmaObject(RmcWrapper.Client.GetResourceByKey(this.ObjectType, this.HashTableToDictionary(this.AttributeValuePairs), this.AttributesToGet)));
                 return;
             }
             else
             {
-                this.WriteObject(RmcWrapper.Client.GetResourceByKey(this.ObjectType, this.AttributeName, this.AttributeValue));
+                this.WriteObject(new RmaObject(RmcWrapper.Client.GetResourceByKey(this.ObjectType, this.AttributeName, this.AttributeValue, this.AttributesToGet)));
                 return;
             }
         }

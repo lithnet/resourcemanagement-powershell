@@ -14,25 +14,27 @@ namespace Lithnet.ResourceManagement.Automation
     public class SaveResources : Cmdlet
     {
         [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 1)]
-        public PSObject[] Resources { get; set; }
+        public RmaObject[] Resources { get; set; }
 
         [Parameter(Mandatory = false)]
         public SwitchParameter Parallel { get; set; }
 
         protected override void ProcessRecord()
         {
-            if (this.Resources.Any(t => !(t.BaseObject is ResourceObject)))
-            {
-                this.WriteError(new ErrorRecord(new ArgumentException("Resources"), "InvalidObjectType", ErrorCategory.InvalidArgument, this.Resources));
-            }
+            IEnumerable<RmaObject> creatingObjects = this.Resources.Where(t => t.InternalObject.ModificationType == OperationType.Create);
 
             if (this.Parallel.IsPresent)
             {
-                RmcWrapper.Client.SaveResourcesParallel(this.Resources.Select(t => (ResourceObject)t.BaseObject));
+                RmcWrapper.Client.SaveResourcesParallel(this.Resources.Select(t => t.GetResourceWithAppliedChanges()));
             }
             else
             {
-                RmcWrapper.Client.SaveResources(this.Resources.Select(t => (ResourceObject)t.BaseObject));
+                RmcWrapper.Client.SaveResources(this.Resources.Select(t => t.GetResourceWithAppliedChanges()));
+            }
+
+            foreach(RmaObject resource in creatingObjects)
+            {
+                resource.ReloadProperties();
             }
         }
     }

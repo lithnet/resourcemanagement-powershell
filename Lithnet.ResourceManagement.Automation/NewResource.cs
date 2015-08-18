@@ -18,7 +18,7 @@ namespace Lithnet.ResourceManagement.Automation
 
         protected override void ProcessRecord()
         {
-            this.WriteObject(RmcWrapper.Client.CreateResource(this.ObjectType));
+            this.WriteObject(new RmaObject(RmcWrapper.Client.CreateResource(this.ObjectType)));
         }
     }
 }

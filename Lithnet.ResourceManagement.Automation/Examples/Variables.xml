@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Lithnet.ResourceManagement.ConfigSync.Variables import-file="">
+    <Variable name="#IMSURLPREFIX#" value ="https://aa-test02-v01/account-activation?token="/>
+</Lithnet.ResourceManagement.ConfigSync.Variables>

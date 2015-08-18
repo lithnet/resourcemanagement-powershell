@@ -29,15 +29,15 @@ namespace Lithnet.ResourceManagement.Automation
         {
             if (this.ObjectID != null)
             {
-                this.WriteObject(RmcWrapper.Client.CreateResourceTemplateForUpdate(this.ObjectType, this.ObjectID));
+                this.WriteObject(new RmaObject(RmcWrapper.Client.CreateResourceTemplateForUpdate(this.ObjectType, this.ObjectID)));
             }
             else if (this.ObjectIDString != null)
             {
-                this.WriteObject(RmcWrapper.Client.CreateResourceTemplateForUpdate(this.ObjectType, new UniqueIdentifier(this.ObjectIDString)));
+                this.WriteObject(new RmaObject(RmcWrapper.Client.CreateResourceTemplateForUpdate(this.ObjectType, new UniqueIdentifier(this.ObjectIDString))));
             }
             else if (this.ObjectIDGuid != Guid.Empty)
             {
-                this.WriteObject(RmcWrapper.Client.CreateResourceTemplateForUpdate(this.ObjectType, new UniqueIdentifier(this.ObjectIDGuid)));
+                this.WriteObject(new RmaObject(RmcWrapper.Client.CreateResourceTemplateForUpdate(this.ObjectType, new UniqueIdentifier(this.ObjectIDGuid))));
             }
             else
             {

@@ -51,7 +51,7 @@ namespace Lithnet.ResourceManagement.Automation
 
             foreach (ResourceObject resource in RmcWrapper.Client.GetResources(this.XPath, attributes))
             {
-                this.WriteObject(resource);
+                this.WriteObject(new RmaObject(resource));
             }
         }
     }

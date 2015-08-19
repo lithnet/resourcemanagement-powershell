@@ -48,7 +48,7 @@ ProcessorArchitecture = 'Amd64'
 RequiredModules = @()
 
 # Assemblies that must be loaded prior to importing this module
-RequiredAssemblies = 'Microsoft.ResourceManagement.dll', 'Lithnet.ResourceManagement.Automation.dll'
+RequiredAssemblies = 'Microsoft.ResourceManagement.dll'
 
 # Script files (.ps1) that are run in the caller's environment prior to importing this module
 ScriptsToProcess = @('RegisterResolver.ps1')
@@ -57,7 +57,7 @@ ScriptsToProcess = @('RegisterResolver.ps1')
 TypesToProcess = @()
 
 # Format files (.ps1xml) to be loaded when importing this module
-FormatsToProcess = @("ResourceObject.format.ps1xml", "AttributeValue.format.ps1xml")
+FormatsToProcess = @()
 
 # Modules to import as nested modules of the module specified in ModuleToProcess
 NestedModules = 'Lithnet.ResourceManagement.Automation.dll'

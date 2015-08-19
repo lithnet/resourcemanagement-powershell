@@ -30,8 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Lithnet.ResourceManagement.Client, Version=1.0.5694.17116, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lithnet.ResourceManagement.Client.1.0.5694.17116\lib\net40\Lithnet.ResourceManagement.Client.dll</HintPath>
+    <Reference Include="Lithnet.ResourceManagement.Client, Version=1.0.5709.24891, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lithnet.ResourceManagement.Client.1.0.5709.24891\lib\net40\Lithnet.ResourceManagement.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ResourceManagement">
@@ -89,18 +89,18 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-    <Content Include="ResourceObject.format.ps1xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="AttributeValue.format.ps1xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="RegisterResolver.ps1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

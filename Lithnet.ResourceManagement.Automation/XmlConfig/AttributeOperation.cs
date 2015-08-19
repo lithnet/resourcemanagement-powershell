@@ -75,7 +75,7 @@ namespace Lithnet.ResourceManagement.Automation
             }
 
             object newValue = this.ExpandedValue;
-
+            
             resource.Attributes[this.Name].AddValue(newValue);  
         }
 

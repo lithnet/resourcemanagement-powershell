@@ -22,7 +22,7 @@ namespace Lithnet.ResourceManagement.Automation
 
         protected override void BeginProcessing()
         {
-            this.WriteVerbose("Loading rules fine");
+            this.WriteVerbose("Loading rules file");
             XmlSerializer s = new XmlSerializer(typeof(ConfigFile));
 
             string filename;
@@ -36,9 +36,12 @@ namespace Lithnet.ResourceManagement.Automation
                 filename = Path.Combine(basePath, this.File);
             }
 
-            StreamReader sr = System.IO.File.OpenText(filename);
-            XmlReader xr = XmlReader.Create(sr);
-            this.config = (ConfigFile)s.Deserialize(xr);
+            using (StreamReader sr = System.IO.File.OpenText(filename))
+            {
+                XmlReader xr = XmlReader.Create(sr);
+                this.config = (ConfigFile)s.Deserialize(xr);
+            }
+
             this.config.Variables.LoadFileVariables(basePath);
             ResourceOperation.LogEvent += ResourceOperation_LogEvent;
 

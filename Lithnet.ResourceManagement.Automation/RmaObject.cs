@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Management.Automation;
@@ -9,7 +10,7 @@ namespace Lithnet.ResourceManagement.Automation
 {
     public class RmaObject : PSObject
     {
-        internal RmaObject (ResourceObject resource)
+        internal RmaObject(ResourceObject resource)
         {
             this.InternalObject = resource;
             this.LoadProperties();
@@ -28,10 +29,18 @@ namespace Lithnet.ResourceManagement.Automation
         }
 
         private void LoadProperties()
-        { 
-            foreach(AttributeValue value in this.InternalObject.Attributes.OrderBy(t => t.AttributeName))
+        {
+            foreach (AttributeValue value in this.InternalObject.Attributes.OrderBy(t => t.AttributeName))
             {
-                PSNoteProperty prop = new PSNoteProperty(value.AttributeName, value.Value);
+                PSNoteProperty prop;
+                if (value.Attribute.IsMultivalued)
+                {
+                    prop = new PSNoteProperty(value.AttributeName, new ArrayList((ICollection)value.Value));
+                }
+                else
+                {
+                    prop = new PSNoteProperty(value.AttributeName, value.Value);
+                }
 
                 this.Properties.Add(prop);
             }
@@ -39,14 +48,32 @@ namespace Lithnet.ResourceManagement.Automation
 
         internal ResourceObject GetResourceWithAppliedChanges()
         {
-            foreach(var property in this.Properties)
+            foreach (var property in this.Properties)
             {
                 if (this.InternalObject.Attributes[property.Name].Attribute.IsReadOnly)
                 {
                     continue;
                 }
 
-                this.InternalObject.Attributes[property.Name].SetValue(property.Value);
+                RmaObject resourceValue = property.Value as RmaObject;
+
+                if (resourceValue != null)
+                {
+                    this.InternalObject.Attributes[property.Name].SetValue(resourceValue.InternalObject.ObjectID);
+                    continue;
+                }
+
+                IEnumerable<RmaObject> resourceValues = property.Value as IEnumerable<RmaObject>;
+
+                if (resourceValues != null)
+                {
+                    this.InternalObject.Attributes[property.Name].SetValue(resourceValues.Select(t => t.InternalObject.ObjectID));
+                    continue;
+                }
+                else
+                {
+                    this.InternalObject.Attributes[property.Name].SetValue(property.Value);
+                }
             }
 
             return this.InternalObject;

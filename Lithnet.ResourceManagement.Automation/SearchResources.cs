@@ -10,7 +10,7 @@ using Lithnet.ResourceManagement.Client;
 
 namespace Lithnet.ResourceManagement.Automation
 {
-    [Cmdlet(VerbsCommon.Search, "Resources", DefaultParameterSetName = "ConstrainedQueryByClass")]
+    [Cmdlet(VerbsCommon.Search, "Resources", DefaultParameterSetName = "ConstrainedQueryByType")]
     public class SearchResources : Cmdlet
     {
         [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 1)]
@@ -19,8 +19,8 @@ namespace Lithnet.ResourceManagement.Automation
         [Parameter(ParameterSetName = "ConstrainedQueryByAttributes", Mandatory = false, Position = 2)]
         public string[] AttributesToGet { get; set; }
 
-        [Parameter(ParameterSetName = "ConstrainedQueryByClass", Mandatory = false, Position = 2)]
-        public string ExpectedObjectClass { get; set; }
+        [Parameter(ParameterSetName = "ConstrainedQueryByType", Mandatory = false, Position = 2)]
+        public string ExpectedObjectType { get; set; }
 
         [Parameter(ParameterSetName = "UnconstrainedQuery", Mandatory = false, Position = 3)]
         public SwitchParameter Unconstrained { get; set; }
@@ -28,18 +28,19 @@ namespace Lithnet.ResourceManagement.Automation
         protected override void ProcessRecord()
         {
             IEnumerable<string> attributes = null;
-
+                      
             if (!this.Unconstrained.IsPresent)
             {
                 if (this.AttributesToGet == null || this.AttributesToGet.Length == 0)
                 {
-                    if (string.IsNullOrWhiteSpace(this.ExpectedObjectClass))
+                    if (string.IsNullOrWhiteSpace(this.ExpectedObjectType))
                     {
                         attributes = new List<string>() { "ObjectID" };
                     }
                     else
                     {
-                        ObjectTypeDefinition objectType = ResourceManagementSchema.GetObjectType(this.ExpectedObjectClass);
+
+                        ObjectTypeDefinition objectType = ResourceManagementSchema.GetObjectType(this.ExpectedObjectType);
                         attributes = objectType.Attributes.Select(t => t.SystemName);
                     }
                 }

@@ -73,10 +73,12 @@ namespace Lithnet.ResourceManagement.Automation
             {
                 this.PerformAttributeReplace(resource);
             }
+            else
+            {
+                object newValue = this.ExpandedValue;
 
-            object newValue = this.ExpandedValue;
-            
-            resource.Attributes[this.Name].AddValue(newValue);  
+                resource.Attributes[this.Name].AddValue(newValue);
+            }
         }
 
         private void PerformAttributeReplace(ResourceObject resource)

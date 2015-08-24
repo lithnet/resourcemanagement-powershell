@@ -119,6 +119,11 @@ namespace Lithnet.ResourceManagement.Automation
 
         private object GetValue()
         {
+            if (this.Value == null)
+            {
+                return null;
+            }
+
             switch (this.ValueType)
             {
                 case AttributeValueType.Value:
@@ -145,7 +150,7 @@ namespace Lithnet.ResourceManagement.Automation
         {
             string expandedInput = input;
 
-            if ( ConfigSyncControl.CurrentConfig.Variables != null)
+            if ( ConfigSyncControl.CurrentConfig.Variables != null && ConfigSyncControl.CurrentConfig.Variables.Items != null)
             {
                 foreach (Variable variable in ConfigSyncControl.CurrentConfig.Variables.Items)
                 {

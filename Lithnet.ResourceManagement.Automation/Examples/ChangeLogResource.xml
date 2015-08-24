@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Lithnet.ResourceManagement.ConfigSync>
+  <Operations>
+
+    <!-- Create a custom resource for creating change log entries -->
+    <ResourceOperation operation="Add Update" resourceType="ObjectTypeDescription" id="changeLogResource">
+      <AnchorAttributes>
+        <AnchorAttribute>Name</AnchorAttribute>
+      </AnchorAttributes>
+      <AttributeOperations>
+        <AttributeOperation operation="replace" name="Name">changeLogEntry</AttributeOperation>
+        <AttributeOperation operation="replace" name="Description">This resource defines a component and its version within the FIM service</AttributeOperation>
+        <AttributeOperation operation="replace" name="DisplayName">Change Log Entry</AttributeOperation>
+      </AttributeOperations>
+    </ResourceOperation>
+
+    <!-- Create a new version and details attribute and bind it to the new object type -->
+    
+    <ResourceOperation operation="Add Update" resourceType="AttributeTypeDescription" id="versionAttribute">
+      <AnchorAttributes>
+        <AnchorAttribute>Name</AnchorAttribute>
+      </AnchorAttributes>
+      <AttributeOperations>
+        <AttributeOperation operation="replace" name="Name">version</AttributeOperation>
+        <AttributeOperation operation="replace" name="DisplayName">Version</AttributeOperation>
+        <AttributeOperation operation="replace" name="Description">The current version of the component</AttributeOperation>
+        <AttributeOperation operation="replace" name="DataType">Text</AttributeOperation>
+        <AttributeOperation operation="replace" name="Multivalued">false</AttributeOperation>
+      </AttributeOperations>
+    </ResourceOperation>
+
+    <ResourceOperation operation="Add Update" resourceType="AttributeTypeDescription" id="detailsAttribute">
+      <AnchorAttributes>
+        <AnchorAttribute>Name</AnchorAttribute>
+      </AnchorAttributes>
+      <AttributeOperations>
+        <AttributeOperation operation="replace" name="Name">details</AttributeOperation>
+        <AttributeOperation operation="replace" name="DisplayName">Details</AttributeOperation>
+        <AttributeOperation operation="replace" name="Description">Contains the change log history for this component</AttributeOperation>
+        <AttributeOperation operation="replace" name="DataType">Text</AttributeOperation>
+        <AttributeOperation operation="replace" name="Multivalued">false</AttributeOperation>
+      </AttributeOperations>
+    </ResourceOperation>
+
+    <ResourceOperation operation="Add Update" resourceType="BindingDescription" id="detailsBinding">
+      <AnchorAttributes>
+        <AnchorAttribute>BoundAttributeType</AnchorAttribute>
+        <AnchorAttribute>BoundObjectType</AnchorAttribute>
+      </AnchorAttributes>
+      <AttributeOperations>
+        <AttributeOperation operation="replace" name="BoundObjectType" type="xmlref">changeLogResource</AttributeOperation>
+        <AttributeOperation operation="replace" name="BoundAttributeType" type="xmlref">detailsAttribute</AttributeOperation>
+        <AttributeOperation operation="replace" name="Required">false</AttributeOperation>
+        <AttributeOperation operation="replace" name="DisplayName">Details</AttributeOperation>
+        <AttributeOperation operation="replace" name="Description">Contains the change log history for this component</AttributeOperation>
+      </AttributeOperations>
+    </ResourceOperation>
+
+    <ResourceOperation operation="Add Update" resourceType="BindingDescription" id="versionBinding">
+      <AnchorAttributes>
+        <AnchorAttribute>BoundAttributeType</AnchorAttribute>
+        <AnchorAttribute>BoundObjectType</AnchorAttribute>
+      </AnchorAttributes>
+      <AttributeOperations>
+        <AttributeOperation operation="replace" name="BoundObjectType" type="xmlref">changeLogResource</AttributeOperation>
+        <AttributeOperation operation="replace" name="BoundAttributeType" type="xmlref">versionAttribute</AttributeOperation>
+        <AttributeOperation operation="replace" name="Required">false</AttributeOperation>
+        <AttributeOperation operation="replace" name="DisplayName">Version</AttributeOperation>
+        <AttributeOperation operation="replace" name="Description">The current version of the component</AttributeOperation>
+      </AttributeOperations>
+    </ResourceOperation>
+
+    <!-- Create a set and MPR to allow administrators to update the change log entries -->
+      
+    <ResourceOperation operation="Add Update" resourceType="Set" id="changeLogEntrySet">
+      <AnchorAttributes>
+        <AnchorAttribute>DisplayName</AnchorAttribute>
+      </AnchorAttributes>
+      <AttributeOperations>
+        <AttributeOperation operation="replace" name="DisplayName">All change log entries</AttributeOperation>
+        <AttributeOperation operation="replace" name="Description">Contains all change log entries</AttributeOperation>
+        <AttributeOperation operation="replace" name="Filter" type="filter">/changeLogEntry</AttributeOperation>
+      </AttributeOperations>
+    </ResourceOperation>
+
+    <ResourceOperation operation="Add Update" resourceType="ManagementPolicyRule" id="changeLogEntryMpr">
+      <AnchorAttributes>
+        <AnchorAttribute>DisplayName</AnchorAttribute>
+      </AnchorAttributes>
+      <AttributeOperations>
+        <AttributeOperation operation="replace" name="DisplayName">_Administrators can control change log entries</AttributeOperation>
+        <AttributeOperation operation="replace" name="Description">Allows administrators to read, create, modify and delete change log entries</AttributeOperation>
+        <AttributeOperation operation="replace" name="Disabled">false</AttributeOperation>
+        <AttributeOperation operation="replace" name="ManagementPolicyRuleType">Request</AttributeOperation>
+        <AttributeOperation operation="replace" name="ActionType"/>
+        <AttributeOperation operation="add" name="ActionType">Modify</AttributeOperation>
+        <AttributeOperation operation="add" name="ActionType">Add</AttributeOperation>
+        <AttributeOperation operation="add" name="ActionType">Remove</AttributeOperation>
+        <AttributeOperation operation="add" name="ActionType">Create</AttributeOperation>
+        <AttributeOperation operation="add" name="ActionType">Delete</AttributeOperation>
+        <AttributeOperation operation="add" name="ActionType">Read</AttributeOperation>
+        <AttributeOperation operation="replace" name="GrantRight">true</AttributeOperation>
+        <AttributeOperation operation="replace" name="ActionParameter">*</AttributeOperation>
+        <AttributeOperation operation="replace" name="PrincipalSet" type="ref">Set|DisplayName|Administrators</AttributeOperation>
+        <AttributeOperation operation="replace" name="ResourceCurrentSet" type="xmlref">changeLogEntrySet</AttributeOperation>
+        <AttributeOperation operation="replace" name="ResourceFinalSet" type="xmlref">changeLogEntrySet</AttributeOperation>
+      </AttributeOperations>
+    </ResourceOperation>
+  </Operations>
+</Lithnet.ResourceManagement.ConfigSync>

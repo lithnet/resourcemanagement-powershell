@@ -60,6 +60,7 @@
     <Compile Include="Enums\ResourceOperationType.cs" />
     <Compile Include="ImportRMConfig.cs" />
     <Compile Include="NewResourceUpdateTemplate.cs" />
+    <Compile Include="UpdateResourceManagementClientSchema.cs" />
     <Compile Include="RemoveResource.cs" />
     <Compile Include="NewResource.cs" />
     <Compile Include="RmaObject.cs" />
@@ -76,6 +77,9 @@
     <Compile Include="XmlConfig\Variables.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Examples\ChangeLogResource.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Examples\ConfigImportExample.xml">
       <SubType>Designer</SubType>
     </Content>

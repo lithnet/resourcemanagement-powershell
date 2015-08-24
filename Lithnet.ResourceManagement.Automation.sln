@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lithnet.ResourceManagement.
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Lithnet.ResourceManagement.Automation.Setup", "Lithnet.ResourceManagement.Automation.Setup\Lithnet.ResourceManagement.Automation.Setup.vdproj", "{3333843E-B9AD-484D-9844-266C80EAD12E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lithnet.ResourceManagement.Resolver", "Lithnet.ResourceManagement.Resolver\Lithnet.ResourceManagement.Resolver.csproj", "{D93AB9DD-9953-4E78-B247-DD5C89097844}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{4C4BEB83-82FF-4625-B8C7-D547C654228A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3333843E-B9AD-484D-9844-266C80EAD12E}.Debug|Any CPU.ActiveCfg = Debug
 		{3333843E-B9AD-484D-9844-266C80EAD12E}.Release|Any CPU.ActiveCfg = Release
+		{D93AB9DD-9953-4E78-B247-DD5C89097844}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D93AB9DD-9953-4E78-B247-DD5C89097844}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D93AB9DD-9953-4E78-B247-DD5C89097844}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D93AB9DD-9953-4E78-B247-DD5C89097844}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

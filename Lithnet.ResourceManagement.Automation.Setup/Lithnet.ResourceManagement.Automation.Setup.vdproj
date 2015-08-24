@@ -57,6 +57,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_D455873FD0E64506AA9A1BC0EEEC8B94"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_F87E6BCAD83EBC3352B565D4ECA4EE60"
         "OwnerKey" = "8:_21905D1A6DEAB9495B3E1B2C4146FF33"
         "MsmSig" = "8:_UNDEFINED"
@@ -71,6 +77,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_F87E6BCAD83EBC3352B565D4ECA4EE60"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_D455873FD0E64506AA9A1BC0EEEC8B94"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -464,7 +476,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Lithnet Resource Management PowerShell Module"
         "ProductCode" = "8:{133A8724-B953-4736-A20B-AC96DF99A44F}"
-        "PackageCode" = "8:{AB2B9873-DDEA-4261-98F2-AFADEEA5F0A8}"
+        "PackageCode" = "8:{34CECAB1-5DAD-4389-A4AD-0DA96990D308}"
         "UpgradeCode" = "8:{CC6C89F6-8663-46ED-A792-15B1327D8AA8}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -977,6 +989,34 @@
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:ContentFiles"
             "OutputProjectGuid" = "8:{4C4BEB83-82FF-4625-B8C7-D547C654228A}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_D455873FD0E64506AA9A1BC0EEEC8B94"
+            {
+            "SourcePath" = "8:..\\Lithnet.ResourceManagement.Resolver\\obj\\Release\\Lithnet.ResourceManagement.Resolver.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_3AFC83A0B0394783A9602EA46736F764"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{D93AB9DD-9953-4E78-B247-DD5C89097844}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {

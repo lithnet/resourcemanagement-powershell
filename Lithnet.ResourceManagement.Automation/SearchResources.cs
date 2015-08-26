@@ -10,25 +10,45 @@ using Lithnet.ResourceManagement.Client;
 
 namespace Lithnet.ResourceManagement.Automation
 {
-    [Cmdlet(VerbsCommon.Search, "Resources", DefaultParameterSetName = "ConstrainedQueryByType")]
+    [Cmdlet(VerbsCommon.Search, "Resources", DefaultParameterSetName = "ConstrainedQueryByTypeRaw")]
     public class SearchResources : Cmdlet
     {
-        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 1)]
+        [Parameter(ParameterSetName = "ConstrainedQueryByAttributesBuilder", Mandatory = true, ValueFromPipeline = true, Position = 1)]
+        [Parameter(ParameterSetName = "ConstrainedQueryByTypeBuilder", Mandatory = true, ValueFromPipeline = true, Position = 1)]
+        [Parameter(ParameterSetName = "UnconstrainedQueryBuilder", Mandatory = true, ValueFromPipeline = true, Position = 1)]
+        public XPathExpression Expression { get; set; }
+
+        [Parameter(ParameterSetName = "ConstrainedQueryByAttributesRaw", Mandatory = true, ValueFromPipeline = true, Position = 1)]
+        [Parameter(ParameterSetName = "ConstrainedQueryByTypeRaw", Mandatory = true, ValueFromPipeline = true, Position = 1)]
+        [Parameter(ParameterSetName = "UnconstrainedQueryRaw", Mandatory = true, ValueFromPipeline = true, Position = 1)]
         public string XPath { get; set; }
 
-        [Parameter(ParameterSetName = "ConstrainedQueryByAttributes", Mandatory = false, Position = 2)]
+        [Parameter(ParameterSetName = "ConstrainedQueryByAttributesBuilder", Mandatory = false, Position = 2)]
+        [Parameter(ParameterSetName = "ConstrainedQueryByAttributesRaw", Mandatory = false, Position = 2)]
         public string[] AttributesToGet { get; set; }
 
-        [Parameter(ParameterSetName = "ConstrainedQueryByType", Mandatory = false, Position = 2)]
+        [Parameter(ParameterSetName = "ConstrainedQueryByTypeBuilder", Mandatory = false, Position = 2)]
+        [Parameter(ParameterSetName = "ConstrainedQueryByTypeRaw", Mandatory = false, Position = 2)]
         public string ExpectedObjectType { get; set; }
 
-        [Parameter(ParameterSetName = "UnconstrainedQuery", Mandatory = false, Position = 3)]
+        [Parameter(ParameterSetName = "UnconstrainedQueryBuilder", Mandatory = false, Position = 3)]
+        [Parameter(ParameterSetName = "UnconstrainedQueryRaw", Mandatory = false, Position = 3)]
         public SwitchParameter Unconstrained { get; set; }
 
         protected override void ProcessRecord()
         {
             IEnumerable<string> attributes = null;
-                      
+            string filter;
+
+            if (this.Expression != null)
+            {
+                filter = this.Expression.ToString();
+            }
+            else
+            {
+                filter = this.XPath;
+            }
+
             if (!this.Unconstrained.IsPresent)
             {
                 if (this.AttributesToGet == null || this.AttributesToGet.Length == 0)
@@ -50,7 +70,7 @@ namespace Lithnet.ResourceManagement.Automation
                 }
             }
 
-            foreach (ResourceObject resource in RmcWrapper.Client.GetResources(this.XPath, attributes))
+            foreach (ResourceObject resource in RmcWrapper.Client.GetResources(filter, attributes))
             {
                 this.WriteObject(new RmaObject(resource));
             }

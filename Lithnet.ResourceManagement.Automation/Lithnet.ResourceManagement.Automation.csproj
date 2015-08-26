@@ -59,6 +59,9 @@
     <Compile Include="Enums\AttributeValueType.cs" />
     <Compile Include="Enums\ResourceOperationType.cs" />
     <Compile Include="ImportRMConfig.cs" />
+    <Compile Include="NewXpathExpression.cs" />
+    <Compile Include="NewXpathQueryGroup.cs" />
+    <Compile Include="NewXpathQuery.cs" />
     <Compile Include="NewResourceUpdateTemplate.cs" />
     <Compile Include="UpdateResourceManagementClientSchema.cs" />
     <Compile Include="RemoveResource.cs" />

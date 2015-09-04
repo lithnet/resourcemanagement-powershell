@@ -63,11 +63,27 @@ namespace Lithnet.ResourceManagement.Automation
                     continue;
                 }
 
-                IEnumerable<RmaObject> resourceValues = property.Value as IEnumerable<RmaObject>;
+                IEnumerable<object> resourceValues = property.Value as IEnumerable<object>;
 
                 if (resourceValues != null)
                 {
-                    this.InternalObject.Attributes[property.Name].SetValue(resourceValues.Select(t => t.InternalObject.ObjectID));
+                    List<object> newValues = new List<object>();
+
+                    foreach(object value in resourceValues)
+                    {
+                        resourceValue = value as RmaObject;
+
+                        if (resourceValue != null)
+                        {
+                            newValues.Add(resourceValue.InternalObject.ObjectID);
+                        }
+                        else
+                        {
+                            newValues.Add(value);
+                        }
+                    }
+
+                    this.InternalObject.Attributes[property.Name].SetValue(newValues);
                     continue;
                 }
                 else

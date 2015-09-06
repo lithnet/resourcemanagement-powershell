@@ -188,7 +188,7 @@ namespace Lithnet.ResourceManagement.Automation
                         xmlDeRefValue = xmlDerefID.Value;
                     }
 
-                    expandedInput = expandedInput.Replace(match.Value, xmlDeRefValue.ToString());
+                    expandedInput = expandedInput.Replace(match.Value, xmlDeRefValue == null ? null : xmlDeRefValue.ToString());
                 }
             }
 
@@ -220,12 +220,26 @@ namespace Lithnet.ResourceManagement.Automation
 
             ResourceObject resource = RmcWrapper.Client.GetResourceByKey(split[0], split[1], split[2]);
 
+            if (resource == null)
+            {
+                if (ConfigSyncControl.Preview)
+                {
+                    return Guid.NewGuid().ToString();
+                }
+                else
+                {
+                    throw new ArgumentException(string.Format("The attribute operation of {1} on attribute {0} specifies a reference to {2}, but the object was not found in the FIM service", this.Name, this.Operation, value));
+                }
+            }
+
             return resource.ObjectID.Value;
         }
 
         private string GetXmlReference(string id)
         {
-            return this.GetXmlReferenceResource(id).ObjectID.Value;
+            ResourceObject resource = this.GetXmlReferenceResource(id);
+
+            return resource.ObjectID == null ? Guid.Empty.ToString() : resource.ObjectID.Value;
         }
 
         private ResourceObject GetXmlReferenceResource(string id)
@@ -234,7 +248,7 @@ namespace Lithnet.ResourceManagement.Automation
 
             if (op == null)
             {
-                throw new ArgumentException(string.Format("The attribute operation of {0} on attribute {1} specifies a reference to another operation with ID {2}, but the operation was not found in the XML file", this.Name, this.Operation, id));
+                throw new ArgumentException(string.Format("The attribute operation of {1} on attribute {0} specifies a reference to another operation with ID {2}, but the operation was not found in the XML file", this.Name, this.Operation, id));
             }
 
             if (op.HasProcessed)
@@ -250,14 +264,14 @@ namespace Lithnet.ResourceManagement.Automation
             }
             catch (Exception ex)
             {
-                throw new ArgumentException(string.Format("The attribute operation of {0} on attribute {1} specifies a reference to another operation with ID {2}, but resource failed to resolve its anchor", this.Name, this.Operation, id), ex);
+                throw new ArgumentException(string.Format("The attribute operation of {1} on attribute {0} specifies a reference to another operation with ID {2}, but resource failed to resolve its anchor", this.Name, this.Operation, id), ex);
             }
 
             ResourceObject resource = RmcWrapper.Client.GetResourceByKey(op.ResourceType, anchorValues);
 
             if (resource == null)
             {
-                throw new ArgumentException(string.Format("The attribute operation of {0} on attribute {1} specifies a reference to another operation with ID {2}, but the object was not found in the FIM service", this.Name, this.Operation, id));
+                throw new ArgumentException(string.Format("The attribute operation of {1} on attribute {0} specifies a reference to another operation with ID {2}, but the object was not found in the FIM service", this.Name, this.Operation, id));
             }
 
             return resource;

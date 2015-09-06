@@ -13,41 +13,22 @@ namespace Lithnet.ResourceManagement.Automation
     [Cmdlet(VerbsCommon.Search, "Resources", DefaultParameterSetName = "ConstrainedQueryByTypeRaw")]
     public class SearchResources : Cmdlet
     {
-        [Parameter(ParameterSetName = "ConstrainedQueryByAttributesBuilder", Mandatory = true, ValueFromPipeline = true, Position = 1)]
-        [Parameter(ParameterSetName = "ConstrainedQueryByTypeBuilder", Mandatory = true, ValueFromPipeline = true, Position = 1)]
-        [Parameter(ParameterSetName = "UnconstrainedQueryBuilder", Mandatory = true, ValueFromPipeline = true, Position = 1)]
-        public XPathExpression Expression { get; set; }
+        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 1)]
+        public object XPath { get; set; }
 
-        [Parameter(ParameterSetName = "ConstrainedQueryByAttributesRaw", Mandatory = true, ValueFromPipeline = true, Position = 1)]
-        [Parameter(ParameterSetName = "ConstrainedQueryByTypeRaw", Mandatory = true, ValueFromPipeline = true, Position = 1)]
-        [Parameter(ParameterSetName = "UnconstrainedQueryRaw", Mandatory = true, ValueFromPipeline = true, Position = 1)]
-        public string XPath { get; set; }
-
-        [Parameter(ParameterSetName = "ConstrainedQueryByAttributesBuilder", Mandatory = false, Position = 2)]
         [Parameter(ParameterSetName = "ConstrainedQueryByAttributesRaw", Mandatory = false, Position = 2)]
         public string[] AttributesToGet { get; set; }
 
-        [Parameter(ParameterSetName = "ConstrainedQueryByTypeBuilder", Mandatory = false, Position = 2)]
         [Parameter(ParameterSetName = "ConstrainedQueryByTypeRaw", Mandatory = false, Position = 2)]
         public string ExpectedObjectType { get; set; }
 
-        [Parameter(ParameterSetName = "UnconstrainedQueryBuilder", Mandatory = false, Position = 3)]
         [Parameter(ParameterSetName = "UnconstrainedQueryRaw", Mandatory = false, Position = 3)]
         public SwitchParameter Unconstrained { get; set; }
 
         protected override void ProcessRecord()
         {
             IEnumerable<string> attributes = null;
-            string filter;
-
-            if (this.Expression != null)
-            {
-                filter = this.Expression.ToString();
-            }
-            else
-            {
-                filter = this.XPath;
-            }
+            string filter = this.GetQueryString();
 
             if (!this.Unconstrained.IsPresent)
             {
@@ -59,7 +40,6 @@ namespace Lithnet.ResourceManagement.Automation
                     }
                     else
                     {
-
                         ObjectTypeDefinition objectType = ResourceManagementSchema.GetObjectType(this.ExpectedObjectType);
                         attributes = objectType.Attributes.Select(t => t.SystemName);
                     }
@@ -74,6 +54,37 @@ namespace Lithnet.ResourceManagement.Automation
             {
                 this.WriteObject(new RmaObject(resource));
             }
+        }
+
+        private string GetQueryString()
+        {
+            XPathExpression expression = this.XPath as XPathExpression;
+
+            if (expression != null)
+            {
+                return expression.ToString(false);
+            }
+
+            PSObject wrappedObject = this.XPath as PSObject;
+
+            if (wrappedObject != null)
+            {
+                expression = wrappedObject.BaseObject as XPathExpression;
+
+                if (expression != null)
+                {
+                    return expression.ToString(false);
+                }
+
+                throw new ArgumentException("The XPath parameter must be a string or XPathExpression object");
+            }
+
+            if (!(this.XPath is string))
+            {
+                throw new ArgumentException("The XPath parameter must be a string or XPathExpression object");
+            }
+
+            return (string)this.XPath;
         }
     }
 }

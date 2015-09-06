@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,28 +11,47 @@ using Lithnet.ResourceManagement.Client;
 
 namespace Lithnet.ResourceManagement.Automation
 {
-    [Cmdlet(VerbsCommon.New, "XpathExpression")]
-    public class NewXpathExpression : Cmdlet
+    [Cmdlet(VerbsCommon.New, "XPathExpression")]
+    public class NewXPathExpression : PSCmdlet //, IDynamicParameters
     {
         [Parameter(Mandatory = true, Position = 1)]
-        public string ObjectType { get; set; }
+        public string ObjectType {get;set;}
+        //{
+        //    get
+        //    {
+        //        return (string)this.MyInvocation.BoundParameters["ObjectType"];
+        //    }
+        //}
 
-        [Parameter(Mandatory = true, Position = 2, ValueFromPipeline=true)]
+        [Parameter(Mandatory = false, Position = 2, ValueFromPipeline = true)]
         public IXPathQueryObject QueryObject { get; set; }
 
         [Parameter(Mandatory = false, Position = 3)]
         public string DereferenceAttribute { get; set; }
 
+        [Parameter(Mandatory = false, Position = 4)]
+        public SwitchParameter WrapFilterXml { get; set; }
+
         protected override void ProcessRecord()
         {
             if (this.DereferenceAttribute == null)
             {
-                this.WriteObject(new XPathExpression(this.ObjectType, this.QueryObject));
+                this.WriteObject(new XPathExpression(this.ObjectType, this.QueryObject, this.WrapFilterXml.IsPresent));
             }
             else
             {
-                this.WriteObject(new XPathDereferencedExpression(this.ObjectType, this.DereferenceAttribute, this.QueryObject));
+                this.WriteObject(new XPathDereferencedExpression(this.ObjectType, this.DereferenceAttribute, this.QueryObject, this.WrapFilterXml.IsPresent));
             }
         }
+
+        //public object GetDynamicParameters()
+        //{
+        //    var runtimeDefinedParameterDictionary = new RuntimeDefinedParameterDictionary();
+        //    RuntimeDefinedParameter parameter = RmcWrapper.GetObjectTypeParameter("ObjectType", true, 1, true, null);
+            
+        //    runtimeDefinedParameterDictionary.Add(parameter.Name, parameter);
+
+        //    return runtimeDefinedParameterDictionary;
+        //}
     }
 }

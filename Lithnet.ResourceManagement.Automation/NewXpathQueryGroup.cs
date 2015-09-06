@@ -10,8 +10,8 @@ using Lithnet.ResourceManagement.Client;
 
 namespace Lithnet.ResourceManagement.Automation
 {
-    [Cmdlet(VerbsCommon.New, "XpathQueryGroup")]
-    public class NewXpathQueryGroup : Cmdlet
+    [Cmdlet(VerbsCommon.New, "XPathQueryGroup")]
+    public class NewXPathQueryGroup : Cmdlet
     {
         [Parameter(Mandatory = true, Position = 1)]
         public GroupOperator Operator { get; set; }

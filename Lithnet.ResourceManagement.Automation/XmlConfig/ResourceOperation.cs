@@ -71,7 +71,7 @@ namespace Lithnet.ResourceManagement.Automation
         {
             get
             {
-                if (this.Resource != null)
+                if (this.Resource != null && this.Resource.ObjectID != null)
                 {
                     return this.Resource.ObjectID.Value;
                 }
@@ -87,7 +87,7 @@ namespace Lithnet.ResourceManagement.Automation
         {
             get
             {
-                return this.Resource != null && this.ObjectID != null;
+                return this.Resource != null;// && this.ObjectID != null;
             }
         }
 

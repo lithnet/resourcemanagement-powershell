@@ -28,13 +28,13 @@
         "Entry"
         {
         "MsmKey" = "8:_304C33177F7EBBBED6EC0B3B9BCA1809"
-        "OwnerKey" = "8:_7D79C3FC659046BD819350F88FEC5C39"
+        "OwnerKey" = "8:_3C44DE5958BD46E305AD59AB12A2CD86"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_304C33177F7EBBBED6EC0B3B9BCA1809"
-        "OwnerKey" = "8:_7F265047161BB88738A64D04DA781084"
+        "OwnerKey" = "8:_7D79C3FC659046BD819350F88FEC5C39"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -45,14 +45,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_7D79C3FC659046BD819350F88FEC5C39"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_3C44DE5958BD46E305AD59AB12A2CD86"
+        "OwnerKey" = "8:_7D79C3FC659046BD819350F88FEC5C39"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_7F265047161BB88738A64D04DA781084"
-        "OwnerKey" = "8:_7D79C3FC659046BD819350F88FEC5C39"
+        "MsmKey" = "8:_7D79C3FC659046BD819350F88FEC5C39"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -82,12 +82,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_7F265047161BB88738A64D04DA781084"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_21905D1A6DEAB9495B3E1B2C4146FF33"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -101,6 +95,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_7D79C3FC659046BD819350F88FEC5C39"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_3C44DE5958BD46E305AD59AB12A2CD86"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -313,18 +313,13 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7F265047161BB88738A64D04DA781084"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3C44DE5958BD46E305AD59AB12A2CD86"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Lithnet.ResourceManagement.Client, Version=1.0.5715.27159, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Lithnet.ResourceManagement.Client, Version=1.0.5723.22126, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_7F265047161BB88738A64D04DA781084"
-                    {
-                    "Name" = "8:Lithnet.ResourceManagement.Client.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Lithnet.ResourceManagement.Client.dll"
             "TargetName" = "8:"
@@ -475,15 +470,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Lithnet Resource Management PowerShell Module"
-        "ProductCode" = "8:{A3DC7BD1-C649-41D2-BF48-E5DC7F8A2403}"
-        "PackageCode" = "8:{6A8AA337-B042-4A58-8825-3109C29BD83B}"
+        "ProductCode" = "8:{1795B146-386C-4E85-B5F6-51001BBB6287}"
+        "PackageCode" = "8:{C73A259A-6199-4D9E-8B14-B61B24266653}"
         "UpgradeCode" = "8:{CC6C89F6-8663-46ED-A792-15B1327D8AA8}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.5723"
+        "ProductVersion" = "8:1.0.5727"
         "Manufacturer" = "8:Lithnet"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

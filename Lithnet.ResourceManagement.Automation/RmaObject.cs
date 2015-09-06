@@ -55,44 +55,68 @@ namespace Lithnet.ResourceManagement.Automation
                     continue;
                 }
 
-                RmaObject resourceValue = property.Value as RmaObject;
-
-                if (resourceValue != null)
-                {
-                    this.InternalObject.Attributes[property.Name].SetValue(resourceValue.InternalObject.ObjectID);
-                    continue;
-                }
-
                 IEnumerable<object> resourceValues = property.Value as IEnumerable<object>;
 
                 if (resourceValues != null)
                 {
-                    List<object> newValues = new List<object>();
-
-                    foreach(object value in resourceValues)
-                    {
-                        resourceValue = value as RmaObject;
-
-                        if (resourceValue != null)
-                        {
-                            newValues.Add(resourceValue.InternalObject.ObjectID);
-                        }
-                        else
-                        {
-                            newValues.Add(value);
-                        }
-                    }
-
-                    this.InternalObject.Attributes[property.Name].SetValue(newValues);
-                    continue;
+                    this.SetMultivaluedAttribute(property, resourceValues);
                 }
                 else
                 {
-                    this.InternalObject.Attributes[property.Name].SetValue(property.Value);
+                    this.SetSingleValuedAttribute(property, property.Value);
                 }
             }
 
             return this.InternalObject;
+        }
+
+        private void SetMultivaluedAttribute(PSPropertyInfo property, IEnumerable<object> resourceValues)
+        {
+            List<object> newValues = new List<object>();
+
+            foreach (object value in resourceValues)
+            {
+                RmaObject resourceValue = value as RmaObject;
+
+                if (resourceValue != null)
+                {
+                    newValues.Add(resourceValue.InternalObject.ObjectID);
+                }
+                else
+                {
+                    newValues.Add(this.UnwrapPSObject(value));
+                }
+            }
+
+            this.InternalObject.Attributes[property.Name].SetValue(newValues);
+        }
+
+        private void SetSingleValuedAttribute(PSPropertyInfo property, object value)
+        {
+            RmaObject resourceValue = property.Value as RmaObject;
+
+            if (resourceValue != null)
+            {
+                this.InternalObject.Attributes[property.Name].SetValue(resourceValue.InternalObject.ObjectID);
+            }
+            else
+            {
+                this.InternalObject.Attributes[property.Name].SetValue(this.UnwrapPSObject(property.Value));
+            }
+        }
+
+        private object UnwrapPSObject(object value)
+        {
+            PSObject psObject = value as PSObject;
+
+            if (psObject != null)
+            {
+                return psObject.BaseObject;
+            }
+            else
+            {
+                return value;
+            }
         }
     }
 }

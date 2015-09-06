@@ -10,11 +10,17 @@ using Lithnet.ResourceManagement.Client;
 
 namespace Lithnet.ResourceManagement.Automation
 {
-    [Cmdlet(VerbsCommon.New, "XpathQuery")]
-    public class NewXpathQuery : Cmdlet
+    [Cmdlet(VerbsCommon.New, "XPathQuery")]
+     public class NewXPathQuery : PSCmdlet//, IDynamicParameters
     {
         [Parameter(Mandatory = true, Position = 1)]
-        public string AttributeName { get; set; }
+        public string AttributeName {get;set;}
+        //{
+        //    get
+        //    {
+        //          return (string)this.MyInvocation.BoundParameters["AttributeName"];
+        //    }
+        //}
 
         [Parameter(Mandatory = true, Position = 2)]
         public ComparisonOperator Operator { get; set; }
@@ -27,7 +33,31 @@ namespace Lithnet.ResourceManagement.Automation
         
         protected override void ProcessRecord()
         {
-            this.WriteObject( new XPathQuery(this.AttributeName, this.Operator, this.Value, this.Negate.IsPresent));
+            object unwrappedValue;
+
+            PSObject wrappedObject = this.Value as PSObject;
+
+            if (wrappedObject != null)
+            {
+                unwrappedValue = wrappedObject.BaseObject;
+            }
+            else
+            {
+                unwrappedValue = this.Value;
+            }
+
+            this.WriteObject( new XPathQuery(this.AttributeName, this.Operator, unwrappedValue, this.Negate.IsPresent));
         }
+
+
+        //public object GetDynamicParameters()
+        //{
+        //    var runtimeDefinedParameterDictionary = new RuntimeDefinedParameterDictionary();
+        //    RuntimeDefinedParameter parameter = RmcWrapper.GetAttributeNameParameter("AttributeName", true, 1, null, null);
+
+        //    runtimeDefinedParameterDictionary.Add(parameter.Name, parameter);
+
+        //    return runtimeDefinedParameterDictionary;
+        //}
     }
 }

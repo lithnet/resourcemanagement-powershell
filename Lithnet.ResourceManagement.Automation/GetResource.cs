@@ -10,8 +10,8 @@ using Lithnet.ResourceManagement.Client;
 
 namespace Lithnet.ResourceManagement.Automation
 {
-    [Cmdlet(VerbsCommon.Get, "Resource", DefaultParameterSetName="GetResourceByKey")]
-    public class GetResource : PSCmdlet
+    [Cmdlet(VerbsCommon.Get, "Resource", DefaultParameterSetName = "GetResourceByKey")]
+    public class GetResource : PSCmdlet //, IDynamicParameters
     {
         [Parameter(ParameterSetName = "GetResource", ValueFromPipeline = true, Mandatory = true, Position = 1)]
         public object ID { get; set; }
@@ -19,9 +19,22 @@ namespace Lithnet.ResourceManagement.Automation
         [Parameter(ParameterSetName = "GetResourceByKey", Mandatory = true, ValueFromPipeline = true, Position = 1)]
         [Parameter(ParameterSetName = "GetResourceByKeys", Mandatory = true, ValueFromPipeline = true, Position = 1)]
         public string ObjectType { get; set; }
+        //{
+        //    get
+        //    {
+        //        return (string)this.MyInvocation.BoundParameters["ObjectType"];
+        //    }
+        //}
 
         [Parameter(ParameterSetName = "GetResourceByKey", Mandatory = true, Position = 2)]
         public string AttributeName { get; set; }
+        //public string AttributeName
+        //{
+        //    get
+        //    {
+        //        return (string)this.MyInvocation.BoundParameters["AttributeName"];
+        //    }
+        //}
 
         [Parameter(ParameterSetName = "GetResourceByKey", Mandatory = true, Position = 3)]
         public object AttributeValue { get; set; }
@@ -33,7 +46,7 @@ namespace Lithnet.ResourceManagement.Automation
         [Parameter(ParameterSetName = "GetResourceByKeys", Mandatory = false, Position = 3)]
         [Parameter(ParameterSetName = "GetResource", Mandatory = false, Position = 2)]
         public string[] AttributesToGet { get; set; }
-        
+
         protected override void ProcessRecord()
         {
             ResourceObject resource;
@@ -52,7 +65,7 @@ namespace Lithnet.ResourceManagement.Automation
                 this.WriteObject(new RmaObject(resource));
                 return;
             }
-            
+
             string stringID = this.ID as string;
 
             if (stringID != null)
@@ -119,5 +132,26 @@ namespace Lithnet.ResourceManagement.Automation
 
             return dictionary;
         }
+
+        //public object GetDynamicParameters()
+        //{
+        //    RuntimeDefinedParameterDictionary runtimeDefinedParameterDictionary = new RuntimeDefinedParameterDictionary();
+        //    RuntimeDefinedParameter parameter;
+
+        //    parameter = RmcWrapper.GetObjectTypeParameter("ObjectType", true, 1, false, "GetResourceByKey");
+        //    parameter.Attributes.Add(new ParameterAttribute() { ParameterSetName = "GetResourceByKeys", Position = 1, Mandatory = true });
+        //    runtimeDefinedParameterDictionary.Add(parameter.Name, parameter);
+
+        //    string objectType = null;
+        //    if (this.MyInvocation.BoundParameters.ContainsKey("ObjectType"))
+        //    {
+        //        objectType = this.ObjectType;
+        //    }
+
+        //    parameter = RmcWrapper.GetAttributeNameParameter("AttributeName", true, 2, objectType, "GetResourceByKey");
+        //    runtimeDefinedParameterDictionary.Add(parameter.Name, parameter);
+
+        //    return runtimeDefinedParameterDictionary;
+        //}
     }
 }

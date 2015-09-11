@@ -146,8 +146,8 @@ namespace Lithnet.ResourceManagement.Automation
         {
             if (this.Resource == null)
             {
-                this.Resource = RmcWrapper.Client.GetResourceByKey(this.ResourceType, this.GetAnchorValues());
-
+                this.Resource = RmcWrapper.Client.GetResourceByKey(this.ResourceType, this.GetAnchorValues(), ResourceManagementSchema.ObjectTypes[this.ResourceType].Attributes.Select(t => t.SystemName).Except(ResourceManagementSchema.ComputedAttributes));
+                
                 if (this.Resource == null)
                 {
                     throw new InvalidOperationException(string.Format("An update operation is not valid for the resource operation with ID {0} as the resource does not exist in the FIM service. Consider changing the operation to an 'Add Update' type", this.ID));
@@ -185,7 +185,7 @@ namespace Lithnet.ResourceManagement.Automation
         {
             if (this.Resource == null)
             {
-                this.Resource = RmcWrapper.Client.GetResourceByKey(this.ResourceType, this.GetAnchorValues());
+                this.Resource = RmcWrapper.Client.GetResourceByKey(this.ResourceType, this.GetAnchorValues(), new List<string>() { "ObjectID" });
 
                 if (this.Resource == null)
                 {
@@ -204,7 +204,7 @@ namespace Lithnet.ResourceManagement.Automation
 
         private void ProcessResourceAddUpdate()
         {
-            this.Resource = RmcWrapper.Client.GetResourceByKey(this.ResourceType, this.GetAnchorValues());
+            this.Resource = RmcWrapper.Client.GetResourceByKey(this.ResourceType, this.GetAnchorValues(), ResourceManagementSchema.ObjectTypes[this.ResourceType].Attributes.Select(t => t.SystemName).Except(ResourceManagementSchema.ComputedAttributes));
 
             if (this.Resource == null)
             {

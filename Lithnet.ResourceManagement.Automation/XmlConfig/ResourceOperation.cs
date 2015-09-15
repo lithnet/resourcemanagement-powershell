@@ -66,6 +66,9 @@ namespace Lithnet.ResourceManagement.Automation
         [XmlAttribute(AttributeName = "id")]
         public string ID { get; set; }
 
+        [XmlAttribute(AttributeName = "refresh-schema")]
+        public SchemaRefreshEvent SchemaRefresh { get; set; }
+
         [XmlIgnore]
         public string ObjectID
         {
@@ -87,7 +90,7 @@ namespace Lithnet.ResourceManagement.Automation
         {
             get
             {
-                return this.Resource != null;// && this.ObjectID != null;
+                return this.Resource != null;
             }
         }
 
@@ -96,7 +99,11 @@ namespace Lithnet.ResourceManagement.Automation
 
         internal void ExecuteOperation()
         {
-            //this.RaiseLogEvent(string.Format("Starting operation on {0}: {1}", this.ID, this.Operation));
+            if (this.SchemaRefresh == SchemaRefreshEvent.BeforeOperation)
+            {
+                this.RaiseLogEvent("Refreshing schema");
+                RmcWrapper.Client.RefreshSchema();
+            }
 
             switch (this.Operation)
             {
@@ -122,6 +129,12 @@ namespace Lithnet.ResourceManagement.Automation
                 default:
                     throw new ArgumentException("Unknown or unsupported operation type: " + this.Operation.ToString());
             }
+
+            if (this.SchemaRefresh == SchemaRefreshEvent.AfterOperation)
+            {
+                this.RaiseLogEvent("Refreshing schema");
+                RmcWrapper.Client.RefreshSchema();
+            }
         }
 
         private void ProcessResourceAdd()
@@ -146,7 +159,7 @@ namespace Lithnet.ResourceManagement.Automation
         {
             if (this.Resource == null)
             {
-                this.Resource = RmcWrapper.Client.GetResourceByKey(this.ResourceType, this.GetAnchorValues(), ResourceManagementSchema.ObjectTypes[this.ResourceType].Attributes.Select(t => t.SystemName).Except(ResourceManagementSchema.ComputedAttributes));
+                this.Resource = RmcWrapper.Client.GetResourceByKey(this.ResourceType, this.GetAnchorValues(), this.AttributesToGet);
                 
                 if (this.Resource == null)
                 {
@@ -170,7 +183,7 @@ namespace Lithnet.ResourceManagement.Automation
                 {
                     foreach (AttributeValueChange valueChange in attributeChange.Value)
                     {
-                        this.RaiseLogEvent(string.Format("{0}:{1}:{2}", attributeChange.Key, valueChange.ChangeType, valueChange.Value.ToString()));
+                        this.RaiseLogEvent(string.Format("{0}:{1}:{2}", attributeChange.Key, valueChange.ChangeType, valueChange.Value == null ? string.Empty : valueChange.Value.ToString()));
                     }
                 }
 
@@ -204,7 +217,7 @@ namespace Lithnet.ResourceManagement.Automation
 
         private void ProcessResourceAddUpdate()
         {
-            this.Resource = RmcWrapper.Client.GetResourceByKey(this.ResourceType, this.GetAnchorValues(), ResourceManagementSchema.ObjectTypes[this.ResourceType].Attributes.Select(t => t.SystemName).Except(ResourceManagementSchema.ComputedAttributes));
+            this.Resource = RmcWrapper.Client.GetResourceByKey(this.ResourceType, this.GetAnchorValues(), this.AttributesToGet);
 
             if (this.Resource == null)
             {
@@ -238,6 +251,26 @@ namespace Lithnet.ResourceManagement.Automation
             }
 
             return anchors;
+        }
+
+        internal IEnumerable<string> AttributesToGet
+        {
+            get
+            {
+                List<string> attributesToGet = new List<string>();
+
+                foreach (string anchor in this.AnchorAttributes)
+                {
+                    attributesToGet.Add(anchor);
+                }
+
+                foreach (AttributeOperation op in this.AttributeOperations)
+                {
+                    attributesToGet.Add(op.Name);
+                }
+
+                return attributesToGet.Distinct();
+            }
         }
 
         private void ExecuteAttributeOperations()

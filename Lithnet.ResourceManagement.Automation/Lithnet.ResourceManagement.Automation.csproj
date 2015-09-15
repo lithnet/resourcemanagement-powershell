@@ -57,6 +57,7 @@
     <Compile Include="ConfigSyncControl.cs" />
     <Compile Include="Enums\AttributeOperationType.cs" />
     <Compile Include="Enums\AttributeValueType.cs" />
+    <Compile Include="Enums\SchemaRefreshEvent.cs" />
     <Compile Include="Enums\ResourceOperationType.cs" />
     <Compile Include="ImportRMConfig.cs" />
     <Compile Include="NewXPathExpression.cs" />

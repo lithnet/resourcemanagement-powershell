@@ -12,8 +12,6 @@ namespace Lithnet.ResourceManagement.Automation
         private Variables variables;
         private List<ResourceOperation> operations;
 
-        //[XmlArray(ElementName = "Variables")]
-        //[XmlArrayItem(ElementName = "Variable", Type = typeof(Variable))]
         public Variables Variables
         {
             get

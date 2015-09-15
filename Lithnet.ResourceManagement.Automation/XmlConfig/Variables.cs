@@ -33,7 +33,7 @@ namespace Lithnet.ResourceManagement.Automation
                 }
                 else
                 {
-                    filename =Path.Combine(currentPath, this.FileName);
+                    filename = Path.Combine(currentPath, this.FileName);
                 }
 
                 StreamReader sr = File.OpenText(filename);

@@ -85,6 +85,17 @@ namespace Lithnet.ResourceManagement.Automation
         {
             object newValue = this.ExpandedValue;
 
+            if (newValue is string)
+            {
+                if (string.IsNullOrEmpty((string)newValue))
+                {
+                    if (resource.Attributes[this.Name].IsNull)
+                    {
+                        return;
+                    }
+                }
+            }
+
             resource.Attributes[this.Name].SetValue(newValue);
         }
 
@@ -267,7 +278,7 @@ namespace Lithnet.ResourceManagement.Automation
                 throw new ArgumentException(string.Format("The attribute operation of {1} on attribute {0} specifies a reference to another operation with ID {2}, but resource failed to resolve its anchor", this.Name, this.Operation, id), ex);
             }
 
-            ResourceObject resource = RmcWrapper.Client.GetResourceByKey(op.ResourceType, anchorValues, ResourceManagementSchema.ObjectTypes[op.ResourceType].Attributes.Select(t => t.SystemName).Except(ResourceManagementSchema.ComputedAttributes));
+            ResourceObject resource = RmcWrapper.Client.GetResourceByKey(op.ResourceType, anchorValues, op.AttributesToGet);
 
             if (resource == null)
             {

@@ -320,11 +320,6 @@
             "AssemblyAsmDisplayName" = "8:Lithnet.ResourceManagement.Client, Version=1.0.5732.30694, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_CF58C36E830D83E2B18C4C122D97B9FC"
-                    {
-                    "Name" = "8:Lithnet.ResourceManagement.Client.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Lithnet.ResourceManagement.Client.dll"
             "TargetName" = "8:"
@@ -475,15 +470,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Lithnet Resource Management PowerShell Module"
-        "ProductCode" = "8:{794A4054-7501-4FD6-ADF6-A65E849F08A6}"
-        "PackageCode" = "8:{2980D56C-3A5A-4AA3-9936-8330D3F3C4D3}"
+        "ProductCode" = "8:{728B1C84-AB28-4069-B1F4-3C0F97A7B739}"
+        "PackageCode" = "8:{C4F74C63-D976-475F-AC0E-0369B428414F}"
         "UpgradeCode" = "8:{CC6C89F6-8663-46ED-A792-15B1327D8AA8}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.5736"
+        "ProductVersion" = "8:1.0.5744"
         "Manufacturer" = "8:Lithnet"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -940,7 +935,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_7D79C3FC659046BD819350F88FEC5C39"
             {
-            "SourcePath" = "8:..\\Lithnet.ResourceManagement.Automation\\obj\\Debug\\Lithnet.ResourceManagement.Automation.dll"
+            "SourcePath" = "8:..\\Lithnet.ResourceManagement.Automation\\obj\\Release\\Lithnet.ResourceManagement.Automation.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3AFC83A0B0394783A9602EA46736F764"
@@ -996,7 +991,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_D455873FD0E64506AA9A1BC0EEEC8B94"
             {
-            "SourcePath" = "8:..\\Lithnet.ResourceManagement.Resolver\\obj\\Debug\\Lithnet.ResourceManagement.Resolver.dll"
+            "SourcePath" = "8:..\\Lithnet.ResourceManagement.Resolver\\obj\\Release\\Lithnet.ResourceManagement.Resolver.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_3AFC83A0B0394783A9602EA46736F764"

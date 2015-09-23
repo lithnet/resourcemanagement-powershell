@@ -104,7 +104,7 @@ namespace Lithnet.ResourceManagement.Automation
                 this.RaiseLogEvent("Refreshing schema");
                 RmcWrapper.Client.RefreshSchema();
             }
-
+            
             switch (this.Operation)
             {
                 case ResourceOperationType.None:

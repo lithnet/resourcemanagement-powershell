@@ -223,7 +223,7 @@ namespace Lithnet.ResourceManagement.Automation
 
         private string GetReference(string value)
         {
-            string[] split = value.Split('|');
+            string[] split = this.ExpandVariables(value).Split('|');
             if (split.Length != 3)
             {
                 throw new ArgumentException(string.Format("The attribute operation of {0} on attribute {1} specifies a reference type, but does not have a string in the value of ObjectType|AttributeName|AttributeValue. The invalid value was {2}", this.Name, this.Operation, this.Value));

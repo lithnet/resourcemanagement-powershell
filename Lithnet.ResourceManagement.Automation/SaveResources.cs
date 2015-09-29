@@ -21,7 +21,7 @@ namespace Lithnet.ResourceManagement.Automation
 
         protected override void ProcessRecord()
         {
-            IEnumerable<RmaObject> creatingObjects = this.Resources.Where(t => t.InternalObject.ModificationType == OperationType.Create);
+            IEnumerable<RmaObject> creatingObjects = this.Resources.Where(t => t.InternalObject.ModificationType == OperationType.Create).ToList();
 
             if (this.Parallel.IsPresent)
             {

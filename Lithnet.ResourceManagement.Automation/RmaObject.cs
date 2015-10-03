@@ -35,13 +35,13 @@ namespace Lithnet.ResourceManagement.Automation
                 PSNoteProperty prop;
                 if (value.Attribute.IsMultivalued)
                 {
-                    prop = new PSNoteProperty(value.AttributeName, new ArrayList((ICollection)value.Value));
+                    prop = new PSNoteProperty(value.AttributeName, new AttributeValueArrayList((ICollection)value.Value));
                 }
                 else
                 {
                     prop = new PSNoteProperty(value.AttributeName, value.Value);
                 }
-
+                
                 this.Properties.Add(prop);
             }
         }

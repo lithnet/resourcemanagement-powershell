@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttributeValueArrayList.cs" />
     <Compile Include="ConfigSyncControl.cs" />
     <Compile Include="Enums\AttributeOperationType.cs" />
     <Compile Include="Enums\AttributeValueType.cs" />

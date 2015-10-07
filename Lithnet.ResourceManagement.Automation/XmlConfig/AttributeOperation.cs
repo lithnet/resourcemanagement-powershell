@@ -218,7 +218,7 @@ namespace Lithnet.ResourceManagement.Automation
 
         private string BuildFilterAttribute(string xpath)
         {
-            return this.ExpandVariables(string.Format(filterTextFormat, xpath));
+            return string.Format(filterTextFormat, System.Security.SecurityElement.Escape(this.ExpandVariables(xpath)));
         }
 
         private string GetReference(string value)

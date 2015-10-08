@@ -8,6 +8,7 @@ using Lithnet.ResourceManagement.Client;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using Microsoft.ResourceManagement.WebServices;
+using System.Security;
 
 namespace Lithnet.ResourceManagement.Automation
 {
@@ -218,7 +219,9 @@ namespace Lithnet.ResourceManagement.Automation
 
         private string BuildFilterAttribute(string xpath)
         {
-            return string.Format(filterTextFormat, System.Security.SecurityElement.Escape(this.ExpandVariables(xpath)));
+            string unescapedText = this.ExpandVariables(xpath);
+            string escapedText = SecurityElement.Escape(unescapedText).Replace("&apos;", "'");
+            return string.Format(filterTextFormat, escapedText);
         }
 
         private string GetReference(string value)

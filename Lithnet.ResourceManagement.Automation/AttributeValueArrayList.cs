@@ -24,21 +24,36 @@ namespace Lithnet.ResourceManagement.Automation
         public override void Remove(object obj)
         {
             if (base.Contains(obj))
-            {
+            { 
+                // obj is already a unique identifier
                 base.Remove(obj);
                 return;
             }
 
             RmaObject rmaObject = obj as RmaObject;
-
             if (rmaObject != null)
             {
+                // obj is an exsting object
                 base.Remove(rmaObject.InternalObject.ObjectID);
+                return;
             }
 
             if (obj is Guid)
             {
+                // obj is a guid
                 base.Remove(new UniqueIdentifier((Guid)obj));
+                return;
+            }
+
+            if (obj is string)
+            {
+                Guid guid;
+                if (Guid.TryParse((string)obj, out guid))
+                {
+                    // obj is a string in GUID format
+                    base.Remove(new UniqueIdentifier(guid));
+                    return;
+                }
             }
         } 
     }

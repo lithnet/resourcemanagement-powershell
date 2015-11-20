@@ -16,13 +16,13 @@
         "Entry"
         {
         "MsmKey" = "8:_21905D1A6DEAB9495B3E1B2C4146FF33"
-        "OwnerKey" = "8:_7D79C3FC659046BD819350F88FEC5C39"
+        "OwnerKey" = "8:_32F6F6002F27DF36A4A075363913B348"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_21905D1A6DEAB9495B3E1B2C4146FF33"
-        "OwnerKey" = "8:_32F6F6002F27DF36A4A075363913B348"
+        "OwnerKey" = "8:_7D79C3FC659046BD819350F88FEC5C39"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -76,18 +76,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F87E6BCAD83EBC3352B565D4ECA4EE60"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_21905D1A6DEAB9495B3E1B2C4146FF33"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_D455873FD0E64506AA9A1BC0EEEC8B94"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -113,6 +101,18 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_32F6F6002F27DF36A4A075363913B348"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_21905D1A6DEAB9495B3E1B2C4146FF33"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_F87E6BCAD83EBC3352B565D4ECA4EE60"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -475,15 +475,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Lithnet Resource Management PowerShell Module"
-        "ProductCode" = "8:{1073E55F-16AD-4B69-9D3A-2355DF0482C2}"
-        "PackageCode" = "8:{6CA71897-6124-4E4A-8907-11B037650A65}"
+        "ProductCode" = "8:{A26665CA-DBFF-4AE8-A583-87C916579506}"
+        "PackageCode" = "8:{9B2F833B-A17C-4AD9-8AFA-994DB99FE8E4}"
         "UpgradeCode" = "8:{CC6C89F6-8663-46ED-A792-15B1327D8AA8}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.5760"
+        "ProductVersion" = "8:1.0.5802"
         "Manufacturer" = "8:Lithnet"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

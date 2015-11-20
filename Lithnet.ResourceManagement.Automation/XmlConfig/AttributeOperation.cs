@@ -220,8 +220,9 @@ namespace Lithnet.ResourceManagement.Automation
         private string BuildFilterAttribute(string xpath)
         {
             string unescapedText = this.ExpandVariables(xpath);
-            string escapedText = SecurityElement.Escape(unescapedText).Replace("&apos;", "'");
-            return string.Format(filterTextFormat, escapedText);
+            string escapedText = unescapedText.Replace("<", "&lt;").Replace(">", "&gt;");
+            string returnValue = string.Format(filterTextFormat, escapedText);
+            return returnValue;
         }
 
         private string GetReference(string value)

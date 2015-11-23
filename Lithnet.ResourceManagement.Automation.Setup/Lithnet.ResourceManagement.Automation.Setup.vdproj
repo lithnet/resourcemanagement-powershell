@@ -16,13 +16,13 @@
         "Entry"
         {
         "MsmKey" = "8:_21905D1A6DEAB9495B3E1B2C4146FF33"
-        "OwnerKey" = "8:_32F6F6002F27DF36A4A075363913B348"
+        "OwnerKey" = "8:_7D79C3FC659046BD819350F88FEC5C39"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_21905D1A6DEAB9495B3E1B2C4146FF33"
-        "OwnerKey" = "8:_7D79C3FC659046BD819350F88FEC5C39"
+        "OwnerKey" = "8:_32F6F6002F27DF36A4A075363913B348"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -82,6 +82,18 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_F87E6BCAD83EBC3352B565D4ECA4EE60"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_21905D1A6DEAB9495B3E1B2C4146FF33"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_7D79C3FC659046BD819350F88FEC5C39"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -101,18 +113,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_32F6F6002F27DF36A4A075363913B348"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_21905D1A6DEAB9495B3E1B2C4146FF33"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F87E6BCAD83EBC3352B565D4ECA4EE60"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -320,11 +320,6 @@
             "AssemblyAsmDisplayName" = "8:Lithnet.ResourceManagement.Client, Version=1.0.5744.21422, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_4FEF5D0BAC27455C1939F2A8E6169B18"
-                    {
-                    "Name" = "8:Lithnet.ResourceManagement.Client.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Lithnet.ResourceManagement.Client.dll"
             "TargetName" = "8:"
@@ -475,15 +470,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Lithnet Resource Management PowerShell Module"
-        "ProductCode" = "8:{A26665CA-DBFF-4AE8-A583-87C916579506}"
-        "PackageCode" = "8:{9B2F833B-A17C-4AD9-8AFA-994DB99FE8E4}"
+        "ProductCode" = "8:{81CA3DA2-6DEA-478E-ABAD-900CB09DC2DD}"
+        "PackageCode" = "8:{63F7D2DD-D45E-4030-AD75-54F37F1828F9}"
         "UpgradeCode" = "8:{CC6C89F6-8663-46ED-A792-15B1327D8AA8}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.5802"
+        "ProductVersion" = "8:1.0.5806"
         "Manufacturer" = "8:Lithnet"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

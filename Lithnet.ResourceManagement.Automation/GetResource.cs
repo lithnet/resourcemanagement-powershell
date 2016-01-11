@@ -78,6 +78,7 @@ namespace Lithnet.ResourceManagement.Automation
                 }
 
                 this.WriteObject(new RmaObject(resource));
+                return;
             }
 
             Guid? guidID = this.ID as Guid?;

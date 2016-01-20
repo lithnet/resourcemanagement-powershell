@@ -10,38 +10,41 @@ using Lithnet.ResourceManagement.Client;
 
 namespace Lithnet.ResourceManagement.Automation
 {
-    [Cmdlet(VerbsCommon.New, "ResourceUpdateTemplate", DefaultParameterSetName = "ObjectIDString")]
+    [Cmdlet(VerbsCommon.New, "ResourceUpdateTemplate")]
     public class NewResourceUpdateTemplate : Cmdlet
     {
         [Parameter(Mandatory = true, Position = 1)]
         public string ObjectType { get; set; }
 
-        [Parameter(Mandatory = true, Position = 2, ParameterSetName="ObjectIDString")]
-        public string ObjectIDString { get; set; }
-
-        [Parameter(Mandatory = true, Position = 2, ParameterSetName = "ObjectIDGuid")]
-        public Guid ObjectIDGuid { get; set; }
-
-        [Parameter(Mandatory = true, Position = 2, ParameterSetName = "ObjectID")]
-        public UniqueIdentifier ObjectID { get; set; }
+        [Parameter(Mandatory = true, Position = 2)]
+        public object ID { get; set; }
 
         protected override void ProcessRecord()
         {
-            if (this.ObjectID != null)
+            UniqueIdentifier uniqueID = this.ID as UniqueIdentifier;
+
+            if (uniqueID != null)
             {
-                this.WriteObject(new RmaObject(RmcWrapper.Client.CreateResourceTemplateForUpdate(this.ObjectType, this.ObjectID)));
+                this.WriteObject(new RmaObject(RmcWrapper.Client.CreateResourceTemplateForUpdate(this.ObjectType, uniqueID)));
+                return;
             }
-            else if (this.ObjectIDString != null)
+
+            string stringID = this.ID as string;
+
+            if (stringID != null)
             {
-                this.WriteObject(new RmaObject(RmcWrapper.Client.CreateResourceTemplateForUpdate(this.ObjectType, new UniqueIdentifier(this.ObjectIDString))));
+                uniqueID = new UniqueIdentifier(stringID);
+                this.WriteObject(new RmaObject(RmcWrapper.Client.CreateResourceTemplateForUpdate(this.ObjectType, uniqueID)));
+                return;
             }
-            else if (this.ObjectIDGuid != Guid.Empty)
+
+            Guid? guidID = this.ID as Guid?;
+
+            if (guidID != null)
             {
-                this.WriteObject(new RmaObject(RmcWrapper.Client.CreateResourceTemplateForUpdate(this.ObjectType, new UniqueIdentifier(this.ObjectIDGuid))));
-            }
-            else
-            {
-                throw new InvalidOperationException();
+                uniqueID = new UniqueIdentifier(guidID.Value);
+                this.WriteObject(new RmaObject(RmcWrapper.Client.CreateResourceTemplateForUpdate(this.ObjectType, uniqueID)));
+                return;
             }
         }
     }

@@ -28,7 +28,7 @@
         "Entry"
         {
         "MsmKey" = "8:_304C33177F7EBBBED6EC0B3B9BCA1809"
-        "OwnerKey" = "8:_4FEF5D0BAC27455C1939F2A8E6169B18"
+        "OwnerKey" = "8:_D383F02A69422B291805D0C969D4F2FD"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -45,14 +45,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_4FEF5D0BAC27455C1939F2A8E6169B18"
-        "OwnerKey" = "8:_7D79C3FC659046BD819350F88FEC5C39"
+        "MsmKey" = "8:_7D79C3FC659046BD819350F88FEC5C39"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_7D79C3FC659046BD819350F88FEC5C39"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_D383F02A69422B291805D0C969D4F2FD"
+        "OwnerKey" = "8:_7D79C3FC659046BD819350F88FEC5C39"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -100,7 +100,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_4FEF5D0BAC27455C1939F2A8E6169B18"
+        "OwnerKey" = "8:_D383F02A69422B291805D0C969D4F2FD"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -313,11 +313,11 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4FEF5D0BAC27455C1939F2A8E6169B18"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D383F02A69422B291805D0C969D4F2FD"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Lithnet.ResourceManagement.Client, Version=1.0.5744.21422, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Lithnet.ResourceManagement.Client, Version=1.0.5806.11539, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                 }
@@ -470,15 +470,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Lithnet Resource Management PowerShell Module"
-        "ProductCode" = "8:{81CA3DA2-6DEA-478E-ABAD-900CB09DC2DD}"
-        "PackageCode" = "8:{63F7D2DD-D45E-4030-AD75-54F37F1828F9}"
+        "ProductCode" = "8:{361C8601-701E-4D11-9EB0-28120D7C3F7D}"
+        "PackageCode" = "8:{DEF3DB99-472F-4C9A-ABA0-538ACE3D22A5}"
         "UpgradeCode" = "8:{CC6C89F6-8663-46ED-A792-15B1327D8AA8}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.5806"
+        "ProductVersion" = "8:1.0.5892"
         "Manufacturer" = "8:Lithnet"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

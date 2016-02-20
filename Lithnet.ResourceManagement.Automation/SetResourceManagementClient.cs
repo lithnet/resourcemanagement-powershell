@@ -9,16 +9,16 @@ namespace Lithnet.ResourceManagement.Automation
     [Cmdlet(VerbsCommon.Set, "ResourceManagementClient")]
     public class SetResourceManagementClient : Cmdlet
     {
-        [Parameter(Mandatory = true)]
+        [Parameter(Mandatory = true, Position = 0)]
         public string BaseAddress { get; set; }
 
-        [Parameter(ValueFromPipeline = true)]
+        [Parameter(ValueFromPipeline = true, Position = 1)]
         public PSCredential Credentials { get; set; }
 
-        [Parameter]
+        [Parameter(Position = 2)]
         public string ServicePrincipalName { get; set; }
 
-        [Parameter]
+        [Parameter(Position = 3)]
         public bool ForceKerberos { get; set; }
 
         protected override void EndProcessing()
@@ -29,24 +29,27 @@ namespace Lithnet.ResourceManagement.Automation
             {
                 creds = new NetworkCredential(this.Credentials.UserName, this.ConvertToUnsecureString(this.Credentials.Password));
             }
-            
-            Uri baseAddress = null;
+
+            Uri baseUri;
 
             try
             {
-                baseAddress = new Uri(this.BaseAddress);
+                baseUri = new Uri(this.BaseAddress);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                this.WriteError(new ErrorRecord(ex, "InvalidUri", ErrorCategory.InvalidArgument, this.BaseAddress));
+                try
+                {
+                    baseUri = new Uri(string.Format("http://{0}:5725", this.BaseAddress));
+                }
+                catch 
+                {
+                    this.WriteError(new ErrorRecord(ex, "InvalidUri", ErrorCategory.InvalidArgument, this.BaseAddress));
+                    return;
+                }
             }
 
-            if (!string.IsNullOrWhiteSpace(this.ServicePrincipalName))
-            {
-
-            }
-
-            RmcWrapper.Client = new Client.ResourceManagementClient(new Uri(this.BaseAddress), creds, this.ServicePrincipalName, !this.ForceKerberos);
+            RmcWrapper.Client = new Client.ResourceManagementClient(baseUri, creds, this.ServicePrincipalName, !this.ForceKerberos);
 
             base.EndProcessing();
         }

@@ -25,6 +25,12 @@ namespace Lithnet.ResourceManagement.Automation
         [Parameter(ParameterSetName = "UnconstrainedQueryRaw", Mandatory = false, Position = 3)]
         public SwitchParameter Unconstrained { get; set; }
 
+        [Parameter(Mandatory = false, ValueFromPipeline = false)]
+        public int MaxResults { get; set; }
+
+        [Parameter(Mandatory = false)]
+        public int PageSize { get; set; }
+
         protected override void ProcessRecord()
         {
             IEnumerable<string> attributes = null;
@@ -50,9 +56,32 @@ namespace Lithnet.ResourceManagement.Automation
                 }
             }
 
-            foreach (ResourceObject resource in RmcWrapper.Client.GetResources(filter, attributes))
+            int count = 0;
+            int pageSize;
+
+            if (this.PageSize > 0)
+            {
+                pageSize = this.PageSize;
+            }
+            else
+            {
+                pageSize = 200;
+            }
+
+            if (this.MaxResults > 0 && this.MaxResults < pageSize)
+            {
+                pageSize = this.MaxResults;
+            }
+
+            foreach (ResourceObject resource in RmcWrapper.Client.GetResources(filter, pageSize, attributes))
             {
                 this.WriteObject(new RmaObject(resource));
+                count++;
+
+                if (this.MaxResults > 0 && count >= this.MaxResults)
+                {
+                    break;
+                }
             }
         }
 

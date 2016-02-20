@@ -244,7 +244,10 @@ namespace Lithnet.ResourceManagement.Automation
 
                 if (attributeOp == null)
                 {
-                    throw new ArgumentException(string.Format("The resource operation with ID {0} specified a modification type that requires an anchor, but the defined anchor attribute was not present in the list of AttributeOperations"));
+                    throw new ArgumentException(
+                        string.Format(
+                            "The resource operation with ID {0} specified a modification type that requires an anchor, but the defined anchor attribute was not present in the list of AttributeOperations",
+                            this.ID));
                 }
 
                 anchors.Add(anchor, attributeOp.ExpandedValue.ToString());

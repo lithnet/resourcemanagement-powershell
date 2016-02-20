@@ -65,6 +65,7 @@
     <Compile Include="NewXPathQueryGroup.cs" />
     <Compile Include="NewXPathQuery.cs" />
     <Compile Include="NewResourceUpdateTemplate.cs" />
+    <Compile Include="GetResourceCount.cs" />
     <Compile Include="UpdateResourceManagementClientSchema.cs" />
     <Compile Include="RemoveResource.cs" />
     <Compile Include="NewResource.cs" />

@@ -25,10 +25,10 @@ namespace Lithnet.ResourceManagement.Automation
         [Parameter(ParameterSetName = "UnconstrainedQueryRaw", Mandatory = false, Position = 3)]
         public SwitchParameter Unconstrained { get; set; }
 
-        [Parameter(Mandatory = false, ValueFromPipeline = false)]
+        [Parameter]
         public int MaxResults { get; set; }
 
-        [Parameter(Mandatory = false)]
+        [Parameter]
         public int PageSize { get; set; }
 
         protected override void ProcessRecord()

@@ -9,11 +9,10 @@ using Microsoft.ResourceManagement.WebServices.WSEnumeration;
 using System.Collections;
 using Lithnet.ResourceManagement.Client;
 
-
 namespace Lithnet.ResourceManagement.Automation
 {
-    [Cmdlet(VerbsCommon.Search, "Resources", DefaultParameterSetName = "ConstrainedQueryByTypeRaw")]
-    public class SearchResources : Cmdlet
+    [Cmdlet(VerbsCommon.Search, "ResourcesPaged", DefaultParameterSetName = "ConstrainedQueryByTypeRaw")]
+    public class SearchResourcesPaged : Cmdlet
     {
         [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 1)]
         public object XPath { get; set; }
@@ -28,11 +27,8 @@ namespace Lithnet.ResourceManagement.Automation
         public SwitchParameter Unconstrained { get; set; }
 
         [Parameter]
-        public int MaxResults { get; set; }
-
-        [Parameter]
         public int PageSize { get; set; }
-
+        
         [Parameter]
         public string[] SortAttributes { get; set; }
 
@@ -64,7 +60,6 @@ namespace Lithnet.ResourceManagement.Automation
                 }
             }
 
-            int count = 0;
             int pageSize;
 
             if (this.PageSize > 0)
@@ -76,10 +71,6 @@ namespace Lithnet.ResourceManagement.Automation
                 pageSize = 200;
             }
 
-            if (this.MaxResults > 0 && this.MaxResults < pageSize)
-            {
-                pageSize = this.MaxResults;
-            }
 
             List<SortingAttribute> sortCriteria = new List<SortingAttribute>();
             if (this.SortAttributes != null)
@@ -90,16 +81,7 @@ namespace Lithnet.ResourceManagement.Automation
                 }
             }
 
-            foreach (ResourceObject resource in RmcWrapper.Client.GetResources(filter, pageSize, attributes, sortCriteria))
-            {
-                this.WriteObject(new RmaObject(resource));
-                count++;
-
-                if (this.MaxResults > 0 && count >= this.MaxResults)
-                {
-                    break;
-                }
-            }
+            this.WriteObject(new RmaSearchPager(RmcWrapper.Client.GetResourcesPaged(filter, pageSize, attributes, sortCriteria)));
         }
 
         private string GetQueryString()

@@ -30,8 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Lithnet.ResourceManagement.Client, Version=1.0.5892.16837, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lithnet.ResourceManagement.Client.1.0.5892.16837\lib\net40\Lithnet.ResourceManagement.Client.dll</HintPath>
+    <Reference Include="Lithnet.ResourceManagement.Client, Version=1.0.5901.17386, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lithnet.ResourceManagement.Client.1.0.5901.17386\lib\net40\Lithnet.ResourceManagement.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ResourceManagement">
@@ -66,6 +66,8 @@
     <Compile Include="NewXPathQuery.cs" />
     <Compile Include="NewResourceUpdateTemplate.cs" />
     <Compile Include="GetResourceCount.cs" />
+    <Compile Include="RmaSearchPager.cs" />
+    <Compile Include="SearchResourcesPaged.cs" />
     <Compile Include="UpdateResourceManagementClientSchema.cs" />
     <Compile Include="RemoveResource.cs" />
     <Compile Include="NewResource.cs" />
@@ -83,34 +85,34 @@
     <Compile Include="XmlConfig\Variables.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Examples\ChangeLogResource.xml">
+    <None Include="Examples\ChangeLogResource.xml">
       <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Examples\ConfigImportExample.xml">
+    </None>
+    <None Include="Examples\ConfigImportExample.xml">
       <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Examples\Email Notifications\EmailTemplateAccountExpiry.html" />
-    <Content Include="Examples\Email Notifications\WFAccountExpiry.xoml" />
+    </None>
+    <None Include="Examples\Email Notifications\EmailTemplateAccountExpiry.html" />
+    <None Include="Examples\Email Notifications\WFAccountExpiry.xoml" />
     <Content Include="LithnetRMA.psd1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Examples\Variables.xml">
+    <None Include="Examples\Variables.xml">
       <SubType>Designer</SubType>
-    </Content>
+    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="RegisterResolver.ps1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>call "C:\Program Files (x86)\WiX Toolset v3.10\bin\heat.exe" dir "$(TargetDir)."  -var var.Lithnet.ResourceManagement.Automation.TargetDir -dr APPLICATIONFOLDER -cg Lithnet.ResourceManagement.Automation.Binaries -ag -scom -sreg -sfrag –srd -o "$(SolutionDir)Lithnet.ResourceManagement.Automation.Installer\$(ProjectName).Binaries.wxs"</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

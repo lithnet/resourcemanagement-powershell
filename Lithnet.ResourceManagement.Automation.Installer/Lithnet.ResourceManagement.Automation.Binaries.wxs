@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="APPLICATIONFOLDER">
+            <Component Id="cmp3903BD4EF215F80D06ECA1F02A0185FA" Guid="*">
+                <File Id="fil07BF703C3870C7016D35B71016C96B78" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\Lithnet.ResourceManagement.Automation.dll" />
+            </Component>
+            <Component Id="cmp51F91B0AEBBACC5C4A14C8B443E1F375" Guid="*">
+                <File Id="fil19AE0E6E165B61E09A053A3DA0A9FD30" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\Lithnet.ResourceManagement.Automation.pdb" />
+            </Component>
+            <Component Id="cmp3464B13C472C7CC22718426A972A9BFE" Guid="*">
+                <File Id="filFF33BB925B87A2B2C5F5208D1905B76D" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\Lithnet.ResourceManagement.Client.dll" />
+            </Component>
+            <Component Id="cmp84337CBEBEFB880CAB19EAC34D773A48" Guid="*">
+                <File Id="fil5C9425897F97959B93D9BB3D10E1DA9D" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\LithnetRMA.psd1" />
+            </Component>
+            <Component Id="cmp25B0BF52D04D0E021A62636AE8E1AA05" Guid="*">
+                <File Id="filF0B1A97980DEA55D4596C49137E52157" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\RegisterResolver.ps1" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="Lithnet.ResourceManagement.Automation.Binaries">
+            <ComponentRef Id="cmp3903BD4EF215F80D06ECA1F02A0185FA" />
+            <ComponentRef Id="cmp51F91B0AEBBACC5C4A14C8B443E1F375" />
+            <ComponentRef Id="cmp3464B13C472C7CC22718426A972A9BFE" />
+            <ComponentRef Id="cmp84337CBEBEFB880CAB19EAC34D773A48" />
+            <ComponentRef Id="cmp25B0BF52D04D0E021A62636AE8E1AA05" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>

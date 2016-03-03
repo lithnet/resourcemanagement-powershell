@@ -20,6 +20,20 @@ namespace Lithnet.ResourceManagement.Automation
             : base(c)
         {
         }
+        
+        public override int Add(object value)
+        {
+            RmaObject rmaObject = value as RmaObject;
+            if (rmaObject != null)
+            {
+                // obj is an existing object
+                return base.Add(rmaObject.InternalObject.ObjectID);
+            }
+            else
+            {
+                return base.Add(value);
+            }
+        }
 
         public override void Remove(object obj)
         {
@@ -33,7 +47,7 @@ namespace Lithnet.ResourceManagement.Automation
             RmaObject rmaObject = obj as RmaObject;
             if (rmaObject != null)
             {
-                // obj is an exsting object
+                // obj is an existing object
                 base.Remove(rmaObject.InternalObject.ObjectID);
                 return;
             }

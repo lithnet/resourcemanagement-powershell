@@ -5,6 +5,9 @@
             <Component Id="cmp3903BD4EF215F80D06ECA1F02A0185FA" Guid="*">
                 <File Id="fil07BF703C3870C7016D35B71016C96B78" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\Lithnet.ResourceManagement.Automation.dll" />
             </Component>
+            <Component Id="cmpAC07E05A681CA093027C5C601CAB8B29" Guid="*">
+                <File Id="fil70389F7187A49046F558BAD8BE0235E4" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\Lithnet.ResourceManagement.Automation.dll.config" />
+            </Component>
             <Component Id="cmp51F91B0AEBBACC5C4A14C8B443E1F375" Guid="*">
                 <File Id="fil19AE0E6E165B61E09A053A3DA0A9FD30" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\Lithnet.ResourceManagement.Automation.pdb" />
             </Component>
@@ -22,6 +25,7 @@
     <Fragment>
         <ComponentGroup Id="Lithnet.ResourceManagement.Automation.Binaries">
             <ComponentRef Id="cmp3903BD4EF215F80D06ECA1F02A0185FA" />
+            <ComponentRef Id="cmpAC07E05A681CA093027C5C601CAB8B29" />
             <ComponentRef Id="cmp51F91B0AEBBACC5C4A14C8B443E1F375" />
             <ComponentRef Id="cmp3464B13C472C7CC22718426A972A9BFE" />
             <ComponentRef Id="cmp84337CBEBEFB880CAB19EAC34D773A48" />

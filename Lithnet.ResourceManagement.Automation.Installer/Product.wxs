@@ -4,7 +4,7 @@
   <Product Id="*"
            Name="Lithnet FIM/MIM Service PowerShell Module"
            Language="1033"
-           Version="1.0.5901"
+           Version="1.0.5922"
            Manufacturer="Lithnet"
            UpgradeCode="CC6C89F6-8663-46ED-A792-15B1327D8AA8">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />

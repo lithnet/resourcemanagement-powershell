@@ -14,32 +14,42 @@ namespace Lithnet.ResourceManagement.Automation
     public class RemoveResource : Cmdlet
     {
         [Parameter(Mandatory = true, Position = 1, ParameterSetName = "ID")]
-        public object ID { get; set; }
+        public object[] ID { get; set; }
 
         [Parameter(Mandatory = true, Position = 1, ValueFromPipeline = true, ParameterSetName = "ResourceObject")]
         public RmaObject[] ResourceObjects { get; set; }
                 
         protected override void ProcessRecord()
         {
-            string idString = this.ID as string;
-            Guid? idGuid = this.ID as Guid?;
-            UniqueIdentifier idUniqueID = this.ID as UniqueIdentifier;
+            if (this.ID != null)
+            {
+                List<UniqueIdentifier> ids = new List<UniqueIdentifier>();
 
-            if (idString != null)
-            {
-                RmcWrapper.Client.DeleteResource(idString);
-            }
-            else if (idGuid.HasValue)
-            {
-                RmcWrapper.Client.DeleteResource(idGuid.Value);
+                foreach (object id in this.ID)
+                {
+                    string idString = id as string;
+                    Guid? idGuid = id as Guid?;
+                    UniqueIdentifier idUniqueID = id as UniqueIdentifier;
+
+                    if (idString != null)
+                    {
+                        ids.Add(new UniqueIdentifier(idString));
+                    }
+                    else if (idGuid.HasValue)
+                    {
+                        ids.Add(new UniqueIdentifier(idGuid.Value));
+                    }
+                    else if (idUniqueID != null)
+                    {
+                        ids.Add(idUniqueID);
+                    }
+                }
+
+                RmcWrapper.Client.DeleteResources(ids);
             }
             else if (this.ResourceObjects != null)
             {
                 RmcWrapper.Client.DeleteResources(this.ResourceObjects.Select(t => t.InternalObject));
-            }
-            else if (idUniqueID != null)
-            {
-                RmcWrapper.Client.DeleteResource(idUniqueID);
             }
             else
             {

@@ -20,6 +20,11 @@
             <Component Id="cmp25B0BF52D04D0E021A62636AE8E1AA05" Guid="*">
                 <File Id="filF0B1A97980DEA55D4596C49137E52157" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\RegisterResolver.ps1" />
             </Component>
+            <Directory Id="dir5CDA73A0F7F98CDCAD6FF95FDA7F3F34" Name="en-us">
+                <Component Id="cmp7EC8CCAB4D75ADE6ECC542650372A702" Guid="*">
+                    <File Id="filC0EDFB66C0E1AAC32AC7C32ED597BF4D" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\en-us\Lithnet.ResourceManagement.Automation.dll-help.xml" />
+                </Component>
+            </Directory>
         </DirectoryRef>
     </Fragment>
     <Fragment>
@@ -30,6 +35,7 @@
             <ComponentRef Id="cmp3464B13C472C7CC22718426A972A9BFE" />
             <ComponentRef Id="cmp84337CBEBEFB880CAB19EAC34D773A48" />
             <ComponentRef Id="cmp25B0BF52D04D0E021A62636AE8E1AA05" />
+            <ComponentRef Id="cmp7EC8CCAB4D75ADE6ECC542650372A702" />
         </ComponentGroup>
     </Fragment>
 </Wix>

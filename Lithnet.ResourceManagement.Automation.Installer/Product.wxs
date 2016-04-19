@@ -4,7 +4,7 @@
   <Product Id="*"
            Name="Lithnet FIM/MIM Service PowerShell Module"
            Language="1033"
-           Version="1.0.5922"
+           Version="1.0.5954"
            Manufacturer="Lithnet"
            UpgradeCode="CC6C89F6-8663-46ED-A792-15B1327D8AA8">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
@@ -16,11 +16,12 @@
     <Condition Message="This application requires .NET Framework 4.0. Please install the .NET Framework then run this installer again. Contact support at support@Swiftposter.com if you have further issues.">
       <![CDATA[Installed OR WIX_IS_NETFRAMEWORK_40_OR_LATER_INSTALLED]]>
     </Condition>
-    
+
     <Feature Id="ProductFeature" Title="PowerShell Module" Level="1">
       <ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="ProductHelp" />
     </Feature>
-    
+
     <UI Id="UserInterface">
       <Property Id="WIXUI_INSTALLDIR" Value="TARGETDIR" />
       <Property Id="WixUI_Mode" Value="Custom" />
@@ -50,13 +51,15 @@
         <Directory Id="PSROOT" Name="WindowsPowerShell">
           <Directory Id="PSV1ROOT" Name ="v1.0">
             <Directory Id ="PSMODULESROOT" Name="Modules">
-              <Directory Id="APPLICATIONFOLDER" Name="LithnetRMA" />
+              <Directory Id="APPLICATIONFOLDER" Name="LithnetRMA">
+                <Directory Id="ENUSHELPFOLDER" Name="en-us"/>
+              </Directory>
+              </Directory>
             </Directory>
           </Directory>
         </Directory>
       </Directory>
-    </Directory>
-  </Fragment>
+    </Fragment>
 
   <Fragment>
     <ComponentGroup Id="ProductComponents" Directory="APPLICATIONFOLDER">
@@ -64,6 +67,10 @@
       <Component Guid="*">
         <File Source="$(var.Lithnet.ResourceManagement.Resolver.TargetPath)" />
       </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="ProductHelp" Directory="ENUSHELPFOLDER">
+      <ComponentGroupRef Id="Lithnet.ResourceManagement.Automation.Help"/>
     </ComponentGroup>
   </Fragment>
 </Wix>

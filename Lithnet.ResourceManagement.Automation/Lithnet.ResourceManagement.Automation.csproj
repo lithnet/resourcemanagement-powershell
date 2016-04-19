@@ -94,12 +94,16 @@
     </None>
     <None Include="Examples\Email Notifications\EmailTemplateAccountExpiry.html" />
     <None Include="Examples\Email Notifications\WFAccountExpiry.xoml" />
+    <Content Include="en-us\Lithnet.ResourceManagement.Automation.dll-help.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="LithnetRMA.psd1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Examples\Variables.xml">
       <SubType>Designer</SubType>
     </None>
+    <None Include="LithnetRMA.Help.pshproj" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

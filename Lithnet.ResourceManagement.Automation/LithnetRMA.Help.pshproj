@@ -1,0 +1,1179 @@
+<?xml version="1.0"?>
+<ModuleObject xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" fVersion="1.1" type="Manifest" mclass="Module" useSupports="false">
+  <Name>LithnetRMA</Name>
+  <Version>1.0</Version>
+  <Description>Lithnet Resource Management Client for PowerShell</Description>
+  <HasManifest>true</HasManifest>
+  <OverridePostCount>false</OverridePostCount>
+  <FetchPostCount xsi:nil="true" />
+  <Cmdlets>
+    <CmdletObject verb="Get" noun="Resource">
+      <Name>Get-Resource</Name>
+      <GeneralHelp>
+        <Synopsis>Gets a resource from the FIM/MIM service</Synopsis>
+        <Description>This cmdlet allows you retrieve a single object from the FIM/MIM service using either the ObjectID, or a unique combination of attribute-value pairs
+</Description>
+        <Notes>This cmdlet will throw a TooManyResults exception if more than one object is returned from an anchor attribute/value pair search. To return multiple objects, use the Search-Resources cmdlet.</Notes>
+        <InputType />
+        <InputUrl />
+        <InputTypeDescription />
+        <ReturnType />
+        <ReturnUrl />
+        <ReturnTypeDescription />
+      </GeneralHelp>
+      <ParamSets>
+        <CommandParameterSetInfo2 Name="GetResourceByKey" Params="ObjectType AttributeName AttributeValue AttributesToGet Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="GetResource" Params="ID AttributesToGet Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="GetResourceByKeys" Params="ObjectType AttributeValuePairs AttributesToGet Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+      </ParamSets>
+      <Syntax>
+        <string>Get-Resource [-ObjectType] &lt;String&gt; [-AttributeName] &lt;String&gt; [-AttributeValue] &lt;Object&gt; [[-AttributesToGet] &lt;String[]&gt;]</string>
+        <string>Get-Resource [-ID] &lt;Object&gt; [[-AttributesToGet] &lt;String[]&gt;]</string>
+        <string>Get-Resource [-ObjectType] &lt;String&gt; [-AttributeValuePairs] &lt;Hashtable&gt; [[-AttributesToGet] &lt;String[]&gt;]</string>
+      </Syntax>
+      <Parameters>
+        <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="false" isPos="true" pos="1" globbing="false">
+          <Name>ObjectType</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>The name of the object type to query</Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="2" globbing="false">
+          <Name>AttributeName</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>The name of primary key attribute to use to find the resource</Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="Object" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="3" globbing="false">
+          <Name>AttributeValue</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>The value of the primary key attribute to use to find the resource</Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="String[]" varLen="true" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="4" globbing="false">
+          <Name>AttributesToGet</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>A list of attribute names to retrieve from the resource. If the object type is known (using the -ObjectType parameter), then all attributes from the object type are returned, unless a subset of attributes are specified with this parameter. If the ObjectType parameter is not used, then only the ObjectID is returned, unless the specific attributes required are specified with this parameter</Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="Object" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="false" isPos="true" pos="1" globbing="false">
+          <Name>ID</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>The ObjectID of the resource to get</Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="Hashtable" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="2" globbing="false">
+          <Name>AttributeValuePairs</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>A hashtable of attribute-value pairs that uniquely identify the object to get</Description>
+          <DefaultValue />
+        </ParameterDescription>
+      </Parameters>
+      <Examples>
+        <Example>
+          <Name>Get a resource by its object ID</Name>
+          <Cmd>Get-Resource -ID 7fb2b853-24f0-4498-9534-4e10589723c4</Cmd>
+          <Description />
+          <Output />
+        </Example>
+        <Example>
+          <Name>Get a Person using its AccountName attribute</Name>
+          <Cmd>Get-Resource -ObjectType Person -AttributeName AccountName -AttributeValue testuser</Cmd>
+          <Description />
+          <Output />
+        </Example>
+        <Example>
+          <Name>Get a Person using a primary key attribute, returning selected attributes</Name>
+          <Cmd>Get-Resource -ObjectType Person -AttributeName AccountName -AttributeValue testuser -AttributesToGet @("JobTitle")</Cmd>
+          <Description>Get a Person using its AccountName attribute, and uses the AttributesToGet parameter to return only the JobTitle attribute</Description>
+          <Output />
+        </Example>
+        <Example>
+          <Name>Get a Person using the AccountName and domain anchor pair</Name>
+          <Cmd>Get-Resource -ObjectType Person -AttributeValuePairs @{AccountName = "testuser"; Domain="fim-dev1"}</Cmd>
+          <Description>Gets a person resource using multiple attribute-value pairs that uniquely identify the resource</Description>
+          <Output />
+        </Example>
+      </Examples>
+      <RelatedLinks />
+      <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
+      <Publish>false</Publish>
+    </CmdletObject>
+    <CmdletObject verb="Get" noun="ResourceCount">
+      <Name>Get-ResourceCount</Name>
+      <GeneralHelp>
+        <Synopsis>Counts the number of resources that match the specified search criteria</Synopsis>
+        <Description>Returns a simple count of the number of resources in the FIM/MIM service that match the specified XPath search criteria</Description>
+        <Notes />
+        <InputType />
+        <InputUrl />
+        <InputTypeDescription />
+        <ReturnType />
+        <ReturnUrl />
+        <ReturnTypeDescription />
+      </GeneralHelp>
+      <ParamSets>
+        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="XPath Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+      </ParamSets>
+      <Syntax>
+        <string>Get-ResourceCount [-XPath] &lt;Object&gt;</string>
+      </Syntax>
+      <Parameters>
+        <ParameterDescription type="Object" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="false" isPos="true" pos="1" globbing="false">
+          <Name>XPath</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>The XPath query to use to perform the search</Description>
+          <DefaultValue />
+        </ParameterDescription>
+      </Parameters>
+      <Examples />
+      <RelatedLinks />
+      <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
+      <Publish>false</Publish>
+    </CmdletObject>
+    <CmdletObject verb="Import" noun="RMConfig">
+      <Name>Import-RMConfig</Name>
+      <GeneralHelp>
+        <Synopsis>Imports a delcared configuration set into the FIM/MIM service</Synopsis>
+        <Description>The Import-RMConfig cmdlet is used to import a configuration definition from an XML file</Description>
+        <Notes>See the 'configuration management' link for a full guide on using the XML file format</Notes>
+        <InputType />
+        <InputUrl />
+        <InputTypeDescription />
+        <ReturnType />
+        <ReturnUrl />
+        <ReturnTypeDescription />
+      </GeneralHelp>
+      <ParamSets>
+        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="File Preview Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+      </ParamSets>
+      <Syntax>
+        <string>Import-RMConfig [-File] &lt;String&gt; [[-Preview] &lt;SwitchParameter&gt;]</string>
+      </Syntax>
+      <Parameters>
+        <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
+          <Name>File</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>The path of the XML file containing the configuration to import </Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="SwitchParameter" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="2" globbing="false">
+          <Name>Preview</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Optional. Indicates that the cmdlet should only report changes required, without committing them to the FIM service </Description>
+          <DefaultValue />
+        </ParameterDescription>
+      </Parameters>
+      <Examples>
+        <Example>
+          <Name>Import a configuration set</Name>
+          <Cmd>Import-RMConfig -File EmailTemplateConfig.xml
+</Cmd>
+          <Description />
+          <Output />
+        </Example>
+      </Examples>
+      <RelatedLinks>
+        <RelatedLink>
+          <LinkText>Configuration Management using Import-RMConfig</LinkText>
+          <LinkUrl>https://lithnetrma.codeplex.com/wikipage?title=Configuration%20Management</LinkUrl>
+        </RelatedLink>
+      </RelatedLinks>
+      <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
+      <Publish>false</Publish>
+    </CmdletObject>
+    <CmdletObject verb="New" noun="Resource">
+      <Name>New-Resource</Name>
+      <GeneralHelp>
+        <Synopsis>The New-Resource cmdlet creates a new object template for creation in the FIM/MIM service</Synopsis>
+        <Description>This cmdlet creates an empty resource of the specified type, which can then later be saved with the Save-Resource cmdlet.</Description>
+        <Notes>The resource is not created in the FIM/MIM service itself, until the Save-Resource cmdlet is used</Notes>
+        <InputType />
+        <InputUrl />
+        <InputTypeDescription />
+        <ReturnType />
+        <ReturnUrl />
+        <ReturnTypeDescription />
+      </GeneralHelp>
+      <ParamSets>
+        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="ObjectType Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+      </ParamSets>
+      <Syntax>
+        <string>New-Resource [-ObjectType] &lt;String&gt;</string>
+      </Syntax>
+      <Parameters>
+        <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
+          <Name>ObjectType</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>The system name of the object type in the schema to create </Description>
+          <DefaultValue />
+        </ParameterDescription>
+      </Parameters>
+      <Examples>
+        <Example>
+          <Name>Create a new person object</Name>
+          <Cmd>$obj = New-Resource -ObjectType Person
+$obj.AccountName = "testuser"
+$obj.Domain = "fim-dev1"
+$obj.DisplayName = "test user"
+$obj.JobTitles = @("Test1", "Test2")
+Save-Resource $obj</Cmd>
+          <Description />
+          <Output />
+        </Example>
+      </Examples>
+      <RelatedLinks />
+      <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
+      <Publish>false</Publish>
+    </CmdletObject>
+    <CmdletObject verb="New" noun="ResourceUpdateTemplate">
+      <Name>New-ResourceUpdateTemplate</Name>
+      <GeneralHelp>
+        <Synopsis />
+        <Description />
+        <Notes />
+        <InputType />
+        <InputUrl />
+        <InputTypeDescription />
+        <ReturnType />
+        <ReturnUrl />
+        <ReturnTypeDescription />
+      </GeneralHelp>
+      <ParamSets>
+        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="ObjectType ID Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+      </ParamSets>
+      <Syntax>
+        <string>New-ResourceUpdateTemplate [-ObjectType] &lt;String&gt; [-ID] &lt;Object&gt;</string>
+      </Syntax>
+      <Parameters>
+        <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
+          <Name>ObjectType</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description />
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="Object" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="2" globbing="false">
+          <Name>ID</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description />
+          <DefaultValue />
+        </ParameterDescription>
+      </Parameters>
+      <Examples />
+      <RelatedLinks />
+      <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
+      <Publish>false</Publish>
+    </CmdletObject>
+    <CmdletObject verb="New" noun="XPathExpression">
+      <Name>New-XPathExpression</Name>
+      <GeneralHelp>
+        <Synopsis>The New-XPathExpression cmdlet allows you to declaratively create an XPath expression</Synopsis>
+        <Description>The cmdlet takes a query or group generated with the  New-XPathQuery or New-XPathQueryGroup cmdlets and produces an XPath expression that can be used in the following manners
+
+1. As an input to the  Search-Resources cmdlet 
+2. As an input to the  New-XPathQuery cmdlet 
+3. By using the ToString() method, you can generate an expression to use elsewhere in your script 
+4. When setting a resource attribute that expects a Filter type
+
+</Description>
+        <Notes />
+        <InputType />
+        <InputUrl />
+        <InputTypeDescription />
+        <ReturnType />
+        <ReturnUrl />
+        <ReturnTypeDescription />
+      </GeneralHelp>
+      <ParamSets>
+        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="ObjectType QueryObject DereferenceAttribute WrapFilterXml Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+      </ParamSets>
+      <Syntax>
+        <string>New-XPathExpression [-ObjectType] &lt;String&gt; [[-QueryObject] &lt;IXPathQueryObject&gt;] [[-DereferenceAttribute] &lt;String&gt;] [[-WrapFilterXml] &lt;SwitchParameter&gt;]</string>
+      </Syntax>
+      <Parameters>
+        <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
+          <Name>ObjectType</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>The type of object to query. To search on all object types, use the value * </Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="IXPathQueryObject" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="false" isPos="true" pos="2" globbing="false">
+          <Name>QueryObject</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>The query or group generated using the  New-XPathQuery or  New-XPathQueryGroup cmdlet </Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="3" globbing="false">
+          <Name>DereferenceAttribute</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Specifies a reference-type attribute to query. See the example section for more information. </Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="SwitchParameter" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="4" globbing="false">
+          <Name>WrapFilterXml</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Specifies that the resulting XPath expression should be wrapped in the filter XML element used when setting the Filter attribute on sets and groups. </Description>
+          <DefaultValue />
+        </ParameterDescription>
+      </Parameters>
+      <Examples>
+        <Example>
+          <Name>Creating a basic expression</Name>
+          <Cmd># Creates an expression that searches for users with the account name 'ryan'
+$query = New-XPathQuery -AttributeName "AccountName" -Operator Equals -Value "ryan"
+$expression = New-XPathExpression -ObjectType "Person" -QueryObject $query
+$expression.ToString()</Cmd>
+          <Description />
+          <Output>/Person[(AccountName = 'ryan')]</Output>
+        </Example>
+        <Example>
+          <Name>Passing the expression to the Search-Resources cmdlet</Name>
+          <Cmd># Creates an expression that searches for users with the account name 'ryan'
+$query = New-XPathQuery -AttributeName "AccountName" -Operator Equals -Value "ryan"
+$expression = New-XPathExpression -ObjectType "Person" -QueryObject $query
+Search-Resources $expression</Cmd>
+          <Description />
+          <Output />
+        </Example>
+        <Example>
+          <Name>Building an expression to dereference an object</Name>
+          <Cmd># Creates an expression that returns the manager of a user who has the account name 'ryan'
+$query = New-XPathQuery -AttributeName "AccountName" -Operator Equals -Value "ryan"
+$expression = New-XPathExpression -ObjectType "Person" -QueryObject $query -DereferenceAttribute "Manager"
+$expression.ToString()</Cmd>
+          <Description>The expression builder supports dereferencing expressions, as supported by the Resource Management Service (See the FIM XPath filter dialect link). The following example finds the manager of a user with the account name 'ryan'</Description>
+          <Output>/Person[(AccountName = 'ryan')]/Manager</Output>
+        </Example>
+        <Example>
+          <Name>Building a nested expression to find objects with dereferencing</Name>
+          <Cmd># Build an expression to find a user by its account name
+$query = New-XpathQuery -AttributeName "AccountName" -Operator Equals -Value "ryan"
+$expression = New-XpathExpression -ObjectType "Person" -Query $query
+
+# Build a query to find all users with a manager who has the account name 'ryan'
+$derefQuery = New-XpathQuery -AttributEName "Manager" -Operator Equals -Value $expression
+$derefExpression = New-XpathExpression Person $derefQuery
+$derefExpression.ToString()</Cmd>
+          <Description />
+          <Output>/Person[(Manager = /Person[(AccountName = 'ryan')])]</Output>
+        </Example>
+        <Example>
+          <Name>Building an expression to use in a group or set filter</Name>
+          <Cmd>$query = New-XPathQuery -AttributeName "AccountName" -Operator Equals -Value "ryan"
+$expression = New-XPathExpression -ObjectType "Person" -QueryObject $query -WrapFilterXml
+$expression.ToString()</Cmd>
+          <Description />
+          <Output>&lt;Filter xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Dialect="http://schemas.microsoft.com/2006/11/XPathFilterDialect" xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"&gt;/Person[(AccountName = 'ryan')]&lt;/Filter&gt;</Output>
+        </Example>
+      </Examples>
+      <RelatedLinks>
+        <RelatedLink>
+          <LinkText />
+          <LinkUrl />
+        </RelatedLink>
+        <RelatedLink>
+          <LinkText>FIM XPath Filter Dialect</LinkText>
+          <LinkUrl>https://msdn.microsoft.com/en-us/library/windows/desktop/ee652287.aspx</LinkUrl>
+        </RelatedLink>
+      </RelatedLinks>
+      <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
+      <Publish>false</Publish>
+    </CmdletObject>
+    <CmdletObject verb="New" noun="XPathQuery">
+      <Name>New-XPathQuery</Name>
+      <GeneralHelp>
+        <Synopsis>Creates a new XPath query component</Synopsis>
+        <Description>The New-XPathQuery cmdlet create a new query object that can be used to create an XPath expression using New-XPathExpression, or an element in an XPath query group using New-XPathQueryGroup. The resulting XPathExpression can be passed as a parameter to  Search-Resources. An XPath query object contains the component of an expression that compares an attribute with a value.</Description>
+        <Notes />
+        <InputType />
+        <InputUrl />
+        <InputTypeDescription />
+        <ReturnType />
+        <ReturnUrl />
+        <ReturnTypeDescription />
+      </GeneralHelp>
+      <ParamSets>
+        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="AttributeName Operator Value Negate Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+      </ParamSets>
+      <Syntax>
+        <string>New-XPathQuery [-AttributeName] &lt;String&gt; [-Operator] &lt;ComparisonOperator&gt; [[-Value] &lt;Object&gt;] [[-Negate] &lt;SwitchParameter&gt;]</string>
+      </Syntax>
+      <Parameters>
+        <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
+          <Name>AttributeName</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>The name of the attribute to compare</Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="ComparisonOperator" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="2" globbing="false">
+          <Name>Operator</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>The operator to apply to the attribute</Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="Object" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="3" globbing="false">
+          <Name>Value</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Optional if using the IsPresent or IsNotPresentOperator. Required for all other operators.
+The value to use in the comparison. This can be any value that can be converted to the data type of the attribute being searched. Reference attributes can also specify another XPath expression as the search value. See the dereferencing example. </Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="SwitchParameter" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="4" globbing="false">
+          <Name>Negate</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Optional. Negates the expression by inverting the comparison operation. For example, using the Negate switch, the LessThan operator becomes not LessThan.
+Note that the FIM XPath dialect does not support double negation. Therefore using the Negate parameter on IsNotPresent and NotEquals operators is not supported. </Description>
+          <DefaultValue />
+        </ParameterDescription>
+      </Parameters>
+      <Examples>
+        <Example>
+          <Name>Viewing the query string</Name>
+          <Cmd>$query = New-XPathQuery -AttributeName "AccountName" -Operator Equals -Value "ryan"
+$query.ToString()</Cmd>
+          <Description>The New-XPathQuery does not return a usable query itself. It returns only a part of the query that is used in an XPath expression. You can view the query component itself as shown in this example.</Description>
+          <Output>(AccountName = 'ryan')</Output>
+        </Example>
+        <Example>
+          <Name>Building a simple query</Name>
+          <Cmd>$query = New-XPathQuery -AttributeName "AccountName" -Operator Equals -Value "ryan"
+$expression = New-XPathExpression -ObjectType "Person" -QueryObject $query
+$expression.ToString()</Cmd>
+          <Description>In order to use the query, it must be rendered by an XPath expression created with the  New-XPathExpression cmdlet</Description>
+          <Output>/Person[(AccountName = 'ryan')]</Output>
+        </Example>
+        <Example>
+          <Name>Building an expression using the pipeline</Name>
+          <Cmd>$expression =  New-XPathQuery -AttributeName "AccountName" -Operator Equals -Value "ryan" | New-XPathExpression -ObjectType "Person" 
+</Cmd>
+          <Description />
+          <Output />
+        </Example>
+        <Example>
+          <Name>Testing for presence</Name>
+          <Cmd>$query = New-XPathQuery -AttributeName "AccountName" -Operator IsPresent
+$expression = New-XPathExpression -ObjectType "Person" -QueryObject $query
+$expression.ToString()</Cmd>
+          <Description>The IsPresent and IsNotPresent operators work without the  Value parameter</Description>
+          <Output>/Person[(starts-with(AccountName, '%'))]</Output>
+        </Example>
+        <Example>
+          <Name>Using a second XPath expression to query a reference attribute</Name>
+          <Cmd># Build an expression to find a user by its account name
+$query = New-XpathQuery -AttributeName "AccountName" -Operator Equals -Value "ryan"
+$expression = New-XpathExpression -ObjectType "Person" -Query $query
+
+# Build a query to find all users with a manager who has the account name 'ryan'
+$derefQuery = New-XpathQuery -AttributeName "Manager" -Operator Equals -Value $expression
+$derefExpression = New-XpathExpression Person $derefQuery
+$derefExpression.ToString()
+</Cmd>
+          <Description />
+          <Output>/Person[(Manager = /Person[(AccountName = 'ryan')])]</Output>
+        </Example>
+      </Examples>
+      <RelatedLinks />
+      <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
+      <Publish>false</Publish>
+    </CmdletObject>
+    <CmdletObject verb="New" noun="XPathQueryGroup">
+      <Name>New-XPathQueryGroup</Name>
+      <GeneralHelp>
+        <Synopsis>Creates a new XPath query group</Synopsis>
+        <Description>The New-XPathQueryGroup cmdlet create a new group of query objects that can be used to create an XPath expression using New-XPathExpression, or an element in an XPath query group using  New-XPathQueryGroup. The resulting  XPathExpression can be passed as a parameter to  Search-Resources. An XPath query group contains one or more XPath query objects or other XPathQueryGroup objects. </Description>
+        <Notes />
+        <InputType />
+        <InputUrl />
+        <InputTypeDescription />
+        <ReturnType />
+        <ReturnUrl />
+        <ReturnTypeDescription />
+      </GeneralHelp>
+      <ParamSets>
+        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="Operator Queries Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+      </ParamSets>
+      <Syntax>
+        <string>New-XPathQueryGroup [-Operator] &lt;GroupOperator&gt; [[-Queries] &lt;IXPathQueryObject[]&gt;]</string>
+      </Syntax>
+      <Parameters>
+        <ParameterDescription type="GroupOperator" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
+          <Name>Operator</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Specifies the logical operator to use when comparing queries within the group. The support values are And and Or</Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="IXPathQueryObject[]" varLen="true" required="false" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="false" isPos="true" pos="2" globbing="false">
+          <Name>Queries</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>One or more query objects generated with the  New-XPathQuery or  New-XPathQueryGroup cmdlets</Description>
+          <DefaultValue />
+        </ParameterDescription>
+      </Parameters>
+      <Examples>
+        <Example>
+          <Name>Viewing the query group string</Name>
+          <Cmd>$query1 = New-XPathQuery -AttributeName "AccountName" -Operator Equals -Value "ryan"
+$query2 = New-XPathQuery -AttributeName "AccountName" -Operator Equals -Value "bob"
+$queryGroup = New-XPathQueryGroup -Operator Or -Queries @($query1, $query2)
+$queryGroup .ToString()</Cmd>
+          <Description>The New-XPathQueryGroup does not return a usable query itself. It returns only a part of the query that is used in an XPath expression. You can view the query component itself as shown in this example.</Description>
+          <Output>((AccountName = 'ryan') or (AccountName = 'bob'))</Output>
+        </Example>
+        <Example>
+          <Name>Building a simple query</Name>
+          <Cmd>$query1 = New-XPathQuery -AttributeName "AccountName" -Operator Equals -Value "ryan"
+$query2 = New-XPathQuery -AttributeName "AccountName" -Operator Equals -Value "bob"
+$queryGroup = New-XPathQueryGroup -Operator Or -Queries ($query1, $query2)
+$expression = New-XPathExpression -ObjectType "Person" -QueryObject $queryGroup 
+$expression.ToString()</Cmd>
+          <Description>In order to use the query, it must be rendered by an XPath expression created with the  New-XPathExpression cmdlet</Description>
+          <Output>/Person[((AccountName = 'ryan') or (AccountName = 'bob'))]</Output>
+        </Example>
+        <Example>
+          <Name>Building a nested query</Name>
+          <Cmd>$query1 = New-XPathQuery -AttributeName "DisplayName" -Operator StartsWith -Value "ryan"
+$query2 = New-XPathQuery -AttributeName "DisplayName" -Operator Equals -Value "bob"
+# Create the child group
+$queryGroup1 = New-XPathQueryGroup -Operator Or -Queries @($query1, $query2)
+$query3 = New-XPathQuery -AttributeName "Email" -Operator IsPresent
+# Create the parent group using the child group and another query
+$queryGroup2 = New-XPathQueryGroup -Operator And -Queries @($query3, $queryGroup1)
+$expression = New-XPathExpression -ObjectType "Person" -QueryObject $queryGroup2
+$expression.ToString()</Cmd>
+          <Description>A query group can contain other groups as well as standard queries</Description>
+          <Output>/Person[((starts-with(Email, '%')) and ((starts-with(DisplayName, 'ryan')) or (DisplayName = 'bob')))]</Output>
+        </Example>
+      </Examples>
+      <RelatedLinks />
+      <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
+      <Publish>false</Publish>
+    </CmdletObject>
+    <CmdletObject verb="Remove" noun="Resource">
+      <Name>Remove-Resource</Name>
+      <GeneralHelp>
+        <Synopsis>The Remove-Resource cmdlet deletes one or more objects from the FIM Service</Synopsis>
+        <Description>The ResourceObjects parameter can be used to pass in an array of resource objects to delete, which will be performed as a single composite request. Note, that if using the pipeline to perform the operation, PowerShell will pass the objects to the cmdlet one at a time, and a composite operation will not be performed. </Description>
+        <Notes />
+        <InputType />
+        <InputUrl />
+        <InputTypeDescription />
+        <ReturnType />
+        <ReturnUrl />
+        <ReturnTypeDescription />
+      </GeneralHelp>
+      <ParamSets>
+        <CommandParameterSetInfo2 Name="ObjectIDString" Params="Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="ID" Params="ID Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="ResourceObject" Params="ResourceObjects Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+      </ParamSets>
+      <Syntax>
+        <string>Remove-Resource</string>
+        <string>Remove-Resource [-ID] &lt;Object[]&gt;</string>
+        <string>Remove-Resource [-ResourceObjects] &lt;RmaObject[]&gt;</string>
+      </Syntax>
+      <Parameters>
+        <ParameterDescription type="Object" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
+          <Name>ID</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>The ID of the object to delete</Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="RmaObject[]" varLen="true" required="true" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="false" isPos="true" pos="1" globbing="false">
+          <Name>ResourceObjects</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>One or more ResourceObjects returned from  Get-Resource or  Search-Resources to delete </Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="Object[]" varLen="true" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
+          <Name>ID</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description />
+          <DefaultValue />
+        </ParameterDescription>
+      </Parameters>
+      <Examples>
+        <Example>
+          <Name>Delete a resource by its object ID</Name>
+          <Cmd>Remove-Resource -ID 4107f14e-e73d-479c-87bd-5293d314a260</Cmd>
+          <Description />
+          <Output />
+        </Example>
+        <Example>
+          <Name>Get a Person using its AccountName attribute, and delete it</Name>
+          <Cmd>Remove-Resource | Get-Resource -ObjectType Person -AttributeName AccountName -AttributeValue testuser</Cmd>
+          <Description />
+          <Output />
+        </Example>
+        <Example>
+          <Name>Delete all email templates one at a time</Name>
+          <Cmd>Remove-Resource | Search-Resource -Xpath "/EmailTemplate"</Cmd>
+          <Description />
+          <Output />
+        </Example>
+        <Example>
+          <Name>Delete all email templates as a composite operation</Name>
+          <Cmd>$resources = Search-Resource -Xpath "/EmailTemplate"
+Remove-Resource $resources</Cmd>
+          <Description />
+          <Output />
+        </Example>
+      </Examples>
+      <RelatedLinks />
+      <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
+      <Publish>false</Publish>
+    </CmdletObject>
+    <CmdletObject verb="Save" noun="Resource">
+      <Name>Save-Resource</Name>
+      <GeneralHelp>
+        <Synopsis>Saves changes made to a resource or resources</Synopsis>
+        <Description>The Save-Resource cmdlet processes pending changes on resource objects obtained from the New-Resource, Search-Resources, and Get-Resource cmdlets, and submits them to the FIM service. The Save-Resource cmdlet provides the ability to take objects from the pipeline and save them individually, as well as passing in an array of objects and processing them in a single composite operation.</Description>
+        <Notes />
+        <InputType />
+        <InputUrl />
+        <InputTypeDescription />
+        <ReturnType />
+        <ReturnUrl />
+        <ReturnTypeDescription />
+      </GeneralHelp>
+      <ParamSets>
+        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="Resources Parallel Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+      </ParamSets>
+      <Syntax>
+        <string>Save-Resource [-Resources] &lt;RmaObject[]&gt; [-Parallel]</string>
+      </Syntax>
+      <Parameters>
+        <ParameterDescription type="RmaObject[]" varLen="true" required="true" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="false" isPos="true" pos="1" globbing="false">
+          <Name>Resources</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>One or more resources returned from New-Resource, Get-Resource or Search-Resources to save</Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="SwitchParameter" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
+          <Name>Parallel</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Optional. When this switch is used, the client will perform an update to the resources on multiple threads. It is recommended to pass in an array to the -Resources parameter, which will trigger a composite update instead. </Description>
+          <DefaultValue />
+        </ParameterDescription>
+      </Parameters>
+      <Examples>
+        <Example>
+          <Name>Save a single object</Name>
+          <Cmd>$obj = Get-Resource -ObjectType Person -AccountName testuser
+$obj.DisplayName = "Test User2"
+Save-Resource $obj</Cmd>
+          <Description>Gets the user with the account name 'testuser' and updates it's display name to "Test User2"</Description>
+          <Output />
+        </Example>
+        <Example>
+          <Name>Save multiple objects in a single composite operation</Name>
+          <Cmd># 
+$objs = Search-Resources "/Person[Location='Melbourne']" -AttributesToGet @("Location")
+foreach($obj in $objs)
+{
+     $obj.Location = "Auckland"
+}
+
+Save-Resource $objs</Cmd>
+          <Description>Update the location attribute of multiple objects and save them as a single composite operation</Description>
+          <Output />
+        </Example>
+        <Example>
+          <Name>Create and save new object</Name>
+          <Cmd>$obj = New-Resource -ObjectType Person
+$obj.AccountName = "newuser"
+$obj.ExpiryDate = "2020-01-01T00:00:00.000"
+$obj.ObjectSID = "AQUAAAAAAAUVAAAAFYLkaG79nJrWb05iFzcCAA==" #Base 64 encoded value
+Save-Resource $obj</Cmd>
+          <Description>Create a new resource template for the object type 'Person', populates some attributes, and saves the new resource</Description>
+          <Output />
+        </Example>
+      </Examples>
+      <RelatedLinks />
+      <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
+      <Publish>false</Publish>
+    </CmdletObject>
+    <CmdletObject verb="Search" noun="Resources">
+      <Name>Search-Resources</Name>
+      <GeneralHelp>
+        <Synopsis>Searches for resources in the FIM/MIM service</Synopsis>
+        <Description>The Search-Resources cmdlet allows you to perform a query for multiple objects from the FIM Service. By default, the cmdlet returns only the ObjectType, ObjectID, and DisplayName attributes for the objects matched by the query string. Use the ExpectedObjectClass or  AttributesToGet parameters to control the attributes that are returned. </Description>
+        <Notes>Use the AttributesToGet parameter to specify the exact attributes you want to return. The cmdlet will only return ObjectType and ObjectID unless specific attributes are specified.</Notes>
+        <InputType />
+        <InputUrl />
+        <InputTypeDescription />
+        <ReturnType />
+        <ReturnUrl />
+        <ReturnTypeDescription />
+      </GeneralHelp>
+      <ParamSets>
+        <CommandParameterSetInfo2 Name="ConstrainedQueryByTypeRaw" Params="XPath ExpectedObjectType MaxResults PageSize SortAttributes Descending Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="ConstrainedQueryByAttributesRaw" Params="XPath AttributesToGet MaxResults PageSize SortAttributes Descending Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="UnconstrainedQueryRaw" Params="XPath Unconstrained MaxResults PageSize SortAttributes Descending Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+      </ParamSets>
+      <Syntax>
+        <string>Search-Resources [-XPath] &lt;Object&gt; [[-ExpectedObjectType] &lt;String&gt;] [-MaxResults &lt;Int32&gt;] [-PageSize &lt;Int32&gt;] [-SortAttributes &lt;String[]&gt;] [-Descending]</string>
+        <string>Search-Resources [-XPath] &lt;Object&gt; [[-AttributesToGet] &lt;String[]&gt;] [-MaxResults &lt;Int32&gt;] [-PageSize &lt;Int32&gt;] [-SortAttributes &lt;String[]&gt;] [-Descending]</string>
+        <string>Search-Resources [-XPath] &lt;Object&gt; [[-Unconstrained] &lt;SwitchParameter&gt;] [-MaxResults &lt;Int32&gt;] [-PageSize &lt;Int32&gt;] [-SortAttributes &lt;String[]&gt;] [-Descending]</string>
+      </Syntax>
+      <Parameters>
+        <ParameterDescription type="Object" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="false" isPos="true" pos="1" globbing="false">
+          <Name>XPath</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>The query to use in the search operation. This can be a string or an XPath expression created with the New-XPathExpression cmdlet </Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="2" globbing="false">
+          <Name>ExpectedObjectType</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Optional. Specifies the expected object type that will be returned from the query. The client will use this to return all the attributes from that type in the schema</Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="Int32" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
+          <Name>MaxResults</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Optional. Limits the number of results returned by the search operation. </Description>
+          <DefaultValue>Unlimited</DefaultValue>
+        </ParameterDescription>
+        <ParameterDescription type="Int32" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
+          <Name>PageSize</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Optional. Specifies how many results should be retrieved per page. </Description>
+          <DefaultValue>200</DefaultValue>
+        </ParameterDescription>
+        <ParameterDescription type="String[]" varLen="true" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
+          <Name>SortAttributes</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Specifies a list of attribute names used to order the results </Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="SwitchParameter" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
+          <Name>Descending</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Specifies that the sort attributes should be sorted in descending order (default is ascending) </Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="String[]" varLen="true" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="2" globbing="false">
+          <Name>AttributesToGet</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>A list of attributes to retrieve for the objects matching the search criteria</Description>
+          <DefaultValue>ObjectID, ObjectType</DefaultValue>
+        </ParameterDescription>
+        <ParameterDescription type="SwitchParameter" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="2" globbing="false">
+          <Name>Unconstrained</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Optional. Performs an unconstrained query, allowing the FIM service to process all attributes in the schema when a matched object is found. This option should be used with caution as it causes significant performance impact on the FIM service. </Description>
+          <DefaultValue />
+        </ParameterDescription>
+      </Parameters>
+      <Examples>
+        <Example>
+          <Name>Get all sets with only mandatory attributes</Name>
+          <Cmd>Search-Resources -Xpath "/Set"</Cmd>
+          <Description>This command will retrieve all sets, but as neither the AttributesToGet or ExpectedObjectType parameters have been specified, only the ObjectID and ObjectType attributes will be returned</Description>
+          <Output />
+        </Example>
+        <Example>
+          <Name>Get resources with specific attributes</Name>
+          <Cmd>Search-Resources -Xpath "/Set[starts-with(AccountName, 't')]" -AttributesToGet @("AccountName","Domain")</Cmd>
+          <Description />
+          <Output />
+        </Example>
+        <Example>
+          <Name>Get first 20 resources matching a criteria</Name>
+          <Cmd>Search-Resources -Xpath "/Set[starts-with(AccountName, 't')]" -AttributesToGet @("AccountName","Domain") -MaxResults 20 -SortAttributes @("DisplayName","AccountName")</Cmd>
+          <Description />
+          <Output />
+        </Example>
+        <Example>
+          <Name>Get resources with a known object type</Name>
+          <Cmd>Search-Resources -Xpath "/WorkflowDefinition" -ExpectedObjectType WorkflowDefinition</Cmd>
+          <Description>This command gets all workflow definition objects. As the object type returned from the query is known, the command will return all attributes in the schema for the WorkflowDefinition type as part of the result set</Description>
+          <Output />
+        </Example>
+        <Example>
+          <Name>Get resources using the XPath query builder</Name>
+          <Cmd>$query = New-XPathQuery -AttributeName "AccountName" -Operator Equals -Value "ryan"
+$expression = New-XPathExpression -ObjectType "Person" -QueryObject $query
+Search-Resources $expression</Cmd>
+          <Description>The example above uses the New-XPathQuery cmdlet to define a search criteria without having to write the XPath by hand</Description>
+          <Output />
+        </Example>
+      </Examples>
+      <RelatedLinks />
+      <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
+      <Publish>false</Publish>
+    </CmdletObject>
+    <CmdletObject verb="Search" noun="ResourcesPaged">
+      <Name>Search-ResourcesPaged</Name>
+      <GeneralHelp>
+        <Synopsis>Performs a paged search for resources in the FIM/MIM service</Synopsis>
+        <Description>The Search-ResourcesPaged cmdlet allows you to perform a query for multiple objects from the FIM Service, with advanced controls of how you navigate through the result set. For standard searching, see the  Search-Resources cmdlet.</Description>
+        <Notes>By default, the cmdlet returns only the ObjectType, ObjectID, and DisplayName attributes for the objects matched by the query string. Use the ExpectedObjectClass or  AttributesToGet parameters to control the attributes that are returned.</Notes>
+        <InputType />
+        <InputUrl />
+        <InputTypeDescription />
+        <ReturnType />
+        <ReturnUrl />
+        <ReturnTypeDescription />
+      </GeneralHelp>
+      <ParamSets>
+        <CommandParameterSetInfo2 Name="ConstrainedQueryByTypeRaw" Params="XPath ExpectedObjectType PageSize SortAttributes Descending Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="ConstrainedQueryByAttributesRaw" Params="XPath AttributesToGet PageSize SortAttributes Descending Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="UnconstrainedQueryRaw" Params="XPath Unconstrained PageSize SortAttributes Descending Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+      </ParamSets>
+      <Syntax>
+        <string>Search-ResourcesPaged [-XPath] &lt;Object&gt; [[-ExpectedObjectType] &lt;String&gt;] [-PageSize &lt;Int32&gt;] [-SortAttributes &lt;String[]&gt;] [-Descending]</string>
+        <string>Search-ResourcesPaged [-XPath] &lt;Object&gt; [[-AttributesToGet] &lt;String[]&gt;] [-PageSize &lt;Int32&gt;] [-SortAttributes &lt;String[]&gt;] [-Descending]</string>
+        <string>Search-ResourcesPaged [-XPath] &lt;Object&gt; [[-Unconstrained] &lt;SwitchParameter&gt;] [-PageSize &lt;Int32&gt;] [-SortAttributes &lt;String[]&gt;] [-Descending]</string>
+      </Syntax>
+      <Parameters>
+        <ParameterDescription type="Object" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="false" isPos="true" pos="1" globbing="false">
+          <Name>XPath</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>The query to use in the search operation. This can be a string or an XPath expression created with the  New-XPathExpression cmdlet </Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="2" globbing="false">
+          <Name>ExpectedObjectType</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Optional. Specifies the expected object type that will be returned from the query. The client will use this to request the attributes from that class as part of the query. </Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="Int32" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
+          <Name>PageSize</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Optional. Specifies how many results should be retrieved per page. </Description>
+          <DefaultValue>200</DefaultValue>
+        </ParameterDescription>
+        <ParameterDescription type="String[]" varLen="true" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
+          <Name>SortAttributes</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Optional. Specifies a list of attribute names used to order the results </Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="SwitchParameter" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
+          <Name>Descending</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Optional. Specifies that the sort attributes should be sorted in descending order (default is ascending) </Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="String[]" varLen="true" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="2" globbing="false">
+          <Name>AttributesToGet</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Optional. A list of attributes to retrieve for the objects matching the search criteria </Description>
+          <DefaultValue>ObjectID, ObjectType</DefaultValue>
+        </ParameterDescription>
+        <ParameterDescription type="SwitchParameter" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="2" globbing="false">
+          <Name>Unconstrained</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Optional. Performs an unconstrained query, allowing the FIM service to process all attributes in the schema when a matched object is found. This option should be used with caution as it causes significant performance impact on the FIM service. </Description>
+          <DefaultValue />
+        </ParameterDescription>
+      </Parameters>
+      <Examples>
+        <Example>
+          <Name>Iterate through a result set one page at a time</Name>
+          <Cmd># Get a pager to enumerate all sets
+$pager = Search-ResourcesPaged -Xpath "/Set";
+$pager.PageSize = 10;
+
+# Loop through the result set until there are no more results
+while ($pager.HasMoreItems)
+{
+    # Get 10 results
+    $resultSet = $pager.GetNextPage();
+    
+    # Iterate through each result and print the ObjectID
+    foreach($result in $resultSet)
+    {
+        $result.ObjectID
+    }
+
+# Repeat until all results have been processed
+}</Cmd>
+          <Description>This command will retrieve a page of 10 objects at a time from the FIM service</Description>
+          <Output />
+        </Example>
+        <Example>
+          <Name>Iterate through the result set, starting from a specific point</Name>
+          <Cmd>$pager = Search-ResourcesPaged -Xpath "/Set";
+$pager.PageSize = 10;
+$pager.CurrentIndex = 50;
+# Loop through the result set until there are no more results
+while ($pager.HasMoreItems)
+{
+    # Get 10 results
+    $resultSet = $pager.GetNextPage();
+    
+    # Iterate through each result and print the ObjectID
+    foreach($result in $resultSet)
+    {
+        $result.ObjectID
+    }
+
+# Repeat until all results have been processed
+}</Cmd>
+          <Description>This command iterates through the results from the FIM service by requesting one page at a time, but starts navigation from the 50th item in the result set.</Description>
+          <Output />
+        </Example>
+      </Examples>
+      <RelatedLinks />
+      <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
+      <Publish>false</Publish>
+    </CmdletObject>
+    <CmdletObject verb="Set" noun="ResourceManagementClient">
+      <Name>Set-ResourceManagementClient</Name>
+      <GeneralHelp>
+        <Synopsis>Sets parameters for connecting to the FIM/MIM service</Synopsis>
+        <Description>The Set-ResourceManagementClient cmdlet allows you to control parameters of the connection to the FIM Service. </Description>
+        <Notes />
+        <InputType />
+        <InputUrl />
+        <InputTypeDescription />
+        <ReturnType />
+        <ReturnUrl />
+        <ReturnTypeDescription />
+      </GeneralHelp>
+      <ParamSets>
+        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="BaseAddress Credentials ServicePrincipalName ForceKerberos Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+      </ParamSets>
+      <Syntax>
+        <string>Set-ResourceManagementClient [-BaseAddress] &lt;String&gt; [[-Credentials] &lt;PSCredential&gt;] [[-ServicePrincipalName] &lt;String&gt;] [[-ForceKerberos] &lt;Boolean&gt;]</string>
+      </Syntax>
+      <Parameters>
+        <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="0" globbing="false">
+          <Name>BaseAddress</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Optional. Specifies the URL to the resource management web service. If not specified, the default value of http://localhost:5725 is used. The http prefix and port can be ommitted, and the just hostname provided</Description>
+          <DefaultValue>http://localhost:5725</DefaultValue>
+        </ParameterDescription>
+        <ParameterDescription type="PSCredential" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="false" isPos="true" pos="1" globbing="false">
+          <Name>Credentials</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Optional. By default, the credentials of the currently logged on user are used. Other credentials can be specified using this parameter </Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="2" globbing="false">
+          <Name>ServicePrincipalName</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Optional. By default the client will use FIMService/hostname for the SPN. You can override the SPN used here </Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="Boolean" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="3" globbing="false">
+          <Name>ForceKerberos</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Optional. A value indicating if the client should force Kerberos, and not allow NTLM authentication to the FIM service </Description>
+          <DefaultValue />
+        </ParameterDescription>
+      </Parameters>
+      <Examples>
+        <Example>
+          <Name>Connect to the FIM service with a specific URL</Name>
+          <Cmd>Set-ResourceManagementClient -BaseAddress http://fimservice:5725</Cmd>
+          <Description />
+          <Output />
+        </Example>
+        <Example>
+          <Name>Connect to the FIM service using only a hostname</Name>
+          <Cmd>Set-ResourceManagementClient -BaseAddress fimservice</Cmd>
+          <Description />
+          <Output />
+        </Example>
+        <Example>
+          <Name>Connect to the FIM service with a specific address and SPN</Name>
+          <Cmd>Set-ResourceManagementClient -BaseAddress http://fimservice:5725 -ServicePrincipalName FIMService/otherhostname</Cmd>
+          <Description />
+          <Output />
+        </Example>
+        <Example>
+          <Name>Allow the client to fall back to NTLM authentication</Name>
+          <Cmd>Set-ResourceManagementClient -ForceKerberos $false</Cmd>
+          <Description />
+          <Output />
+        </Example>
+        <Example>
+          <Name>Connect to the FIM service with specific credentials</Name>
+          <Cmd>Get-Credential | Set-ResourceManagementClient -BaseAddress http://fimservice:5725 </Cmd>
+          <Description />
+          <Output />
+        </Example>
+      </Examples>
+      <RelatedLinks />
+      <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
+      <Publish>false</Publish>
+    </CmdletObject>
+    <CmdletObject verb="Update" noun="ResourceManagementClientSchema">
+      <Name>Update-ResourceManagementClientSchema</Name>
+      <GeneralHelp>
+        <Synopsis>Refreshes the cached copy of the FIM/MIM service schema</Synopsis>
+        <Description>The Update-ResourceManagementClientSchema cmdlet refreshes the client's copy of the schema from the Resource Management service. This cmdlet should be called after making changes to resource type, attribute, and binding objects </Description>
+        <Notes />
+        <InputType />
+        <InputUrl />
+        <InputTypeDescription />
+        <ReturnType />
+        <ReturnUrl />
+        <ReturnTypeDescription />
+      </GeneralHelp>
+      <ParamSets>
+        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+      </ParamSets>
+      <Syntax>
+        <string>Update-ResourceManagementClientSchema</string>
+      </Syntax>
+      <Parameters />
+      <Examples>
+        <Example>
+          <Name>Refresh the cached copy of the schema</Name>
+          <Cmd>Update-ResourceManagementClientSchema</Cmd>
+          <Description />
+          <Output />
+        </Example>
+      </Examples>
+      <RelatedLinks />
+      <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
+      <Publish>false</Publish>
+    </CmdletObject>
+  </Cmdlets>
+</ModuleObject>

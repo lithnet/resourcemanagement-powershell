@@ -13,7 +13,7 @@
                 DowngradeErrorMessage="A later version of [ProductName] is already installed" />
 
     <PropertyRef Id="WIX_IS_NETFRAMEWORK_40_OR_LATER_INSTALLED"/>
-    <Condition Message="This application requires .NET Framework 4.0. Please install the .NET Framework then run this installer again. Contact support at support@Swiftposter.com if you have further issues.">
+    <Condition Message="This application requires .NET Framework 4.0. Please install the .NET Framework then run this installer again.">
       <![CDATA[Installed OR WIX_IS_NETFRAMEWORK_40_OR_LATER_INSTALLED]]>
     </Condition>
 

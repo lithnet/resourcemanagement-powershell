@@ -4,7 +4,7 @@
   <Product Id="*"
            Name="Lithnet FIM/MIM Service PowerShell Module"
            Language="1033"
-           Version="1.0.5954"
+           Version="1.0.5962"
            Manufacturer="Lithnet"
            UpgradeCode="CC6C89F6-8663-46ED-A792-15B1327D8AA8">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
@@ -64,9 +64,6 @@
   <Fragment>
     <ComponentGroup Id="ProductComponents" Directory="APPLICATIONFOLDER">
       <ComponentGroupRef Id="Lithnet.ResourceManagement.Automation.Binaries"/>
-      <Component Guid="*">
-        <File Source="$(var.Lithnet.ResourceManagement.Resolver.TargetPath)" />
-      </Component>
     </ComponentGroup>
 
     <ComponentGroup Id="ProductHelp" Directory="ENUSHELPFOLDER">

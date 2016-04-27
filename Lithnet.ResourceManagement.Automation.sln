@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lithnet.ResourceManagement.Automation", "Lithnet.ResourceManagement.Automation\Lithnet.ResourceManagement.Automation.csproj", "{4C4BEB83-82FF-4625-B8C7-D547C654228A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lithnet.ResourceManagement.Resolver", "Lithnet.ResourceManagement.Resolver\Lithnet.ResourceManagement.Resolver.csproj", "{D93AB9DD-9953-4E78-B247-DD5C89097844}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Lithnet.ResourceManagement.Automation.Installer", "Lithnet.ResourceManagement.Automation.Installer\Lithnet.ResourceManagement.Automation.Installer.wixproj", "{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}"
 EndProject
@@ -29,16 +27,6 @@ Global
 		{4C4BEB83-82FF-4625-B8C7-D547C654228A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{4C4BEB83-82FF-4625-B8C7-D547C654228A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4C4BEB83-82FF-4625-B8C7-D547C654228A}.Release|x86.ActiveCfg = Release|Any CPU
-		{D93AB9DD-9953-4E78-B247-DD5C89097844}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D93AB9DD-9953-4E78-B247-DD5C89097844}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D93AB9DD-9953-4E78-B247-DD5C89097844}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{D93AB9DD-9953-4E78-B247-DD5C89097844}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{D93AB9DD-9953-4E78-B247-DD5C89097844}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{D93AB9DD-9953-4E78-B247-DD5C89097844}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D93AB9DD-9953-4E78-B247-DD5C89097844}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D93AB9DD-9953-4E78-B247-DD5C89097844}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{D93AB9DD-9953-4E78-B247-DD5C89097844}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{D93AB9DD-9953-4E78-B247-DD5C89097844}.Release|x86.ActiveCfg = Release|Any CPU
 		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
 		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Debug|Mixed Platforms.Build.0 = Debug|x64

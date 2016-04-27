@@ -28,7 +28,9 @@ namespace Lithnet.ResourceManagement.Resolver
 
                 try
                 {
+#pragma warning disable 618
                     return Assembly.LoadWithPartialName("Microsoft.ResourceManagement");
+#pragma warning restore 618
                 }
                 catch
                 {

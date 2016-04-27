@@ -48,10 +48,10 @@ ProcessorArchitecture = 'Amd64'
 RequiredModules = @()
 
 # Assemblies that must be loaded prior to importing this module
-RequiredAssemblies = 'Lithnet.ResourceManagement.Resolver.dll'
+#RequiredAssemblies = ''
 
 # Script files (.ps1) that are run in the caller's environment prior to importing this module
-ScriptsToProcess = @('RegisterResolver.ps1')
+ScriptsToProcess = @()
 
 # Type files (.ps1xml) to be loaded when importing this module
 TypesToProcess = @()

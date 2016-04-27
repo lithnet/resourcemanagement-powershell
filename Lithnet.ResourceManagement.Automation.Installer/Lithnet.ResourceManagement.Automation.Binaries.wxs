@@ -2,40 +2,42 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <Fragment>
         <DirectoryRef Id="APPLICATIONFOLDER">
-            <Component Id="cmp3903BD4EF215F80D06ECA1F02A0185FA" Guid="*">
-                <File Id="fil07BF703C3870C7016D35B71016C96B78" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\Lithnet.ResourceManagement.Automation.dll" />
-            </Component>
-            <Component Id="cmpAC07E05A681CA093027C5C601CAB8B29" Guid="*">
-                <File Id="fil70389F7187A49046F558BAD8BE0235E4" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\Lithnet.ResourceManagement.Automation.dll.config" />
-            </Component>
-            <Component Id="cmp51F91B0AEBBACC5C4A14C8B443E1F375" Guid="*">
-                <File Id="fil19AE0E6E165B61E09A053A3DA0A9FD30" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\Lithnet.ResourceManagement.Automation.pdb" />
-            </Component>
-            <Component Id="cmp3464B13C472C7CC22718426A972A9BFE" Guid="*">
-                <File Id="filFF33BB925B87A2B2C5F5208D1905B76D" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\Lithnet.ResourceManagement.Client.dll" />
-            </Component>
-            <Component Id="cmp84337CBEBEFB880CAB19EAC34D773A48" Guid="*">
-                <File Id="fil5C9425897F97959B93D9BB3D10E1DA9D" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\LithnetRMA.psd1" />
-            </Component>
-            <Component Id="cmp25B0BF52D04D0E021A62636AE8E1AA05" Guid="*">
-                <File Id="filF0B1A97980DEA55D4596C49137E52157" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\RegisterResolver.ps1" />
-            </Component>
-            <Directory Id="dir5CDA73A0F7F98CDCAD6FF95FDA7F3F34" Name="en-us">
-                <Component Id="cmp7EC8CCAB4D75ADE6ECC542650372A702" Guid="*">
-                    <File Id="filC0EDFB66C0E1AAC32AC7C32ED597BF4D" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\en-us\Lithnet.ResourceManagement.Automation.dll-help.xml" />
+            <Directory Id="dir128677A741165F2F6D19FF607E03DC4F" Name="Release">
+                <Component Id="cmp44F5A769315DA83FB1A070B9C66E5383" Guid="*">
+                    <File Id="fil18060C2BC43E32ACC516A2269CB7C01D" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\Lithnet.ResourceManagement.Automation.dll" />
                 </Component>
+                <Component Id="cmp6AA247236914B9C4022538C9D0F5369A" Guid="*">
+                    <File Id="filBBFB1E0C17F39A80703C33A9BC936465" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\Lithnet.ResourceManagement.Automation.dll.config" />
+                </Component>
+                <Component Id="cmpC4BB01CFEF99C223EEBE120FE817D8A9" Guid="*">
+                    <File Id="filCA0086F3F6056F8B17C7F2CDEBDF0FB6" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\Lithnet.ResourceManagement.Automation.pdb" />
+                </Component>
+                <Component Id="cmpECC2A696E8444DA68FF8FB38375E3EA5" Guid="*">
+                    <File Id="fil1B2182B7A4BD7274027AFB2851880279" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\Lithnet.ResourceManagement.Client.dll" />
+                </Component>
+                <Component Id="cmp5F3F12C04EAC7E5E4716F74A3A287F48" Guid="*">
+                    <File Id="fil7DA818C129883377AEC67D898DF31E26" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\LithnetRMA.psd1" />
+                </Component>
+                <Component Id="cmp8B4F0E4A23EF38DE4BEC6D1066B6E56B" Guid="*">
+                    <File Id="fil9A79DA7BF772076D1BADB698E6500F3F" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\System.Management.Automation.dll" />
+                </Component>
+                <Directory Id="dirA2988F617AB31463CC17E3965C8AD8FD" Name="en-us">
+                    <Component Id="cmp9DBF9DBD8D46C014AFB8CFAAC066FF7B" Guid="*">
+                        <File Id="fil33D64FB92678F09E857D43EEB637FC2A" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\en-us\Lithnet.ResourceManagement.Automation.dll-help.xml" />
+                    </Component>
+                </Directory>
             </Directory>
         </DirectoryRef>
     </Fragment>
     <Fragment>
         <ComponentGroup Id="Lithnet.ResourceManagement.Automation.Binaries">
-            <ComponentRef Id="cmp3903BD4EF215F80D06ECA1F02A0185FA" />
-            <ComponentRef Id="cmpAC07E05A681CA093027C5C601CAB8B29" />
-            <ComponentRef Id="cmp51F91B0AEBBACC5C4A14C8B443E1F375" />
-            <ComponentRef Id="cmp3464B13C472C7CC22718426A972A9BFE" />
-            <ComponentRef Id="cmp84337CBEBEFB880CAB19EAC34D773A48" />
-            <ComponentRef Id="cmp25B0BF52D04D0E021A62636AE8E1AA05" />
-            <ComponentRef Id="cmp7EC8CCAB4D75ADE6ECC542650372A702" />
+            <ComponentRef Id="cmp44F5A769315DA83FB1A070B9C66E5383" />
+            <ComponentRef Id="cmp6AA247236914B9C4022538C9D0F5369A" />
+            <ComponentRef Id="cmpC4BB01CFEF99C223EEBE120FE817D8A9" />
+            <ComponentRef Id="cmpECC2A696E8444DA68FF8FB38375E3EA5" />
+            <ComponentRef Id="cmp5F3F12C04EAC7E5E4716F74A3A287F48" />
+            <ComponentRef Id="cmp8B4F0E4A23EF38DE4BEC6D1066B6E56B" />
+            <ComponentRef Id="cmp9DBF9DBD8D46C014AFB8CFAAC066FF7B" />
         </ComponentGroup>
     </Fragment>
 </Wix>

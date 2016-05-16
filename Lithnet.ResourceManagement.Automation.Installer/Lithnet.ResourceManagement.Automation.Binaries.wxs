@@ -18,8 +18,8 @@
                 <Component Id="cmp5F3F12C04EAC7E5E4716F74A3A287F48" Guid="*">
                     <File Id="fil7DA818C129883377AEC67D898DF31E26" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\LithnetRMA.psd1" />
                 </Component>
-                <Component Id="cmp8B4F0E4A23EF38DE4BEC6D1066B6E56B" Guid="*">
-                    <File Id="fil9A79DA7BF772076D1BADB698E6500F3F" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\System.Management.Automation.dll" />
+                <Component Id="cmpB673B48E50F7CB0D00817496FD24EBF4" Guid="*">
+                    <File Id="filD7CFA3F6FD179F405B67FDAA26EF2B7F" KeyPath="yes" Source="$(var.Lithnet.ResourceManagement.Automation.TargetDir)\Microsoft.ResourceManagement.dll" />
                 </Component>
                 <Directory Id="dirA2988F617AB31463CC17E3965C8AD8FD" Name="en-us">
                     <Component Id="cmp9DBF9DBD8D46C014AFB8CFAAC066FF7B" Guid="*">
@@ -36,7 +36,7 @@
             <ComponentRef Id="cmpC4BB01CFEF99C223EEBE120FE817D8A9" />
             <ComponentRef Id="cmpECC2A696E8444DA68FF8FB38375E3EA5" />
             <ComponentRef Id="cmp5F3F12C04EAC7E5E4716F74A3A287F48" />
-            <ComponentRef Id="cmp8B4F0E4A23EF38DE4BEC6D1066B6E56B" />
+            <ComponentRef Id="cmpB673B48E50F7CB0D00817496FD24EBF4" />
             <ComponentRef Id="cmp9DBF9DBD8D46C014AFB8CFAAC066FF7B" />
         </ComponentGroup>
     </Fragment>

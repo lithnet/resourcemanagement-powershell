@@ -38,7 +38,7 @@
     </Reference>
     <Reference Include="Microsoft.ResourceManagement">
       <HintPath>..\..\lithnetrmc\lib\Microsoft.ResourceManagement.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -46,6 +46,7 @@
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\WindowsPowerShell\3.0\System.Management.Automation.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.Net" />
     <Reference Include="System.ServiceModel" />
@@ -63,7 +64,6 @@
     <Compile Include="Enums\SchemaRefreshEvent.cs" />
     <Compile Include="Enums\ResourceOperationType.cs" />
     <Compile Include="ImportRMConfig.cs" />
-    <Compile Include="ModuleInitializer.cs" />
     <Compile Include="NewXPathExpression.cs" />
     <Compile Include="NewXPathQueryGroup.cs" />
     <Compile Include="NewXPathQuery.cs" />

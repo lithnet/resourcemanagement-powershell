@@ -11,7 +11,7 @@ using Lithnet.ResourceManagement.Client;
 namespace Lithnet.ResourceManagement.Automation
 {
     [Cmdlet(VerbsData.Save, "Resource")]
-    public class SaveResources : Cmdlet
+    public class SaveResource : Cmdlet
     {
         [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 1)]
         public RmaObject[] Resources { get; set; }

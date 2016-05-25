@@ -32,8 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Lithnet.ResourceManagement.Client, Version=1.0.5922.36551, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lithnet.ResourceManagement.Client.1.0.5922.36551\lib\net40\Lithnet.ResourceManagement.Client.dll</HintPath>
+    <Reference Include="Lithnet.ResourceManagement.Client, Version=1.0.5989.35480, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lithnet.ResourceManagement.Client.1.0.5989.35480\lib\net40\Lithnet.ResourceManagement.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ResourceManagement">
@@ -60,9 +60,12 @@
     <Compile Include="AttributeValueArrayList.cs" />
     <Compile Include="ConfigSyncControl.cs" />
     <Compile Include="Enums\AttributeOperationType.cs" />
+    <Compile Include="Enums\ApprovalDecision.cs" />
     <Compile Include="Enums\AttributeValueType.cs" />
     <Compile Include="Enums\SchemaRefreshEvent.cs" />
     <Compile Include="Enums\ResourceOperationType.cs" />
+    <Compile Include="SetPendingApprovalRequest.cs" />
+    <Compile Include="GetPendingApprovalRequest.cs" />
     <Compile Include="ImportRMConfig.cs" />
     <Compile Include="NewXPathExpression.cs" />
     <Compile Include="NewXPathQueryGroup.cs" />
@@ -76,7 +79,7 @@
     <Compile Include="NewResource.cs" />
     <Compile Include="RmaObject.cs" />
     <Compile Include="SearchResources.cs" />
-    <Compile Include="SaveResources.cs" />
+    <Compile Include="SaveResource.cs" />
     <Compile Include="GetResource.cs" />
     <Compile Include="RmcWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -112,7 +115,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>call "C:\Program Files (x86)\WiX Toolset v3.10\bin\heat.exe" dir "$(TargetDir)."  -var var.Lithnet.ResourceManagement.Automation.TargetDir -dr APPLICATIONFOLDER -cg Lithnet.ResourceManagement.Automation.Binaries -ag -scom -sreg -sfrag –srd -o "$(SolutionDir)Lithnet.ResourceManagement.Automation.Installer\$(ProjectName).Binaries.wxs"</PostBuildEvent>
+    <PostBuildEvent>REM call "C:\Program Files (x86)\WiX Toolset v3.10\bin\heat.exe" dir "$(TargetDir)."  -var var.Lithnet.ResourceManagement.Automation.TargetDir -dr APPLICATIONFOLDER -cg Lithnet.ResourceManagement.Automation.Binaries -ag -scom -sreg -sfrag –srd -o "$(SolutionDir)Lithnet.ResourceManagement.Automation.Installer\$(ProjectName).Binaries.wxs"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>

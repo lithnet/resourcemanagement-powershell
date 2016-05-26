@@ -27,7 +27,7 @@ namespace Lithnet.ResourceManagement.Automation
 
             if (this.Credentials != null)
             {
-                creds = new NetworkCredential(this.Credentials.UserName, this.ConvertToUnsecureString(this.Credentials.Password));
+                creds = this.Credentials.GetNetworkCredential();
             }
 
             Uri baseUri;

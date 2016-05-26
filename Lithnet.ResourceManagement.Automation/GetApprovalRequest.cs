@@ -10,12 +10,15 @@ using Lithnet.ResourceManagement.Client;
 
 namespace Lithnet.ResourceManagement.Automation
 {
-    [Cmdlet(VerbsCommon.Get, "PendingApprovalRequest")]
-    public class GetPendingApprovalRequest : PSCmdlet
+    [Cmdlet(VerbsCommon.Get, "ApprovalRequest")]
+    public class GetApprovalRequest : PSCmdlet
     {
+        [Parameter(Mandatory = false, Position = 1)]
+        public ApprovalStatus Status { get; set; }
+
         protected override void ProcessRecord()
         {
-            ISearchResultCollection results = RmcWrapper.Client.GetPendingApprovals();
+            ISearchResultCollection results = RmcWrapper.Client.GetApprovals(this.Status);
 
             foreach (ResourceObject result in results)
             {

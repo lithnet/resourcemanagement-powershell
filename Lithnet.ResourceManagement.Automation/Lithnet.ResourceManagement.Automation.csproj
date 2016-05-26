@@ -32,8 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Lithnet.ResourceManagement.Client, Version=1.0.5989.35480, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lithnet.ResourceManagement.Client.1.0.5989.35480\lib\net40\Lithnet.ResourceManagement.Client.dll</HintPath>
+    <Reference Include="Lithnet.ResourceManagement.Client, Version=1.0.5990.37130, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lithnet.ResourceManagement.Client.1.0.5990.37130\lib\net40\Lithnet.ResourceManagement.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ResourceManagement">
@@ -65,7 +65,7 @@
     <Compile Include="Enums\SchemaRefreshEvent.cs" />
     <Compile Include="Enums\ResourceOperationType.cs" />
     <Compile Include="SetPendingApprovalRequest.cs" />
-    <Compile Include="GetPendingApprovalRequest.cs" />
+    <Compile Include="GetApprovalRequest.cs" />
     <Compile Include="ImportRMConfig.cs" />
     <Compile Include="NewXPathExpression.cs" />
     <Compile Include="NewXPathQueryGroup.cs" />

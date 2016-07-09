@@ -50,6 +50,7 @@ namespace Lithnet.ResourceManagement.Automation
             }
 
             RmcWrapper.Client = new Client.ResourceManagementClient(baseUri, creds, this.ServicePrincipalName, !this.ForceKerberos);
+            RmcWrapper.Client.RefreshSchema();
 
             base.EndProcessing();
         }

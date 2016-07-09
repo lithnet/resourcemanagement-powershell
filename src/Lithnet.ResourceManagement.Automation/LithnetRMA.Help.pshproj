@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <ModuleObject xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" fVersion="1.1" type="Manifest" mclass="Module" useSupports="false">
   <Name>LithnetRMA</Name>
-  <Version>1.0</Version>
+  <Version>1.0.6034</Version>
   <Description>Lithnet Resource Management Client for PowerShell</Description>
   <HasManifest>true</HasManifest>
   <OverridePostCount>false</OverridePostCount>
@@ -22,14 +22,14 @@
         <ReturnTypeDescription />
       </GeneralHelp>
       <ParamSets>
-        <CommandParameterSetInfo2 Name="GetResourceByKey" Params="ObjectType AttributeName AttributeValue AttributesToGet Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
-        <CommandParameterSetInfo2 Name="GetResource" Params="ID AttributesToGet Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
-        <CommandParameterSetInfo2 Name="GetResourceByKeys" Params="ObjectType AttributeValuePairs AttributesToGet Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="GetResourceByKey" Params="ObjectType AttributeName AttributeValue AttributesToGet Locale Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="GetResource" Params="ID AttributesToGet Locale Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="GetResourceByKeys" Params="ObjectType AttributeValuePairs AttributesToGet Locale Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-Resource [-ObjectType] &lt;String&gt; [-AttributeName] &lt;String&gt; [-AttributeValue] &lt;Object&gt; [[-AttributesToGet] &lt;String[]&gt;]</string>
-        <string>Get-Resource [-ID] &lt;Object&gt; [[-AttributesToGet] &lt;String[]&gt;]</string>
-        <string>Get-Resource [-ObjectType] &lt;String&gt; [-AttributeValuePairs] &lt;Hashtable&gt; [[-AttributesToGet] &lt;String[]&gt;]</string>
+        <string>Get-Resource [-ObjectType] &lt;String&gt; [-AttributeName] &lt;String&gt; [-AttributeValue] &lt;Object&gt; [[-AttributesToGet] &lt;String[]&gt;] [[-Locale] &lt;String&gt;]</string>
+        <string>Get-Resource [-ID] &lt;Object&gt; [[-AttributesToGet] &lt;String[]&gt;] [[-Locale] &lt;String&gt;]</string>
+        <string>Get-Resource [-ObjectType] &lt;String&gt; [-AttributeValuePairs] &lt;Hashtable&gt; [[-AttributesToGet] &lt;String[]&gt;] [[-Locale] &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -89,6 +89,17 @@
           <Description>A hashtable of attribute-value pairs that uniquely identify the object to get</Description>
           <DefaultValue />
         </ParameterDescription>
+        <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="5" globbing="false">
+          <Name>Locale</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Specifies the language code of the culture to localize the representation of the resource in. This requires the appropriate language packs to be installed on the FIM/MIM Service. e.g en-US, de-de, ja-jp, es-es, it-it.</Description>
+          <DefaultValue />
+        </ParameterDescription>
       </Parameters>
       <Examples>
         <Example>
@@ -114,6 +125,33 @@
           <Cmd>Get-Resource -ObjectType Person -AttributeValuePairs @{AccountName = "testuser"; Domain="fim-dev1"}</Cmd>
           <Description>Gets a person resource using multiple attribute-value pairs that uniquely identify the resource</Description>
           <Output />
+        </Example>
+        <Example>
+          <Name>Gets the localized representation of a resource</Name>
+          <Cmd>Get-Resource -ObjectType AttributeTypeDescription -AttributeName Name -AttributeValue DisplayName -Locale it-IT</Cmd>
+          <Description>Gets the display name of the "Display Name" attribute, in italian</Description>
+          <Output>CreatedTime       : 27/05/2015 5:22:43 AM
+Creator           :
+DataType          : String
+DeletedTime       :
+Description       :
+DetectedRulesList : {}
+DisplayName       : Nome visualizzato (it)
+ExpectedRulesList : {}
+ExpirationTime    :
+IntegerMaximum    :
+IntegerMinimum    :
+Locale            :
+Localizable       : True
+Multivalued       : False
+MVObjectID        :
+Name              : DisplayName
+ObjectID          : urn:uuid:7dcc83b6-8be7-4717-a1ac-62b0b1b7ce29
+ObjectType        : AttributeTypeDescription
+ResourceTime      :
+StringRegex       :
+UsageKeyword      : {Microsoft.ResourceManagement.WebServices}
+</Output>
         </Example>
       </Examples>
       <RelatedLinks />
@@ -714,10 +752,10 @@ Remove-Resource $resources</Cmd>
         <ReturnTypeDescription />
       </GeneralHelp>
       <ParamSets>
-        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="Resources Parallel Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="Resources Parallel Locale Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Save-Resource [-Resources] &lt;RmaObject[]&gt; [-Parallel]</string>
+        <string>Save-Resource [-Resources] &lt;RmaObject[]&gt; [-Parallel] [-Locale &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="RmaObject[]" varLen="true" required="true" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -736,6 +774,15 @@ Remove-Resource $resources</Cmd>
           </Attributes>
           <Aliases />
           <Description>Optional. When this switch is used, the client will perform an update to the resources on multiple threads. It is recommended to pass in an array to the -Resources parameter, which will trigger a composite update instead. </Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
+          <Name>Locale</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Specifies the language code of the culture to save a localized representation of the resource in. This requires the appropriate language packs to be installed on the FIM/MIM Service. e.g en-US, de-de, ja-jp, es-es, it-it.</Description>
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
@@ -790,14 +837,14 @@ Save-Resource $obj</Cmd>
         <ReturnTypeDescription />
       </GeneralHelp>
       <ParamSets>
-        <CommandParameterSetInfo2 Name="ConstrainedQueryByTypeRaw" Params="XPath ExpectedObjectType MaxResults PageSize SortAttributes Descending Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
-        <CommandParameterSetInfo2 Name="ConstrainedQueryByAttributesRaw" Params="XPath AttributesToGet MaxResults PageSize SortAttributes Descending Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
-        <CommandParameterSetInfo2 Name="UnconstrainedQueryRaw" Params="XPath Unconstrained MaxResults PageSize SortAttributes Descending Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="ConstrainedQueryByTypeRaw" Params="XPath ExpectedObjectType MaxResults PageSize SortAttributes Descending Locale Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="ConstrainedQueryByAttributesRaw" Params="XPath AttributesToGet MaxResults PageSize SortAttributes Descending Locale Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="UnconstrainedQueryRaw" Params="XPath Unconstrained MaxResults PageSize SortAttributes Descending Locale Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Search-Resources [-XPath] &lt;Object&gt; [[-ExpectedObjectType] &lt;String&gt;] [-MaxResults &lt;Int32&gt;] [-PageSize &lt;Int32&gt;] [-SortAttributes &lt;String[]&gt;] [-Descending]</string>
-        <string>Search-Resources [-XPath] &lt;Object&gt; [[-AttributesToGet] &lt;String[]&gt;] [-MaxResults &lt;Int32&gt;] [-PageSize &lt;Int32&gt;] [-SortAttributes &lt;String[]&gt;] [-Descending]</string>
-        <string>Search-Resources [-XPath] &lt;Object&gt; [[-Unconstrained] &lt;SwitchParameter&gt;] [-MaxResults &lt;Int32&gt;] [-PageSize &lt;Int32&gt;] [-SortAttributes &lt;String[]&gt;] [-Descending]</string>
+        <string>Search-Resources [-XPath] &lt;Object&gt; [[-ExpectedObjectType] &lt;String&gt;] [-MaxResults &lt;Int32&gt;] [-PageSize &lt;Int32&gt;] [-SortAttributes &lt;String[]&gt;] [-Descending] [-Locale &lt;String&gt;]</string>
+        <string>Search-Resources [-XPath] &lt;Object&gt; [[-AttributesToGet] &lt;String[]&gt;] [-MaxResults &lt;Int32&gt;] [-PageSize &lt;Int32&gt;] [-SortAttributes &lt;String[]&gt;] [-Descending] [-Locale &lt;String&gt;]</string>
+        <string>Search-Resources [-XPath] &lt;Object&gt; [[-Unconstrained] &lt;SwitchParameter&gt;] [-MaxResults &lt;Int32&gt;] [-PageSize &lt;Int32&gt;] [-SortAttributes &lt;String[]&gt;] [-Descending] [-Locale &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="Object" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -872,6 +919,15 @@ Save-Resource $obj</Cmd>
           <Description>Optional. Performs an unconstrained query, allowing the FIM service to process all attributes in the schema when a matched object is found. This option should be used with caution as it causes significant performance impact on the FIM service. </Description>
           <DefaultValue />
         </ParameterDescription>
+        <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
+          <Name>Locale</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Specifies the language code of the culture to localize the representation of the resource in. This requires the appropriate language packs to be installed on the FIM/MIM Service. e.g en-US, de-de, ja-jp, es-es, it-it.</Description>
+          <DefaultValue />
+        </ParameterDescription>
       </Parameters>
       <Examples>
         <Example>
@@ -906,6 +962,12 @@ Search-Resources $expression</Cmd>
           <Description>The example above uses the New-XPathQuery cmdlet to define a search criteria without having to write the XPath by hand</Description>
           <Output />
         </Example>
+        <Example>
+          <Name>Get the localized representation of a set of resources</Name>
+          <Cmd>Search-Resources -XPath "/ObjectTypeDescription" -ExpectedObjectType "ObjectTypeDescription" -Locale it-IT</Cmd>
+          <Description />
+          <Output />
+        </Example>
       </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
@@ -925,14 +987,14 @@ Search-Resources $expression</Cmd>
         <ReturnTypeDescription />
       </GeneralHelp>
       <ParamSets>
-        <CommandParameterSetInfo2 Name="ConstrainedQueryByTypeRaw" Params="XPath ExpectedObjectType PageSize SortAttributes Descending Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
-        <CommandParameterSetInfo2 Name="ConstrainedQueryByAttributesRaw" Params="XPath AttributesToGet PageSize SortAttributes Descending Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
-        <CommandParameterSetInfo2 Name="UnconstrainedQueryRaw" Params="XPath Unconstrained PageSize SortAttributes Descending Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="ConstrainedQueryByTypeRaw" Params="XPath ExpectedObjectType PageSize SortAttributes Descending Locale Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="ConstrainedQueryByAttributesRaw" Params="XPath AttributesToGet PageSize SortAttributes Descending Locale Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="UnconstrainedQueryRaw" Params="XPath Unconstrained PageSize SortAttributes Descending Locale Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Search-ResourcesPaged [-XPath] &lt;Object&gt; [[-ExpectedObjectType] &lt;String&gt;] [-PageSize &lt;Int32&gt;] [-SortAttributes &lt;String[]&gt;] [-Descending]</string>
-        <string>Search-ResourcesPaged [-XPath] &lt;Object&gt; [[-AttributesToGet] &lt;String[]&gt;] [-PageSize &lt;Int32&gt;] [-SortAttributes &lt;String[]&gt;] [-Descending]</string>
-        <string>Search-ResourcesPaged [-XPath] &lt;Object&gt; [[-Unconstrained] &lt;SwitchParameter&gt;] [-PageSize &lt;Int32&gt;] [-SortAttributes &lt;String[]&gt;] [-Descending]</string>
+        <string>Search-ResourcesPaged [-XPath] &lt;Object&gt; [[-ExpectedObjectType] &lt;String&gt;] [-PageSize &lt;Int32&gt;] [-SortAttributes &lt;String[]&gt;] [-Descending] [-Locale &lt;String&gt;]</string>
+        <string>Search-ResourcesPaged [-XPath] &lt;Object&gt; [[-AttributesToGet] &lt;String[]&gt;] [-PageSize &lt;Int32&gt;] [-SortAttributes &lt;String[]&gt;] [-Descending] [-Locale &lt;String&gt;]</string>
+        <string>Search-ResourcesPaged [-XPath] &lt;Object&gt; [[-Unconstrained] &lt;SwitchParameter&gt;] [-PageSize &lt;Int32&gt;] [-SortAttributes &lt;String[]&gt;] [-Descending] [-Locale &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="Object" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -996,6 +1058,15 @@ Search-Resources $expression</Cmd>
           </Attributes>
           <Aliases />
           <Description>Optional. Performs an unconstrained query, allowing the FIM service to process all attributes in the schema when a matched object is found. This option should be used with caution as it causes significant performance impact on the FIM service. </Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
+          <Name>Locale</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Specifies the language code of the culture to localize the representation of the resource in. This requires the appropriate language packs to be installed on the FIM/MIM Service. e.g en-US, de-de, ja-jp, es-es, it-it.</Description>
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
@@ -1167,6 +1238,139 @@ while ($pager.HasMoreItems)
         <Example>
           <Name>Refresh the cached copy of the schema</Name>
           <Cmd>Update-ResourceManagementClientSchema</Cmd>
+          <Description />
+          <Output />
+        </Example>
+      </Examples>
+      <RelatedLinks />
+      <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
+      <Publish>false</Publish>
+    </CmdletObject>
+    <CmdletObject verb="Get" noun="ApprovalRequest">
+      <Name>Get-ApprovalRequest</Name>
+      <GeneralHelp>
+        <Synopsis>Gets approval requests from the resource management service</Synopsis>
+        <Description>The Get-ApprovalRequest  cmdlet allows you retrieve approval requests for the current user. The cmdlet can be combined with the Set-PendingApprovalRequest to approve or reject pending approval requests.</Description>
+        <Notes />
+        <InputType />
+        <InputUrl />
+        <InputTypeDescription />
+        <ReturnType />
+        <ReturnUrl />
+        <ReturnTypeDescription />
+      </GeneralHelp>
+      <ParamSets>
+        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="Status Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+      </ParamSets>
+      <Syntax>
+        <string>Get-ApprovalRequest [[-Status] &lt;ApprovalStatus&gt;]</string>
+      </Syntax>
+      <Parameters>
+        <ParameterDescription type="ApprovalStatus" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
+          <Name>Status</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>Allows you to specify to get only  Pending, Expired, Rejected, or Approved  requests. When no value is specified for this parameter, all approval requests are returned</Description>
+          <DefaultValue />
+        </ParameterDescription>
+      </Parameters>
+      <Examples>
+        <Example>
+          <Name>Get all pending approvals</Name>
+          <Cmd>Get-ApprovalRequest -Status Pending</Cmd>
+          <Description />
+          <Output />
+        </Example>
+        <Example>
+          <Name>Get all approval requests</Name>
+          <Cmd>Get-ApprovalRequest</Cmd>
+          <Description />
+          <Output />
+        </Example>
+        <Example>
+          <Name>Approval all pending requests</Name>
+          <Cmd>Get-ApprovalRequest -Status Pending | Set-PendingApprovalRequest -Decision Approved</Cmd>
+          <Description />
+          <Output />
+        </Example>
+      </Examples>
+      <RelatedLinks />
+      <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
+      <Publish>false</Publish>
+    </CmdletObject>
+    <CmdletObject verb="Set" noun="PendingApprovalRequest">
+      <Name>Set-PendingApprovalRequest</Name>
+      <GeneralHelp>
+        <Synopsis>Sets the status of a request that is pending approval</Synopsis>
+        <Description>The Set-PendingApprovalRequest cmdlet allows you approve or reject an approval request. The cmdlet can be combined with the Get-ApprovalRequest to approve or reject pending approval requests for the current user.</Description>
+        <Notes />
+        <InputType />
+        <InputUrl />
+        <InputTypeDescription />
+        <ReturnType />
+        <ReturnUrl />
+        <ReturnTypeDescription />
+      </GeneralHelp>
+      <ParamSets>
+        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="ApprovalObject Decision Reason Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+      </ParamSets>
+      <Syntax>
+        <string>Set-PendingApprovalRequest [-ApprovalObject] &lt;RmaObject&gt; [[-Decision] &lt;ApprovalDecision&gt;] [[-Reason] &lt;String&gt;]</string>
+      </Syntax>
+      <Parameters>
+        <ParameterDescription type="RmaObject" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="true" pipeProp="false" isPos="true" pos="1" globbing="false">
+          <Name>ApprovalObject</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>An Approval object obtained using the Get-ApprovalRequest cmdlet that is in the Pending state.</Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="ApprovalDecision" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="2" globbing="false">
+          <Name>Decision</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>The approval decision. This can be either 'Approved' or 'Rejected'</Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="3" globbing="false">
+          <Name>Reason</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description>The reason for the approval or rejection</Description>
+          <DefaultValue />
+        </ParameterDescription>
+      </Parameters>
+      <Examples>
+        <Example>
+          <Name>Individually get and approve each request</Name>
+          <Cmd>$requests = Get-ApprovalRequest
+foreach ($request in $requests)
+{
+   if ($request.Status -eq "Pending")
+   {
+       Set-PendingApprovalRequest -ApprovalObject $request -Decision Approved
+   }
+}</Cmd>
+          <Description />
+          <Output />
+        </Example>
+        <Example>
+          <Name>Approve all pending requests using the pipeline</Name>
+          <Cmd>Get-ApprovalRequest -Status Pending | Set-PendingApprovalRequest -Decision Approved -Reason "Make it so!"</Cmd>
+          <Description />
+          <Output />
+        </Example>
+        <Example>
+          <Name>Reject all pending requests using the pipeline</Name>
+          <Cmd>Get-ApprovalRequest -Status Pending | Set-PendingApprovalRequest -Decision Reject -Reason "Not today"</Cmd>
           <Description />
           <Output />
         </Example>

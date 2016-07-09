@@ -32,8 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Lithnet.ResourceManagement.Client, Version=1.0.6003.14892, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lithnet.ResourceManagement.Client.1.0.6003.14892\lib\net40\Lithnet.ResourceManagement.Client.dll</HintPath>
+    <Reference Include="Lithnet.ResourceManagement.Client, Version=1.0.6034.20090, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lithnet.ResourceManagement.Client.1.0.6034.20090\lib\net40\Lithnet.ResourceManagement.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ResourceManagement">
@@ -110,7 +110,9 @@
     <None Include="Examples\Variables.xml">
       <SubType>Designer</SubType>
     </None>
-    <None Include="LithnetRMA.Help.pshproj" />
+    <None Include="LithnetRMA.Help.pshproj">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

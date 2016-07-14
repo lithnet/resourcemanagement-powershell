@@ -9,10 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Lithnet.ResourceManagement.Automation</RootNamespace>
     <AssemblyName>Lithnet.ResourceManagement.Automation</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,14 +32,15 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Lithnet.ResourceManagement.Client, Version=1.0.6003.14892, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lithnet.ResourceManagement.Client.1.0.6003.14892\lib\net40\Lithnet.ResourceManagement.Client.dll</HintPath>
+    <Reference Include="Lithnet.ResourceManagement.Client, Version=1.0.6039.27655, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lithnet.ResourceManagement.Client.1.0.6039.27655\lib\net40\Lithnet.ResourceManagement.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ResourceManagement">
-      <HintPath>..\..\lithnetrmc\lib\Microsoft.ResourceManagement.dll</HintPath>
+      <HintPath>..\..\..\lib\Microsoft.ResourceManagement.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

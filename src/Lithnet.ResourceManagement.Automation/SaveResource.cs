@@ -22,28 +22,38 @@ namespace Lithnet.ResourceManagement.Automation
 
         [Parameter(Mandatory = false)]
         public string Locale { get; set; }
-        
+
         protected override void ProcessRecord()
         {
             IEnumerable<RmaObject> creatingObjects = this.Resources.Where(t => t.InternalObject.ModificationType == OperationType.Create).ToList();
 
-            CultureInfo locale = null;
-
             if (this.Locale != null)
             {
-                locale = new CultureInfo(this.Locale);
-            }
+                CultureInfo locale = new CultureInfo(this.Locale);
 
-            if (this.Parallel.IsPresent)
-            {
-                RmcWrapper.Client.SaveResourcesParallel(this.Resources.Select(t => t.GetResourceWithAppliedChanges()), -1, locale);
+                if (this.Resources.Length > 1)
+                {
+                    this.WriteWarning("Composite save disabled as locale parameter has been specified");
+                }
+
+                foreach (ResourceObject r in this.Resources.Select(t => t.GetResourceWithAppliedChanges()))
+                {
+                    RmcWrapper.Client.SaveResource(r, locale);
+                }
             }
             else
             {
-                RmcWrapper.Client.SaveResources(this.Resources.Select(t => t.GetResourceWithAppliedChanges()), locale);
+                if (this.Parallel.IsPresent)
+                {
+                    RmcWrapper.Client.SaveResourcesParallel(this.Resources.Select(t => t.GetResourceWithAppliedChanges()), -1);
+                }
+                else
+                {
+                    RmcWrapper.Client.SaveResources(this.Resources.Select(t => t.GetResourceWithAppliedChanges()));
+                }
             }
 
-            foreach(RmaObject resource in creatingObjects)
+            foreach (RmaObject resource in creatingObjects)
             {
                 resource.ReloadProperties();
             }

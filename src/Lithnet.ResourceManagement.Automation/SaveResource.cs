@@ -27,13 +27,18 @@ namespace Lithnet.ResourceManagement.Automation
         {
             IEnumerable<RmaObject> creatingObjects = this.Resources.Where(t => t.InternalObject.ModificationType == OperationType.Create).ToList();
 
-            if (this.Locale != null)
+            if (this.Locale != null || this.Resources.Any(t => t.InternalObject.Locale != null))
             {
-                CultureInfo locale = new CultureInfo(this.Locale);
+                CultureInfo locale = null;
+
+                if (this.Locale != null)
+                {
+                    locale = new CultureInfo(this.Locale);
+                }
 
                 if (this.Resources.Length > 1)
                 {
-                    this.WriteWarning("Composite save disabled as locale parameter has been specified");
+                    this.WriteWarning("Composite save disabled as locale parameter has been specified or at least one resource has been localized");
                 }
 
                 foreach (ResourceObject r in this.Resources.Select(t => t.GetResourceWithAppliedChanges()))

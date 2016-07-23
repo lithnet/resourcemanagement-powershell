@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using System.Collections.ObjectModel;
 using System.Collections;
 using Lithnet.ResourceManagement.Client;
+using System.Globalization;
 
 namespace Lithnet.ResourceManagement.Automation
 {
@@ -63,6 +64,9 @@ namespace Lithnet.ResourceManagement.Automation
         [XmlAttribute(AttributeName = "resourceType")]
         public string ResourceType { get; set; }
 
+        [XmlAttribute(AttributeName = "locale")]
+        public string Locale { get; set; }
+
         [XmlAttribute(AttributeName = "id")]
         public string ID { get; set; }
 
@@ -104,7 +108,9 @@ namespace Lithnet.ResourceManagement.Automation
                 this.RaiseLogEvent("Refreshing schema");
                 RmcWrapper.Client.RefreshSchema();
             }
-            
+
+            this.ThrowOnLocaleSpecifiedForNonUpdate();
+
             switch (this.Operation)
             {
                 case ResourceOperationType.None:
@@ -137,6 +143,17 @@ namespace Lithnet.ResourceManagement.Automation
             }
         }
 
+        private void ThrowOnLocaleSpecifiedForNonUpdate()
+        {
+            if (this.Locale != null)
+            {
+                if (this.Operation != ResourceOperationType.Update)
+                {
+                    throw new InvalidOperationException("Locale can only be specified for an 'Update' operation. Perform an Add-Update first with the invariant culture values, then perform an update with the culture-specific values");
+                }
+            }
+        }
+
         private void ProcessResourceAdd()
         {
             this.Resource = RmcWrapper.Client.CreateResource(this.ResourceType);
@@ -159,8 +176,15 @@ namespace Lithnet.ResourceManagement.Automation
         {
             if (this.Resource == null)
             {
-                this.Resource = RmcWrapper.Client.GetResourceByKey(this.ResourceType, this.GetAnchorValues(), this.AttributesToGet);
-                
+                CultureInfo locale = null;
+
+                if (!string.IsNullOrWhiteSpace(this.Locale))
+                {
+                    locale = new CultureInfo(this.Locale);
+                }
+
+                this.Resource = RmcWrapper.Client.GetResourceByKey(this.ResourceType, this.GetAnchorValues(), this.AttributesToGet, locale);
+
                 if (this.Resource == null)
                 {
                     throw new InvalidOperationException(string.Format("An update operation is not valid for the resource operation with ID {0} as the resource does not exist in the FIM service. Consider changing the operation to an 'Add Update' type", this.ID));

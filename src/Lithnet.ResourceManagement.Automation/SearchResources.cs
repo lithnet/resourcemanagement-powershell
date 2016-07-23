@@ -8,7 +8,7 @@ using Microsoft.ResourceManagement.WebServices;
 using Microsoft.ResourceManagement.WebServices.WSEnumeration;
 using System.Collections;
 using Lithnet.ResourceManagement.Client;
-
+using System.Globalization;
 
 namespace Lithnet.ResourceManagement.Automation
 {
@@ -38,9 +38,19 @@ namespace Lithnet.ResourceManagement.Automation
 
         [Parameter]
         public SwitchParameter Descending { get; set; }
-
+        
+        [Parameter]       
+        public string Locale { get; set; }
+   
         protected override void ProcessRecord()
         {
+            CultureInfo locale = null;
+
+            if (this.Locale != null)
+            {
+                locale = new CultureInfo(this.Locale);
+            }
+
             IEnumerable<string> attributes = null;
             string filter = this.GetQueryString();
 
@@ -90,7 +100,7 @@ namespace Lithnet.ResourceManagement.Automation
                 }
             }
 
-            foreach (ResourceObject resource in RmcWrapper.Client.GetResources(filter, pageSize, attributes, sortCriteria))
+            foreach (ResourceObject resource in RmcWrapper.Client.GetResources(filter, pageSize, attributes, sortCriteria, locale))
             {
                 this.WriteObject(new RmaObject(resource));
                 count++;

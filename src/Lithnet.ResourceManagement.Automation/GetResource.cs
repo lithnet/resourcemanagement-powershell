@@ -7,6 +7,7 @@ using System.Management.Automation;
 using Microsoft.ResourceManagement.WebServices;
 using System.Collections;
 using Lithnet.ResourceManagement.Client;
+using System.Globalization;
 
 namespace Lithnet.ResourceManagement.Automation
 {
@@ -47,15 +48,26 @@ namespace Lithnet.ResourceManagement.Automation
         [Parameter(ParameterSetName = "GetResource", Mandatory = false, Position = 2)]
         public string[] AttributesToGet { get; set; }
 
+        [Parameter(ParameterSetName = "GetResourceByKey", Mandatory = false, Position = 5)]
+        [Parameter(ParameterSetName = "GetResourceByKeys", Mandatory = false, Position = 4)]
+        [Parameter(ParameterSetName = "GetResource", Mandatory = false, Position = 3)]
+        public string Locale { get; set; }
+        
         protected override void ProcessRecord()
         {
             ResourceObject resource;
+            CultureInfo locale = null;
+
+            if (this.Locale != null)
+            {
+                locale = new CultureInfo(this.Locale);
+            }
 
             UniqueIdentifier uniqueID = this.ID as UniqueIdentifier;
 
             if (uniqueID != null)
             {
-                resource = RmcWrapper.Client.GetResource(uniqueID, this.AttributesToGet);
+                resource = RmcWrapper.Client.GetResource(uniqueID, this.AttributesToGet, locale);
 
                 if (resource == null)
                 {
@@ -70,7 +82,7 @@ namespace Lithnet.ResourceManagement.Automation
 
             if (stringID != null)
             {
-                resource = RmcWrapper.Client.GetResource(stringID, this.AttributesToGet);
+                resource = RmcWrapper.Client.GetResource(stringID, this.AttributesToGet, locale);
 
                 if (resource == null)
                 {
@@ -85,7 +97,7 @@ namespace Lithnet.ResourceManagement.Automation
 
             if (guidID != null)
             {
-                resource = RmcWrapper.Client.GetResource(guidID, this.AttributesToGet);
+                resource = RmcWrapper.Client.GetResource(guidID, this.AttributesToGet, locale);
 
                 if (resource == null)
                 {
@@ -98,7 +110,7 @@ namespace Lithnet.ResourceManagement.Automation
 
             if (this.AttributeValuePairs != null)
             {
-                resource = RmcWrapper.Client.GetResourceByKey(this.ObjectType, this.HashTableToDictionary(this.AttributeValuePairs), this.AttributesToGet);
+                resource = RmcWrapper.Client.GetResourceByKey(this.ObjectType, this.HashTableToDictionary(this.AttributeValuePairs), this.AttributesToGet, locale);
 
                 if (resource == null)
                 {
@@ -110,7 +122,7 @@ namespace Lithnet.ResourceManagement.Automation
             }
             else
             {
-                resource = RmcWrapper.Client.GetResourceByKey(this.ObjectType, this.AttributeName, this.AttributeValue, this.AttributesToGet);
+                resource = RmcWrapper.Client.GetResourceByKey(this.ObjectType, this.AttributeName, this.AttributeValue, this.AttributesToGet, locale);
 
                 if (resource == null)
                 {

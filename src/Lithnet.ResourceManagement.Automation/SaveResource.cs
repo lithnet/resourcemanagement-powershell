@@ -7,6 +7,7 @@ using System.Management.Automation;
 using Microsoft.ResourceManagement.WebServices;
 using System.Collections;
 using Lithnet.ResourceManagement.Client;
+using System.Globalization;
 
 namespace Lithnet.ResourceManagement.Automation
 {
@@ -19,20 +20,40 @@ namespace Lithnet.ResourceManagement.Automation
         [Parameter(Mandatory = false)]
         public SwitchParameter Parallel { get; set; }
 
+        [Parameter(Mandatory = false)]
+        public string Locale { get; set; }
+
         protected override void ProcessRecord()
         {
             IEnumerable<RmaObject> creatingObjects = this.Resources.Where(t => t.InternalObject.ModificationType == OperationType.Create).ToList();
 
-            if (this.Parallel.IsPresent)
+            if (this.Locale != null)
             {
-                RmcWrapper.Client.SaveResourcesParallel(this.Resources.Select(t => t.GetResourceWithAppliedChanges()));
+                CultureInfo locale = new CultureInfo(this.Locale);
+
+                if (this.Resources.Length > 1)
+                {
+                    this.WriteWarning("Composite save disabled as locale parameter has been specified");
+                }
+
+                foreach (ResourceObject r in this.Resources.Select(t => t.GetResourceWithAppliedChanges()))
+                {
+                    RmcWrapper.Client.SaveResource(r, locale);
+                }
             }
             else
             {
-                RmcWrapper.Client.SaveResources(this.Resources.Select(t => t.GetResourceWithAppliedChanges()));
+                if (this.Parallel.IsPresent)
+                {
+                    RmcWrapper.Client.SaveResourcesParallel(this.Resources.Select(t => t.GetResourceWithAppliedChanges()), -1);
+                }
+                else
+                {
+                    RmcWrapper.Client.SaveResources(this.Resources.Select(t => t.GetResourceWithAppliedChanges()));
+                }
             }
 
-            foreach(RmaObject resource in creatingObjects)
+            foreach (RmaObject resource in creatingObjects)
             {
                 resource.ReloadProperties();
             }

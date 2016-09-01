@@ -25,42 +25,50 @@ namespace Lithnet.ResourceManagement.Automation
 
         protected override void ProcessRecord()
         {
-            IEnumerable<RmaObject> creatingObjects = this.Resources.Where(t => t.InternalObject.ModificationType == OperationType.Create).ToList();
-
-            if (this.Locale != null || this.Resources.Any(t => t.InternalObject.Locale != null))
+            try
             {
-                CultureInfo locale = null;
+                IEnumerable<RmaObject> creatingObjects = this.Resources.Where(t => t.InternalObject.ModificationType == OperationType.Create).ToList();
 
-                if (this.Locale != null)
+                if (this.Locale != null || this.Resources.Any(t => t.InternalObject.Locale != null))
                 {
-                    locale = new CultureInfo(this.Locale);
-                }
+                    CultureInfo locale = null;
 
-                if (this.Resources.Length > 1)
-                {
-                    this.WriteWarning("Composite save disabled as locale parameter has been specified or at least one resource has been localized");
-                }
+                    if (this.Locale != null)
+                    {
+                        locale = new CultureInfo(this.Locale);
+                    }
 
-                foreach (ResourceObject r in this.Resources.Select(t => t.GetResourceWithAppliedChanges()))
-                {
-                    RmcWrapper.Client.SaveResource(r, locale);
-                }
-            }
-            else
-            {
-                if (this.Parallel.IsPresent)
-                {
-                    RmcWrapper.Client.SaveResourcesParallel(this.Resources.Select(t => t.GetResourceWithAppliedChanges()), -1);
+                    if (this.Resources.Length > 1)
+                    {
+                        this.WriteWarning("Composite save disabled as locale parameter has been specified or at least one resource has been localized");
+                    }
+
+                    foreach (ResourceObject r in this.Resources.Select(t => t.GetResourceWithAppliedChanges()))
+                    {
+                        RmcWrapper.Client.SaveResource(r, locale);
+                    }
                 }
                 else
                 {
-                    RmcWrapper.Client.SaveResources(this.Resources.Select(t => t.GetResourceWithAppliedChanges()));
+                    if (this.Parallel.IsPresent)
+                    {
+                        RmcWrapper.Client.SaveResourcesParallel(this.Resources.Select(t => t.GetResourceWithAppliedChanges()), -1);
+                    }
+                    else
+                    {
+                        RmcWrapper.Client.SaveResources(this.Resources.Select(t => t.GetResourceWithAppliedChanges()));
+                    }
+                }
+
+                foreach (RmaObject resource in creatingObjects)
+                {
+                    resource.ReloadProperties();
                 }
             }
-
-            foreach (RmaObject resource in creatingObjects)
+            catch (AuthorizationRequiredException ex)
             {
-                resource.ReloadProperties();
+                this.WriteVerbose("Authorization required: " + ex.ResourceReference);
+                this.WriteObject(ex.ResourceReference);
             }
         }
     }

@@ -35,8 +35,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Lithnet.ResourceManagement.Client, Version=1.0.6048.17046, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lithnet.ResourceManagement.Client.1.0.6048.17046\lib\net40\Lithnet.ResourceManagement.Client.dll</HintPath>
+    <Reference Include="Lithnet.ResourceManagement.Client, Version=1.0.6088.20561, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lithnet.ResourceManagement.Client.1.0.6088.20561\lib\net40\Lithnet.ResourceManagement.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ResourceManagement, Version=4.1.3451.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">

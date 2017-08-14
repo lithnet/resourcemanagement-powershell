@@ -37,10 +37,11 @@ namespace Lithnet.ResourceManagement.Automation
             RuntimeDefinedParameter parameter = new RuntimeDefinedParameter();
             parameter.Name = paramName;
             parameter.ParameterType = typeof(string);
+            IList<ObjectTypeDefinition> objectTypes = ResourceManagementSchema.GetObjectTypes().ToList();
 
-            if (ResourceManagementSchema.ObjectTypes != null && ResourceManagementSchema.ObjectTypes.Count > 0)
+            if (objectTypes.Count > 0)
             {
-                List<string> objectTypeNames = ResourceManagementSchema.ObjectTypes.OrderBy(t => t.Key).Select(t => t.Key).ToList();
+                List<string> objectTypeNames = objectTypes.OrderBy(t => t.SystemName).Select(t => t.SystemName).ToList();
                 if (allowWildcard)
                 {
                     objectTypeNames.Add("*");
@@ -68,9 +69,11 @@ namespace Lithnet.ResourceManagement.Automation
             {
                 List<string> attributeNames = new List<string>();
 
-                if (ResourceManagementSchema.ObjectTypes != null)
+                IList<ObjectTypeDefinition> objectTypes = ResourceManagementSchema.GetObjectTypes().ToList();
+
+                if (objectTypes.Count > 0)
                 {
-                    foreach (ObjectTypeDefinition type in ResourceManagementSchema.ObjectTypes.Values)
+                    foreach (ObjectTypeDefinition type in objectTypes)
                     {
                         attributeNames.AddRange(type.Attributes.Select(t => t.SystemName));
                     }
@@ -84,10 +87,10 @@ namespace Lithnet.ResourceManagement.Automation
             }
             else
             {
-                if (ResourceManagementSchema.ObjectTypes != null &&
-                    ResourceManagementSchema.ObjectTypes.ContainsKey(objectType))
+                
+                if (ResourceManagementSchema.ContainsObjectType(objectType))
                 {
-                    ValidateSetAttribute setAttribute = new ValidateSetAttribute(ResourceManagementSchema.ObjectTypes[objectType].Attributes.OrderBy(t => t.SystemName).Select(t => t.SystemName).ToArray());
+                    ValidateSetAttribute setAttribute = new ValidateSetAttribute(ResourceManagementSchema.GetObjectType(objectType).Attributes.OrderBy(t => t.SystemName).Select(t => t.SystemName).ToArray());
                     parameter.Attributes.Add(setAttribute);
                 }
             }

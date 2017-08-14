@@ -3,6 +3,7 @@ using System.Management.Automation;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Security;
+using Lithnet.ResourceManagement.Client;
 
 namespace Lithnet.ResourceManagement.Automation
 {
@@ -21,6 +22,9 @@ namespace Lithnet.ResourceManagement.Automation
         [Parameter(Position = 3)]
         public bool ForceKerberos { get; set; }
 
+        [Parameter(Position = 4)]
+        public SwitchParameter RefreshSchema { get; set; }
+
         protected override void EndProcessing()
         {
             NetworkCredential creds = null;
@@ -34,23 +38,23 @@ namespace Lithnet.ResourceManagement.Automation
 
             try
             {
-                baseUri = new Uri(this.BaseAddress);
+                if (!Uri.TryCreate(this.BaseAddress, UriKind.Absolute, out baseUri))
+                {
+                    baseUri = new Uri($"http://{this.BaseAddress}:5725");
+                }
             }
             catch (Exception ex)
             {
-                try
-                {
-                    baseUri = new Uri(string.Format("http://{0}:5725", this.BaseAddress));
-                }
-                catch 
-                {
-                    this.WriteError(new ErrorRecord(ex, "InvalidUri", ErrorCategory.InvalidArgument, this.BaseAddress));
-                    return;
-                }
+                this.WriteError(new ErrorRecord(ex, "InvalidUri", ErrorCategory.InvalidArgument, this.BaseAddress));
+                return;
             }
 
             RmcWrapper.Client = new Client.ResourceManagementClient(baseUri, creds, this.ServicePrincipalName, !this.ForceKerberos);
-            RmcWrapper.Client.RefreshSchema();
+
+            if (this.RefreshSchema.IsPresent || !baseUri.Host.Equals(ResourceManagementSchema.SchemaEndpoint?.Host, StringComparison.OrdinalIgnoreCase))
+            {
+                RmcWrapper.Client.RefreshSchema();
+            }
 
             base.EndProcessing();
         }
@@ -58,7 +62,7 @@ namespace Lithnet.ResourceManagement.Automation
         private string ConvertToUnsecureString(SecureString securePassword)
         {
             if (securePassword == null)
-                throw new ArgumentNullException("securePassword");
+                throw new ArgumentNullException(nameof(securePassword));
 
             IntPtr unmanagedString = IntPtr.Zero;
             try

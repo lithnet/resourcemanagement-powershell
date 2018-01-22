@@ -63,49 +63,59 @@ namespace Lithnet.ResourceManagement.Automation
                 locale = new CultureInfo(this.Locale);
             }
 
-            UniqueIdentifier uniqueID = this.ID as UniqueIdentifier;
-
-            if (uniqueID != null)
+            if (this.ID != null)
             {
-                resource = RmcWrapper.Client.GetResource(uniqueID, this.AttributesToGet, locale);
+                object item = null;
 
-                if (resource == null)
+                if (this.ID is PSObject pso)
                 {
-                    throw new ResourceNotFoundException();
+                    item = pso.BaseObject;
+                }
+                else
+                {
+                    item = this.ID;
                 }
 
-                this.WriteObject(new RmaObject(resource));
-                return;
-            }
-
-            string stringID = this.ID as string;
-
-            if (stringID != null)
-            {
-                resource = RmcWrapper.Client.GetResource(stringID, this.AttributesToGet, locale);
-
-                if (resource == null)
+                if (item is UniqueIdentifier uniqueID)
                 {
-                    throw new ResourceNotFoundException();
+                    resource = RmcWrapper.Client.GetResource(uniqueID, this.AttributesToGet, locale);
+
+                    if (resource == null)
+                    {
+                        throw new ResourceNotFoundException();
+                    }
+
+                    this.WriteObject(new RmaObject(resource));
+                    return;
                 }
 
-                this.WriteObject(new RmaObject(resource));
-                return;
-            }
-
-            Guid? guidID = this.ID as Guid?;
-
-            if (guidID != null)
-            {
-                resource = RmcWrapper.Client.GetResource(guidID, this.AttributesToGet, locale);
-
-                if (resource == null)
+                if (item is string stringID)
                 {
-                    throw new ResourceNotFoundException();
+                    resource = RmcWrapper.Client.GetResource(stringID, this.AttributesToGet, locale);
+
+                    if (resource == null)
+                    {
+                        throw new ResourceNotFoundException();
+                    }
+
+                    this.WriteObject(new RmaObject(resource));
+                    return;
                 }
 
-                this.WriteObject(new RmaObject(resource));
-                return;
+                if (item is Guid guidID)
+                {
+                    resource = RmcWrapper.Client.GetResource(guidID, this.AttributesToGet, locale);
+
+                    if (resource == null)
+                    {
+                        throw new ResourceNotFoundException();
+                    }
+
+                    this.WriteObject(new RmaObject(resource));
+                    return;
+                }
+
+                throw new ArgumentException($"The object type of the ID parameter was unknown. {this.ID.GetType().FullName}");
             }
 
             if (this.AttributeValuePairs != null)

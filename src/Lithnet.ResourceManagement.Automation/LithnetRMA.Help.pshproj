@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <ModuleObject xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" fVersion="1.1" type="Manifest" mclass="Module" useSupports="false">
   <Name>LithnetRMA</Name>
-  <Version>1.0.6597.17047</Version>
+  <Version>1.0.6623.18398</Version>
   <Description>Lithnet Resource Management Client for PowerShell</Description>
   <HasManifest>true</HasManifest>
   <OverridePostCount>false</OverridePostCount>

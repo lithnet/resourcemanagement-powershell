@@ -13,11 +13,11 @@ namespace Lithnet.ResourceManagement.Automation
     public class ImportConfigSyncController : PSCmdlet
     {
         [Parameter(ValueFromPipeline = false, Mandatory = false, Position = 2)]
-        public string FilePath { get; set; }
+        public string File { get; set; }
 
         protected override void ProcessRecord()
         {
-            using (StreamReader sr = System.IO.File.OpenText(FilePath))
+            using (StreamReader sr = System.IO.File.OpenText(File))
             {
                 this.WriteObject(
                     JsonConvert.DeserializeObject<ConfigSyncController>(sr.ReadToEnd()));

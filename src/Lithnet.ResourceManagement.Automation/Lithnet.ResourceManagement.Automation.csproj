@@ -42,6 +42,9 @@
       <HintPath>..\packages\Lithnet.ResourceManagement.Client.1.0.6623.18312\lib\net40\Microsoft.ResourceManagement.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
@@ -60,12 +63,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AttributeValueArrayList.cs" />
+    <Compile Include="AttributeValueExtension.cs" />
+    <Compile Include="ConfigSyncController\ConfigSyncController.cs" />
     <Compile Include="ConfigSyncControl.cs" />
+    <Compile Include="ConfigSyncController\ConfigSyncConfiguration.cs" />
+    <Compile Include="ConfigSyncController\ImportConfigSyncController.cs" />
+    <Compile Include="ConfigSyncController\NewConfigSyncConfiguration.cs" />
+    <Compile Include="ConfigSyncController\NewObjectExclusion.cs" />
+    <Compile Include="ConfigSyncController\SaveConfigSyncController.cs" />
+    <Compile Include="ConvertToRMConfig.cs" />
     <Compile Include="Enums\AttributeOperationType.cs" />
     <Compile Include="Enums\ApprovalDecision.cs" />
     <Compile Include="Enums\AttributeValueType.cs" />
     <Compile Include="Enums\SchemaRefreshEvent.cs" />
     <Compile Include="Enums\ResourceOperationType.cs" />
+    <Compile Include="Enums\WellKnownGuids.cs" />
+    <Compile Include="ConfigSyncController\ObjectExclusion.cs" />
+    <Compile Include="ConfigSyncController\NewConfigSyncController.cs" />
+    <Compile Include="OutRMConfig.cs" />
+    <Compile Include="ResourceOperationExtension.cs" />
     <Compile Include="SetPendingApprovalRequest.cs" />
     <Compile Include="GetApprovalRequest.cs" />
     <Compile Include="ImportRMConfig.cs" />
@@ -145,10 +161,8 @@
       $(PostBuildEventDependsOn);
       PostBuildMacros;
     </PostBuildEventDependsOn>
-    <PostBuildEvent>"C:\Program Files (x86)\Microsoft SDKs\ClickOnce\SignTool\signtool.exe" sign /sha1 "$(CSCERTTHUMBPRINT)" /t http://timestamp.digicert.com /fd sha256 /v "$(TargetFileName)"
-
-"C:\Program Files\Debugging Tools for Windows (x64)\symstore" add /f "$(TargetDir)*.pdb" /s \\localhost\symbols /t "$(ProjectName)" /v "@(VersionNumber)"
-</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
@@ -169,10 +183,10 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Fody.1.29.2\build\dotnet\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.29.2\build\dotnet\Fody.targets'))" />
   </Target>
-  <Target Name="AfterBuild">
+  <!--<Target Name="AfterBuild">
     <ReplaceFileText InputFilename="$(TargetDir)LithnetRMA.psd1" OutputFilename="$(TargetDir)LithnetRMA.psd1" MatchExpression="\$version\$" ReplacementText="@(VersionNumber)" />
     <ReplaceFileText InputFilename="$(ProjectDir)LithnetRMA.Help.pshproj" OutputFilename="$(ProjectDir)LithnetRMA.Help.pshproj" MatchExpression="&lt;Version&gt;.*?&lt;\/Version&gt;" ReplacementText="&lt;Version&gt;@(VersionNumber)&lt;/Version&gt;" />
-  </Target>
+  </Target>-->
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

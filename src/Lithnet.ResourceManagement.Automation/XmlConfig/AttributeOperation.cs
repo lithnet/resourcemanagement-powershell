@@ -162,45 +162,48 @@ namespace Lithnet.ResourceManagement.Automation
         {
             string expandedInput = input;
 
-            if ( ConfigSyncControl.CurrentConfig.Variables != null && ConfigSyncControl.CurrentConfig.Variables.Items != null)
+            if (ConfigSyncControl.CurrentConfig != null)
             {
-                foreach (Variable variable in ConfigSyncControl.CurrentConfig.Variables.Items)
+                if (ConfigSyncControl.CurrentConfig.Variables != null && ConfigSyncControl.CurrentConfig.Variables.Items != null)
                 {
-                    expandedInput = expandedInput.Replace(variable.Name, variable.ExpandedValue);
+                    foreach (Variable variable in ConfigSyncControl.CurrentConfig.Variables.Items)
+                    {
+                        expandedInput = expandedInput.Replace(variable.Name, variable.ExpandedValue);
+                    }
                 }
-            }
 
-            foreach (Match match in Regex.Matches(expandedInput, @"\#\#xmlref:(.+?):(.*?)\#\#"))
-            {
-                if (match.Groups.Count >= 2)
+                foreach (Match match in Regex.Matches(expandedInput, @"\#\#xmlref:(.+?):(.*?)\#\#"))
                 {
-                    string xmlRefName = match.Groups[1].Value;
-                    ResourceObject xmlRef = this.GetXmlReferenceResource(xmlRefName);
-                    if (xmlRef == null)
+                    if (match.Groups.Count >= 2)
                     {
-                        throw new ArgumentException("The input string contained the xmlref pattern '{0}', but the object could not be resolved");
-                    }
-
-                    string xmlDeRefAttributeName = "ObjectID";
-                    if (match.Groups.Count > 2)
-                    {
-                        string groupValue = match.Groups[2].Value;
-
-                        if (!string.IsNullOrWhiteSpace(groupValue))
+                        string xmlRefName = match.Groups[1].Value;
+                        ResourceObject xmlRef = this.GetXmlReferenceResource(xmlRefName);
+                        if (xmlRef == null)
                         {
-                            xmlDeRefAttributeName = match.Groups[2].Value;
+                            throw new ArgumentException("The input string contained the xmlref pattern '{0}', but the object could not be resolved");
                         }
+
+                        string xmlDeRefAttributeName = "ObjectID";
+                        if (match.Groups.Count > 2)
+                        {
+                            string groupValue = match.Groups[2].Value;
+
+                            if (!string.IsNullOrWhiteSpace(groupValue))
+                            {
+                                xmlDeRefAttributeName = match.Groups[2].Value;
+                            }
+                        }
+
+                        object xmlDeRefValue = xmlRef.Attributes[xmlDeRefAttributeName].Value;
+
+                        UniqueIdentifier xmlDerefID = xmlDeRefValue as UniqueIdentifier;
+                        if (xmlDerefID != null)
+                        {
+                            xmlDeRefValue = xmlDerefID.Value;
+                        }
+
+                        expandedInput = expandedInput.Replace(match.Value, xmlDeRefValue == null ? null : xmlDeRefValue.ToString());
                     }
-
-                    object xmlDeRefValue = xmlRef.Attributes[xmlDeRefAttributeName].Value;
-
-                    UniqueIdentifier xmlDerefID = xmlDeRefValue as UniqueIdentifier;
-                    if (xmlDerefID != null)
-                    {
-                        xmlDeRefValue = xmlDerefID.Value;
-                    }
-
-                    expandedInput = expandedInput.Replace(match.Value, xmlDeRefValue == null ? null : xmlDeRefValue.ToString());
                 }
             }
 

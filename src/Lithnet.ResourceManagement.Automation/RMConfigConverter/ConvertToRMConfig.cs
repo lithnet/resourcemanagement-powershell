@@ -25,13 +25,13 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
         public string[] AnchorAttributes { get; set; }
 
         [Parameter(ParameterSetName = "ConvertResourceReferenceResolution", Mandatory = true, ValueFromPipeline = false, Position = 3)]
-        public ConverterSetting Settings { get; set; }
+        public ConverterSetting RMConverterSetting { get; set; }
 
         [Parameter(ParameterSetName = "ConvertResource", ValueFromPipeline = false, Mandatory = false, Position = 3)]
         public string IDPrefix { get; set; }
 
         [Parameter(ParameterSetName = "ConvertResource", ValueFromPipeline = false, Mandatory = false, Position = 4)]
-        public ObjectExclusion[] ObjectExclusion { get; set; }
+        public ObjectExclusion[] RMConverterObjectExclusions { get; set; }
 
         [Parameter(ParameterSetName = "ConvertResource", Mandatory = false, ValueFromPipeline = false, Position = 5)]
         public string[] AttributExclusions { get; set; }
@@ -46,7 +46,7 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
 
         protected override void BeginProcessing()
         {
-            if (Settings == null)
+            if (RMConverterSetting == null)
             {
                 ObjectSetting s = new ObjectSetting()
                 {
@@ -56,17 +56,17 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
                     IDPrefix = IDPrefix,
                     IncludeDefaultAttributes = IncludeDefaultAttributes,
                     IncludeEmptyAttributeValues = IncludeEmptyAttributeValues,
-                    ObjectSpecificExlusions = ObjectExclusion.ToList(),
+                    ObjectSpecificExlusions = RMConverterObjectExclusions.ToList(),
                     ObjectType = Resources[0].InternalObject.ObjectTypeName
                 };
 
-                Settings = new ConverterSetting()
+                RMConverterSetting = new ConverterSetting()
                 {
                     Configurations = new List<ObjectSetting>() { s }
                 };
             }
 
-            rmConfigConverter = new Converter(Settings);
+            rmConfigConverter = new Converter(RMConverterSetting);
         }
 
         protected override void ProcessRecord()

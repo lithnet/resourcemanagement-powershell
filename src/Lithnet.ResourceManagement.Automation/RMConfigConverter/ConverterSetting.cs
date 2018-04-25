@@ -1,17 +1,25 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lithnet.ResourceManagement.Automation
+namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
 {
-    [Cmdlet(VerbsCommon.New, "ConfigSyncController")]
-    public class NewConfigSyncController : PSCmdlet
+    public class ConverterSetting
+    {
+        public List<ObjectSetting> Configurations { get; set; }
+    }
+
+
+    [Cmdlet(VerbsCommon.New, "RMConverterSetting")]
+    public class NewConverterSetting : PSCmdlet
     {
         [Parameter(ParameterSetName = "NewMany", Mandatory = true, Position = 1)]
-        public ConfigSyncConfiguration[] Configurations { get; set; }
+        public ObjectSetting[] ObjectSettings { get; set; }
 
         [Parameter(ParameterSetName = "NewOne", Mandatory = true, Position = 1)]
         public string ObjectType { get; set; }
@@ -40,19 +48,19 @@ namespace Lithnet.ResourceManagement.Automation
 
         protected override void ProcessRecord()
         {
-            if (Configurations != null)
+            if (ObjectSettings != null)
                 this.WriteObject(
-                    new ConfigSyncController()
+                    new ConverterSetting()
                     {
-                        Configurations = Configurations.ToList()
+                        Configurations = ObjectSettings.ToList()
                     });
             else
             {
-                ConfigSyncConfiguration config = new ConfigSyncConfiguration()
+                ObjectSetting config = new ObjectSetting()
                 {
                     AnchorAttributes = AnchorAttributes?.ToList(),
                     AttributExclusions = AttributExclusions?.ToList(),
-                    IDPrefix = IDPrefix,                    
+                    IDPrefix = IDPrefix,
                     IncludeDefaultAttributes = IncludeDefaultAttributes.IsPresent,
                     IncludeEmptyAttributeValues = IncludeEmptyAttributeValues.IsPresent,
                     ObjectSpecificExlusions = ObjectSpecificExlusions?.ToList(),
@@ -61,12 +69,51 @@ namespace Lithnet.ResourceManagement.Automation
                 };
 
                 this.WriteObject(
-                 new ConfigSyncController()
+                 new ConverterSetting()
                  {
-                     Configurations = new List<ConfigSyncConfiguration>() { config }
+                     Configurations = new List<ObjectSetting>() { config }
                  });
             }
 
+        }
+    }
+
+
+    [Cmdlet(VerbsData.Save, "RMConverterSetting")]
+    public class SaveConverterSetting : PSCmdlet
+    {
+        [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 1)]
+        public ConverterSetting ConverterSettings { get; set; }
+
+        [Parameter(ValueFromPipeline = true, Mandatory = false, Position = 2)]
+        public string FilePath { get; set; }
+
+        protected override void ProcessRecord()
+        {
+            JsonSerializer serializer = new JsonSerializer();
+            serializer.Formatting = Formatting.Indented;
+
+            using (StreamWriter sw = new StreamWriter(FilePath))
+            using (JsonWriter writer = new JsonTextWriter(sw))
+            {
+                serializer.Serialize(writer, ConverterSettings);
+            }
+        }
+    }
+
+    [Cmdlet(VerbsData.Import, "RMConverterSetting")]
+    public class ImportConverterSetting : PSCmdlet
+    {
+        [Parameter(ValueFromPipeline = false, Mandatory = false, Position = 2)]
+        public string File { get; set; }
+
+        protected override void ProcessRecord()
+        {
+            using (StreamReader sr = System.IO.File.OpenText(File))
+            {
+                this.WriteObject(
+                    JsonConvert.DeserializeObject<ConverterSetting>(sr.ReadToEnd()));
+            }
         }
     }
 }

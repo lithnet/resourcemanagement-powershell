@@ -90,9 +90,11 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
 
         protected override void ProcessRecord()
         {
-            JsonSerializer serializer = new JsonSerializer();
-            serializer.Formatting = Formatting.Indented;
-
+            JsonSerializer serializer = new JsonSerializer
+            {
+                Formatting = Formatting.Indented
+            };
+            
             using (StreamWriter sw = new StreamWriter(FilePath))
             using (JsonWriter writer = new JsonTextWriter(sw))
             {

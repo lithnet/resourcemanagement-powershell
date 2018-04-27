@@ -13,19 +13,6 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
 {
     internal class Converter
     {
-        private string[] defaultAttributes = new string[] {
-            "CreatedTime",
-            "ObjectID",
-            "Creator",
-            "ComputedMember",
-            "MVObjectID",
-            "ResourceTime" };
-
-        private List<string> minimumAttributes = new List<string>() {
-            "ObjectID",
-            "ObjectType"
-            };
-
         private ConfigFile config;
         private List<ResourceObject> resolvedObject = new List<ResourceObject>();
         private ConverterSetting settings;
@@ -47,8 +34,17 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
             return converter.GetConfigFile();
         }
 
-        internal static void SerializeConfigFile(ConfigFile RMConfig, List<string> AttributeSeparations, string FilePath)
+        /// <summary>
+        /// Serialize a ConfigFile to the file system
+        /// </summary>
+        /// <param name="RMConfig"></param>
+        /// <param name="AttributeSeparations"></param>
+        /// <param name="FilePath"></param>
+        /// <returns>A list of exported files</returns>
+        internal static List<string> SerializeConfigFile(ConfigFile RMConfig, List<string> AttributeSeparations, string FilePath)
         {
+            List<string> fileExportList = new List<string>();
+
             ConfigSyncControl.CurrentConfig = RMConfig;
             ConfigSyncControl.CurrentPath = FilePath;
 
@@ -72,12 +68,17 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
                         if (attributeOperations.Count == 1)
                         {
                             string attributDirectory = Path.Combine(exportDirectory, attributeOperations[0].Name);
+                            string attributeFilePath = Path.Combine(attributDirectory, fileName);
+
                             if (!Directory.Exists(attributDirectory))
                                 Directory.CreateDirectory(attributDirectory);
 
+
                             File.WriteAllText(
-                                Path.Combine(attributDirectory, fileName),
+                                attributeFilePath,
                                 attributeOperations[0].Value);
+
+                            fileExportList.Add(attributeFilePath);
 
                             attributeOperations[0].ValueType = AttributeValueType.File;
                             attributeOperations[0].Value = Path.Combine(
@@ -93,6 +94,9 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
             {
                 s.Serialize(sw, RMConfig);
             }
+
+            fileExportList.Insert(0, FilePath);
+            return fileExportList;
         }
 
         internal Converter(ConverterSetting converterSetting)
@@ -140,8 +144,10 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
         private ConfigFile AddXMLReferencedObjects()
         {
             ConfigFile file = new ConfigFile();
+
             List<ResourceObject> objRefResolutionDone = new List<ResourceObject>();
             List<ResourceObject> objRefNeedResolution = resolvedObject.ToList();
+
             do
             {
                 foreach (ResourceObject r in objRefNeedResolution)
@@ -157,7 +163,8 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
                                Operation = ResourceOperationType.None,
                                ResourceType = r.ObjectType.SystemName,
                                ID = GetID(r, true),
-                               AnchorAttributes = (objectSetting == null) ? minimumAttributes : objectSetting.AnchorAttributes.ToList(),
+                               //AnchorAttributes = (objectSetting == null) ? minimumAttributes : objectSetting.AnchorAttributes.ToList(),
+                               AnchorAttributes = objectSetting.AnchorAttributes.ToList(),
                                AttributeOperations = GetAttributeOperations(r, objectSetting, false)
                            });
                     objRefResolutionDone.Add(r);
@@ -182,7 +189,8 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
 
             if (objectSetting == null)
             {
-                // Export minimum attributes
+                objectSetting = ObjectSetting.GetDefaultObjectSetting(r.ObjectTypeName);
+                /* Export minimum attributes
                 minimumAttributes.ForEach(item =>
                 {
                     operations.Add(new AttributeOperation()
@@ -195,60 +203,61 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
                 
             }
             else
+            {*/
+            }
+            foreach (var a in r.Attributes)
             {
-                foreach (var a in r.Attributes)
+                // Processing AttributExclusions
+                if (objectSetting.AttributExclusions != null)
                 {
-                    // Processing AttributExclusions
-                    if (objectSetting.AttributExclusions != null)
-                    {
-                        if (objectSetting.AttributExclusions.Contains(a.AttributeName))
-                            if (!objectSetting.AnchorAttributes.Contains(a.AttributeName))
-                                continue;
-                    }
-
-                    // Processing Default Attribute Exclusions
-                    if (!objectSetting.IncludeDefaultAttributes)
-                    {
-                        if (this.defaultAttributes.Contains(a.AttributeName))
+                    if (objectSetting.AttributExclusions.Contains(a.AttributeName))
+                        if (!objectSetting.AnchorAttributes.Contains(a.AttributeName))
                             continue;
-                    }
+                }
+
+                // Processing Default Attribute Exclusions
+                if (!objectSetting.IncludeDefaultAttributes)
+                {
+                    if (ObjectSetting.DefaultAttributes.Contains(a.AttributeName))
+                        continue;
+                }
 
 
-                    // Skipping Empty Attribute Exclusions
-                    if (!objectSetting.IncludeEmptyAttributeValues)
-                    {
-                        if (a.IsNull)
-                            continue;
-                    }
+                // Skipping Empty Attribute Exclusions
+                if (!objectSetting.IncludeEmptyAttributeValues)
+                {
+                    if (a.IsNull)
+                        continue;
+                }
 
-                    // Adding empty Add in case of a multiValue attribute
-                    if (a.Attribute.IsMultivalued)
-                    {
-                        operations.Add(
-                            new AttributeOperation()
-                            {
-                                Operation = AttributeOperationType.Replace,
-                                Name = a.AttributeName,
-                            });
-                    }
-
-                    // Processing AttributOperation Conversation if needed
-                    if (ReferenceResolution)
-                    {
-                        if (objectSetting.ReferenceResolutionAttributExclusions != null)
+                // Adding empty Add in case of a multiValue attribute
+                if (a.Attribute.IsMultivalued)
+                {
+                    operations.Add(
+                        new AttributeOperation()
                         {
-                            if (objectSetting.ReferenceResolutionAttributExclusions.Contains(a.AttributeName))
-                                operations.AddRange(GetAttributeOperations(a));
-                        }
-                        else
-                        {
-                            operations.AddRange(ResolveReferenceAttribute(a));
-                        }
+                            Operation = AttributeOperationType.Replace,
+                            Name = a.AttributeName,
+                        });
+                }
+
+                // Processing AttributOperation Conversation if needed
+                if (ReferenceResolution)
+                {
+                    if (objectSetting.ReferenceResolutionAttributExclusions != null)
+                    {
+                        if (objectSetting.ReferenceResolutionAttributExclusions.Contains(a.AttributeName))
+                            operations.AddRange(GetAttributeOperations(a));
                     }
                     else
-                        operations.AddRange(GetAttributeOperations(a));
+                    {
+                        operations.AddRange(ResolveReferenceAttribute(a));
+                    }
                 }
+                else
+                    operations.AddRange(GetAttributeOperations(a));
             }
+
 
             return operations.OrderBy(a => a.Name).ToList();
         }

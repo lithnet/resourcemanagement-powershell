@@ -74,14 +74,20 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
             int count = 0;
             foreach (ResourceObject r in Resources.Select(t => t.InternalObject))
             {
-                ProgressRecord p = new ProgressRecord(0, string.Format("Processing converting...")
-                    , string.Format("Processing {0}", r.ObjectID));
-                p.PercentComplete = (count / Resources.Length) * 100;
+                ProgressRecord p = new ProgressRecord(
+                                                    0,
+                                                    string.Format("Processing converting..."),
+                                                    string.Format("Processing {0}", r.ObjectID))
+                {
+                    PercentComplete = (count / Resources.Length) * 100
+                };
 
                 if (!rmConfigConverter.TryAddResourceOperation(r))
+                {
                     this.WriteWarning(String.Format(
                         "Ressource Object {0} was filtered by the configuration",
                         r.ObjectID));
+                }
 
                 this.WriteProgress(p);
             }

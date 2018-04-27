@@ -9,11 +9,39 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
 {
     public class ObjectSetting
     {
+        public static List<string> DefaultAttributes
+        {
+            get
+            {
+                return new List<string>
+                {
+                    "CreatedTime",
+                    "ObjectID",
+                    "Creator",
+                    "ComputedMember",
+                    "MVObjectID",
+                    "ResourceTime"
+                };
+            }
+        }
+
+        public static List<string> MinimumAttributes
+        {
+            get
+            {
+                return new List<string>
+                {
+                    "ObjectID",
+                    "ObjectType"
+                };
+            }
+        }
+
         public string ObjectType { get; set; }
         public List<string> AnchorAttributes { get; set; }
 
         public string IDPrefix { get; set; }
-        
+
         public bool ReferenceResolution { get; set; }
         public List<string> ReferenceResolutionAttributExclusions { get; set; }
 
@@ -23,7 +51,20 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
 
         public List<string> AttributExclusions { get; set; }
 
-        public List<ObjectExclusion> ObjectSpecificExlusions { get; set; }        
+        public List<ObjectExclusion> ObjectSpecificExlusions { get; set; }
+
+        internal static ObjectSetting GetDefaultObjectSetting(string ObjectType)
+        {
+            return new ObjectSetting()
+            {
+                ObjectType = ObjectType,
+                AnchorAttributes = new List<string> { "ObjectID" },
+                IDPrefix = "ObjectType",
+                ReferenceResolution = true,
+                IncludeDefaultAttributes = false,
+                IncludeEmptyAttributeValues = false
+            };
+        }
     }
 
     [Cmdlet(VerbsCommon.New, "RMConverterObjectSetting")]

@@ -47,6 +47,18 @@ namespace Lithnet.ResourceManagement.Automation.ChangeObserver
             if (ExportDirectory != null)
                 RMObserverSetting.ExportDirectory = ExportDirectory;
 
+            if(String.IsNullOrEmpty(RMObserverSetting.ExportDirectory))
+            {
+                Dictionary<string, PSObject> result = Host.UI.Prompt(
+                    "EXPORT DIRECTORY",
+                    "Enter the path to the export directory",
+                    new System.Collections.ObjectModel.Collection<FieldDescription>() { new FieldDescription("Directory") }
+                    );                
+                RMObserverSetting.ExportDirectory = result["Directory"].ToString();
+            }
+                
+                
+
             if (!Directory.Exists(RMObserverSetting.ExportDirectory))
                 try
                 {

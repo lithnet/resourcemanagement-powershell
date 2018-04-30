@@ -25,11 +25,11 @@ namespace Lithnet.ResourceManagement.Automation.ChangeObserver
     [Cmdlet(VerbsCommon.New, "RMObserverSetting")]
     public class NewObserverSetting : PSCmdlet
     {
-        [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 1)]
+        [Parameter(ValueFromPipeline = true, Mandatory = false, Position = 1)]
         public string ExportDirectory { get; set; }
 
         [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 2)]
-        //[ValidateSet("Me","Any")]
+        
         public ChangeModeType ChangeMode { get; set; }
 
         [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 3)]

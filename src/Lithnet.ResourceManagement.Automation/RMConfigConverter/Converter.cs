@@ -45,57 +45,61 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
         {
             List<string> fileExportList = new List<string>();
 
-            ConfigSyncControl.CurrentConfig = RMConfig;
-            ConfigSyncControl.CurrentPath = FilePath;
-
-            string exportDirectory = Path.GetDirectoryName(FilePath);
-
-            if (!Directory.Exists(exportDirectory))
-                Directory.CreateDirectory(exportDirectory);
-
-            string fileName = Path.GetFileName(FilePath);
-
-            XmlSerializer s = new XmlSerializer(typeof(ConfigFile));
-
-            if (AttributeSeparations != null)
+            if (RMConfig.Operations.Count > 0)
             {
-                foreach (ResourceOperation operations in RMConfig.Operations)
+                ConfigSyncControl.CurrentConfig = RMConfig;
+                ConfigSyncControl.CurrentPath = FilePath;
+
+                string exportDirectory = Path.GetDirectoryName(FilePath);
+
+                if (!Directory.Exists(exportDirectory))
+                    Directory.CreateDirectory(exportDirectory);
+
+                string fileName = Path.GetFileName(FilePath);
+
+                XmlSerializer s = new XmlSerializer(typeof(ConfigFile));
+
+                if (AttributeSeparations != null)
                 {
-                    foreach (string a in AttributeSeparations)
+                    foreach (ResourceOperation operations in RMConfig.Operations)
                     {
-                        var attributeOperations = operations.AttributeOperations.FindAll(o => o.Name == a);
-
-                        if (attributeOperations.Count == 1)
+                        foreach (string a in AttributeSeparations)
                         {
-                            string attributDirectory = Path.Combine(exportDirectory, attributeOperations[0].Name);
-                            string attributeFilePath = Path.Combine(attributDirectory, fileName);
+                            var attributeOperations = operations.AttributeOperations.FindAll(o => o.Name == a);
 
-                            if (!Directory.Exists(attributDirectory))
-                                Directory.CreateDirectory(attributDirectory);
+                            if (attributeOperations.Count == 1)
+                            {
+                                string attributDirectory = Path.Combine(exportDirectory, attributeOperations[0].Name);
+                                string attributeFilePath = Path.Combine(attributDirectory, fileName);
+
+                                if (!Directory.Exists(attributDirectory))
+                                    Directory.CreateDirectory(attributDirectory);
 
 
-                            File.WriteAllText(
-                                attributeFilePath,
-                                attributeOperations[0].Value);
+                                File.WriteAllText(
+                                    attributeFilePath,
+                                    attributeOperations[0].Value);
 
-                            fileExportList.Add(attributeFilePath);
+                                fileExportList.Add(attributeFilePath);
 
-                            attributeOperations[0].ValueType = AttributeValueType.File;
-                            attributeOperations[0].Value = Path.Combine(
-                                    @".\",
-                                    attributeOperations[0].Name,
-                                    fileName);
+                                attributeOperations[0].ValueType = AttributeValueType.File;
+                                attributeOperations[0].Value = Path.Combine(
+                                        @".\",
+                                        attributeOperations[0].Name,
+                                        fileName);
+                            }
                         }
                     }
                 }
+
+                using (StreamWriter sw = new StreamWriter(FilePath))
+                {
+                    s.Serialize(sw, RMConfig);
+                }
+
+                fileExportList.Insert(0, FilePath);
             }
 
-            using (StreamWriter sw = new StreamWriter(FilePath))
-            {
-                s.Serialize(sw, RMConfig);
-            }
-
-            fileExportList.Insert(0, FilePath);
             return fileExportList;
         }
 
@@ -174,10 +178,10 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
                                {
                                    Operation = ResourceOperationType.None,
                                    ResourceType = r.ObjectType.SystemName,
-                                   ID = GetID(r, true),                                   
+                                   ID = GetID(r, true),
                                    AnchorAttributes = objectSetting.AnchorAttributes.ToList(),
                                    AttributeOperations = GetAttributeOperations(r, objectSetting, false)
-                               });                        
+                               });
                     }
                     objRefResolutionDone.Add(r);
                 }

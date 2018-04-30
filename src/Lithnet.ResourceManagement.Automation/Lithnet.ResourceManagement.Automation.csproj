@@ -70,6 +70,7 @@
     <Compile Include="AttributeValueExtension.cs" />
     <Compile Include="ChangeObserver\ChangeModeType.cs" />
     <Compile Include="ChangeObserver\ObserverObjectSetting.cs" />
+    <Compile Include="ChangeObserver\ObserverRequest.cs" />
     <Compile Include="ChangeObserver\ObserverSetting.cs" />
     <Compile Include="ChangeObserver\StartChangeObserver.cs" />
     <Compile Include="RMConfigConverter\ConverterSetting.cs" />

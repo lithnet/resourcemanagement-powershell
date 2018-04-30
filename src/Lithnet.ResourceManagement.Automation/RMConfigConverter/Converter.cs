@@ -143,6 +143,15 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
 
         private ConfigFile AddXMLReferencedObjects()
         {
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(ConfigFile));
+            string configFile;
+
+            using (StringWriter textWriter = new StringWriter())
+            {
+                xmlSerializer.Serialize(textWriter, this.config);
+                configFile = textWriter.ToString();
+            }
+
             ConfigFile file = new ConfigFile();
 
             List<ResourceObject> objRefResolutionDone = new List<ResourceObject>();
@@ -156,17 +165,20 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
                         .Where(c => c.ObjectType == r.ObjectTypeName)
                         .FirstOrDefault();
 
+                    string refID = GetID(r, true);
 
-                    file.Operations.Add(
-                           new ResourceOperation()
-                           {
-                               Operation = ResourceOperationType.None,
-                               ResourceType = r.ObjectType.SystemName,
-                               ID = GetID(r, true),
-                               //AnchorAttributes = (objectSetting == null) ? minimumAttributes : objectSetting.AnchorAttributes.ToList(),
-                               AnchorAttributes = objectSetting.AnchorAttributes.ToList(),
-                               AttributeOperations = GetAttributeOperations(r, objectSetting, false)
-                           });
+                    if (configFile.Contains(String.Format("##xmlref:{0}:ObjectID##", refID)))
+                    {
+                        file.Operations.Add(
+                               new ResourceOperation()
+                               {
+                                   Operation = ResourceOperationType.None,
+                                   ResourceType = r.ObjectType.SystemName,
+                                   ID = GetID(r, true),                                   
+                                   AnchorAttributes = objectSetting.AnchorAttributes.ToList(),
+                                   AttributeOperations = GetAttributeOperations(r, objectSetting, false)
+                               });                        
+                    }
                     objRefResolutionDone.Add(r);
                 }
                 objRefNeedResolution.Clear();
@@ -208,26 +220,28 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
             foreach (var a in r.Attributes)
             {
                 // Processing AttributExclusions
-                if (objectSetting.AttributExclusions != null)
+                if (!objectSetting.AnchorAttributes.Contains(a.AttributeName))
                 {
-                    if (objectSetting.AttributExclusions.Contains(a.AttributeName))
-                        if (!objectSetting.AnchorAttributes.Contains(a.AttributeName))
+                    if (objectSetting.AttributExclusions != null)
+                    {
+                        if (objectSetting.AttributExclusions.Contains(a.AttributeName))
                             continue;
-                }
+                    }
 
-                // Processing Default Attribute Exclusions
-                if (!objectSetting.IncludeDefaultAttributes)
-                {
-                    if (ObjectSetting.DefaultAttributes.Contains(a.AttributeName))
-                        continue;
-                }
+                    // Processing Default Attribute Exclusions
+                    if (!objectSetting.IncludeDefaultAttributes)
+                    {
+                        if (ObjectSetting.DefaultAttributes.Contains(a.AttributeName))
+                            continue;
+                    }
 
 
-                // Skipping Empty Attribute Exclusions
-                if (!objectSetting.IncludeEmptyAttributeValues)
-                {
-                    if (a.IsNull)
-                        continue;
+                    // Skipping Empty Attribute Exclusions
+                    if (!objectSetting.IncludeEmptyAttributeValues)
+                    {
+                        if (a.IsNull)
+                            continue;
+                    }
                 }
 
                 // Adding empty Add in case of a multiValue attribute
@@ -248,6 +262,8 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
                     {
                         if (objectSetting.ReferenceResolutionAttributExclusions.Contains(a.AttributeName))
                             operations.AddRange(GetAttributeOperations(a));
+                        else
+                            operations.AddRange(ResolveReferenceAttribute(a));
                     }
                     else
                     {
@@ -269,18 +285,60 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
 
         internal static string GetFileName(ResourceObject resourceObject, ObjectSetting objectSetting)
         {
-
-
             string fileName = String.Empty;
-            foreach (string s in objectSetting.AnchorAttributes)
+            foreach (string s in GetAnchorAttributeValues(resourceObject, objectSetting))
             {
                 if (!string.IsNullOrEmpty(fileName))
                     fileName += "-";
 
-                fileName += resourceObject.Attributes[s].StringValue;
+                fileName += s;
             }
 
             return illegalInFileName.Replace(fileName + ".xml", " ");
+        }
+
+        private static List<string> GetAnchorAttributeValues(ResourceObject resourceObject, ObjectSetting objectSetting)
+        {
+            return GetAnchorAttributeValues(resourceObject, objectSetting, null);
+        }
+
+        private static List<string> GetAnchorAttributeValues(ResourceObject resourceObject, ObjectSetting objectSetting, List<ResourceObject> ResolvedResourceObjects)
+        {
+            List<string> anchorValues = new List<string>();
+            foreach (string s in objectSetting.AnchorAttributes)
+            {
+                if (resourceObject.Attributes[s].Attribute.Type == AttributeType.Reference)
+                {
+                    ResourceObject refObj = null;
+                    if (ResolvedResourceObjects != null)
+                    {
+                        var ob = ResolvedResourceObjects.Where(ro => ro.ObjectID.Value == resourceObject.Attributes[s].ReferenceValue.Value).FirstOrDefault();
+                        if (ob != null)
+                            refObj = ob;
+                    }
+
+                    if (refObj == null)
+                        refObj = RmcWrapper.Client.GetResource(resourceObject.Attributes[s].ReferenceValue);
+
+                    var nameAttribute = refObj.Attributes.FirstOrDefault(a => a.AttributeName == "Name");
+
+                    if (nameAttribute != null)
+                    {
+                        anchorValues.Add(nameAttribute.StringValue);
+                    }
+                    else if (!String.IsNullOrEmpty(refObj.DisplayName))
+                    {
+                        anchorValues.Add(refObj.DisplayName);
+                    }
+                    else
+                    {
+                        anchorValues.Add(resourceObject.Attributes[s].StringValue);
+                    }
+                }
+                else
+                    anchorValues.Add(resourceObject.Attributes[s].StringValue);
+            }
+            return anchorValues;
         }
 
         internal static string GetFilePath(ResourceObject resourceObject, ObjectSetting objectSetting, string exportDirectory)
@@ -513,8 +571,8 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
             }
 
             string id = (!string.IsNullOrEmpty(config.IDPrefix) && AddIdSuffix) ? config.IDPrefix : "";
-            foreach (string s in config.AnchorAttributes)
-                id += (string.IsNullOrEmpty(id)) ? r.Attributes[s].StringValue : "-" + r.Attributes[s].StringValue;
+            foreach (string s in GetAnchorAttributeValues(r, config, resolvedObject))
+                id += (string.IsNullOrEmpty(id)) ? s : "-" + s;
             return id;
 
         }

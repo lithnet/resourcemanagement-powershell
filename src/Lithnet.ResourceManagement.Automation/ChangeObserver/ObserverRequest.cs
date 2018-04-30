@@ -10,7 +10,14 @@ namespace Lithnet.ResourceManagement.Automation.ChangeObserver
     internal class ObserverRequest
     {
         public UniqueIdentifier TargetObjectID { get; set; }
+        public string TargetObjectType { get; set; }
         public string RequestOperationType { get; set; }
-        
+
+        internal ObserverRequest(UniqueIdentifier TargetObjectID, string TargetObjectType, string RequestOperationType)
+        {
+            this.TargetObjectID = TargetObjectID;
+            this.TargetObjectType = TargetObjectType;
+            this.RequestOperationType = RequestOperationType;
+        }
     }
 }

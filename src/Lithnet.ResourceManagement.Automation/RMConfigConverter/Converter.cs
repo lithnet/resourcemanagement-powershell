@@ -358,16 +358,18 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
         internal static List<string> GetSerializedFiles(ResourceObject resourceObject, ObjectSetting objectSetting, string exportDirectory, List<string> attributeSeparations)
         {
             List<string> list = new List<string>();
+                        
+            string objFilePath = GetFilePath(resourceObject, objectSetting, exportDirectory);
+            string objectExportDirectory = Path.GetDirectoryName(objFilePath);
+            string objFileName = Path.GetFileName(objFilePath);
 
-            string objFileName = GetFilePath(resourceObject, objectSetting, exportDirectory);
-            string objectExportDirectory = Path.GetDirectoryName(objFileName);
-            list.Add(objFileName);
+            list.Add(objFilePath);
 
 
             attributeSeparations?.ForEach(item =>
             {
-                if (resourceObject.Attributes[item].IsNull)
-                    list.Add(Path.Combine(exportDirectory, item, objFileName));
+                if (!resourceObject.Attributes[item].IsNull)
+                    list.Add(Path.Combine(objectExportDirectory, item, objFileName));
             });
 
 

@@ -132,13 +132,10 @@ namespace Lithnet.ResourceManagement.Automation.ChangeObserver
                 while (true)
                 {
                     if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape) break;
-
-                    WriteDebug("1");
+                                        
                     ProcessingChanges(lastImport);
-                    lastImport = DateTime.Now;
-                    WriteDebug("2");
-                    await Task.Delay(RMObserverSetting.ChangeDetectionInterval);
-                    WriteDebug("3");
+                    lastImport = DateTime.Now;                    
+                    await Task.Delay(RMObserverSetting.ChangeDetectionInterval);                    
                 }
             }
         }
@@ -229,7 +226,7 @@ namespace Lithnet.ResourceManagement.Automation.ChangeObserver
                     Directory.Delete(item, true);
                 });
             }
-                
+
             Directory.CreateDirectory(RMObserverSetting.ExportDirectory);
 
             var initSyncTasks = new List<Task>();
@@ -248,7 +245,8 @@ namespace Lithnet.ResourceManagement.Automation.ChangeObserver
                                    observerSetting.AttributeSeparations,
                                    Converter.GetFilePath(item, converterSetting, RMObserverSetting.ExportDirectory)
                                    );
-                    }catch(Exception ex)
+                    }
+                    catch (Exception ex)
                     {
                         WriteError(new ErrorRecord(
                                                 ex,
@@ -281,28 +279,28 @@ namespace Lithnet.ResourceManagement.Automation.ChangeObserver
                 List<ObserverRequest> observerRequests;
                 if (request.Attributes["TargetObjectType"].StringValue == "	msidmCompositeType")
                 {
-                    WriteDebug(String.Format("Detected new 	msidmCompositeType with ID {0} and operation {1}", request.ObjectID.Value, request.Attributes["Operation"].StringValue));
+                    WriteVerbose(String.Format("Detected new msidmCompositeType with ID {0} and operation {1}", request.ObjectID.Value, request.Attributes["Operation"].StringValue));
                     observerRequests = GetObserverRequestFromCompositeRequest(request);
                 }
                 else
                 {
-                    WriteDebug(String.Format("Detected new request with ID {0} and operation {1}", request.ObjectID.Value, request.Attributes["Operation"].StringValue));
+                    WriteVerbose(String.Format("Detected new request with ID {0} and operation {1}", request.ObjectID.Value, request.Attributes["Operation"].StringValue));
                     observerRequests = new List<ObserverRequest>{
-                                                                    new ObserverRequest{
-                                                                        TargetObjectID = request.Attributes["Target"].ReferenceValue,
-                                                                       RequestOperationType = request.Attributes["Operation"].StringValue
-                                                                    }
+                                                                    new ObserverRequest(
+                                                                        request.Attributes["Target"].ReferenceValue,
+                                                                        request.Attributes["TargetObjectType"].StringValue,
+                                                                        request.Attributes["Operation"].StringValue)
                                                                 };
                 }
 
                 foreach (ObserverRequest observerRequest in observerRequests)
                 {
 
-                    var observerObjectSetting = RMObserverSetting.ObserverObjectSettings.Where(c => c.ObjectType == observerRequest.TargetObjectID.GetGuid().ToString()).FirstOrDefault();
+                    var observerObjectSetting = RMObserverSetting.ObserverObjectSettings.Where(c => c.ObjectType == observerRequest.TargetObjectType).FirstOrDefault();
 
                     if (observerObjectSetting == null)
                     {
-                        WriteDebug("Change is skipped. No ObserverConfiguration for this ObjectType is configured.");
+                        WriteVerbose("Change is skipped. No ObserverConfiguration for this ObjectType is configured.");
                         continue;
                     }
 
@@ -339,13 +337,17 @@ namespace Lithnet.ResourceManagement.Automation.ChangeObserver
             XElement requestParameters = XElement.Parse(parameterXMLString);
             foreach (var requestParameter in requestParameters.Elements())
             {
-                observerRequests.Add(new ObserverRequest
-                                            {
-                                                RequestOperationType = requestParameter.Element("Operation").Value,
-                                                TargetObjectID = new UniqueIdentifier(requestParameter.Element("Target").Value)
+                var objectID = new UniqueIdentifier(requestParameter.Element("Target").Value);
+                var objectType = observedObjects.Where(o => o.ObjectID == objectID).FirstOrDefault();
 
-                                            }
-                );
+                if(objectType != null)                
+                    observerRequests.Add(
+                    new ObserverRequest(
+                        objectID,
+                        objectType.ObjectTypeName,
+                        requestParameter.Element("Operation").Value));                
+                else
+                    WriteVerbose("msidmCompositeType RequestParameter is skipped. Could not find Target in observed objects.");
             }
             return observerRequests;
         }
@@ -353,7 +355,7 @@ namespace Lithnet.ResourceManagement.Automation.ChangeObserver
         private void WriteModificationToConsole(Dictionary<string, string> modifications)
         {
             foreach (var item in modifications)
-                Host.UI.WriteLine(string.Format("{0} : {1}", item.Value, item.Key.ToString().Remove(0, RMObserverSetting.ExportDirectory.Length + 1)));
+                Host.UI.WriteLine(string.Format("{0,-8} : {1}", item.Value, item.Key.ToString().Remove(0, RMObserverSetting.ExportDirectory.Length + 1)));
         }
 
         private Dictionary<string, string> ProcessingCreate(ResourceObject obj)
@@ -411,7 +413,7 @@ namespace Lithnet.ResourceManagement.Automation.ChangeObserver
                 }
             }
 
-            foreach (var file in filesDeleted.Values)
+            foreach (var file in filesDeleted.Keys)
             {
                 filesModified.Add(file, "Deleted");
             }
@@ -440,7 +442,7 @@ namespace Lithnet.ResourceManagement.Automation.ChangeObserver
 
             if (obj == null)
             {
-                WriteDebug("Target is not observed. Delete Request will be skipped.");
+                WriteVerbose("Target is not observed. Delete Request will be skipped.");
                 return filesDeleted;
             }
 

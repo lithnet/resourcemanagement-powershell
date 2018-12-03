@@ -11,22 +11,35 @@ namespace Lithnet.ResourceManagement.Automation
 {
     public class AttributeValueArrayList : ArrayList
     {
-        public AttributeValueArrayList ()
+        public AttributeValueArrayList()
             : base()
         {
         }
 
-        public AttributeValueArrayList (ICollection c)
+        public AttributeValueArrayList(ICollection c)
             : base(c)
         {
         }
-        
+
+        public override void AddRange(ICollection c)
+        {
+            foreach (object item in c)
+            {
+                if (item is RmaObject rmaObject)
+                {
+                    base.Add(rmaObject.InternalObject.ObjectID);
+                }
+                else
+                {
+                    base.Add(item);
+                }
+            }
+        }
+
         public override int Add(object value)
         {
-            RmaObject rmaObject = value as RmaObject;
-            if (rmaObject != null)
+            if (value is RmaObject rmaObject)
             {
-                // obj is an existing object
                 return base.Add(rmaObject.InternalObject.ObjectID);
             }
             else
@@ -38,37 +51,29 @@ namespace Lithnet.ResourceManagement.Automation
         public override void Remove(object obj)
         {
             if (base.Contains(obj))
-            { 
+            {
                 // obj is already a unique identifier
                 base.Remove(obj);
                 return;
             }
 
-            RmaObject rmaObject = obj as RmaObject;
-            if (rmaObject != null)
+            switch (obj)
             {
-                // obj is an existing object
-                base.Remove(rmaObject.InternalObject.ObjectID);
-                return;
-            }
+                case RmaObject rmaObject:
+                    // obj is an existing object
+                    base.Remove(rmaObject.InternalObject.ObjectID);
+                    return;
 
-            if (obj is Guid)
-            {
-                // obj is a guid
-                base.Remove(new UniqueIdentifier((Guid)obj));
-                return;
-            }
+                case Guid guid1:
+                    // obj is a guid
+                    base.Remove(new UniqueIdentifier(guid1));
+                    return;
 
-            if (obj is string)
-            {
-                Guid guid;
-                if (Guid.TryParse((string)obj, out guid))
-                {
+                case string s when Guid.TryParse(s, out Guid guid):
                     // obj is a string in GUID format
                     base.Remove(new UniqueIdentifier(guid));
                     return;
-                }
             }
-        } 
+        }
     }
 }

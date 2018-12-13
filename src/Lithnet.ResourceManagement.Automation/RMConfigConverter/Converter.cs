@@ -468,7 +468,7 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
                                         Operation = attributeValue.Attribute.IsMultivalued ? AttributeOperationType.Add : AttributeOperationType.Replace,
                                         Value = string.Format("{0}|{1}|{2}",
                                                                     refObj.ObjectTypeName,
-                                                                    attributeValue.AttributeName,
+                                                                    objectSetting.AnchorAttributes[0],
                                                                     refID),
                                         ValueType = AttributeValueType.Reference
                                     });

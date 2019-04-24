@@ -20,6 +20,8 @@ namespace Lithnet.ResourceManagement.Automation.ChangeObserver
 
         public List<ObserverObjectSetting> ObserverObjectSettings { get; set; }
 
+        public int OnLoadDelayInterval { get; set; }
+
     }
 
     [Cmdlet(VerbsCommon.New, "RMObserverSetting")]
@@ -38,6 +40,9 @@ namespace Lithnet.ResourceManagement.Automation.ChangeObserver
         [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 4)]
         public ObserverObjectSetting[] ObserverConfigurations { get; set; }
 
+        [Parameter(ValueFromPipeline = true, Mandatory = false, Position = 5)]
+        public int OnLoadDelayInterval { get; set; }
+
         protected override void ProcessRecord()
         {
             WriteObject(
@@ -46,7 +51,8 @@ namespace Lithnet.ResourceManagement.Automation.ChangeObserver
                     ExportDirectory = ExportDirectory,
                     ChangeMode = ChangeMode,
                     ChangeDetectionInterval = ChangeDetectionInterval,
-                    ObserverObjectSettings = ObserverConfigurations?.ToList()
+                    ObserverObjectSettings = ObserverConfigurations?.ToList(),
+                    OnLoadDelayInterval = OnLoadDelayInterval
                 }
                 );
         }

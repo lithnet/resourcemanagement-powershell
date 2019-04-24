@@ -42,22 +42,18 @@ namespace Lithnet.ResourceManagement.Automation.ChangeObserver
             int loadingRetryOnException = 1;
             Start = DateTime.Now;
 
-
-
             if (ExportDirectory != null)
                 RMObserverSetting.ExportDirectory = ExportDirectory;
 
-            if(String.IsNullOrEmpty(RMObserverSetting.ExportDirectory))
+            if (String.IsNullOrEmpty(RMObserverSetting.ExportDirectory))
             {
                 Dictionary<string, PSObject> result = Host.UI.Prompt(
                     "EXPORT DIRECTORY",
                     "Enter the path to the export directory",
                     new System.Collections.ObjectModel.Collection<FieldDescription>() { new FieldDescription("Directory") }
-                    );                
+                    );
                 RMObserverSetting.ExportDirectory = result["Directory"].ToString();
             }
-                
-                
 
             if (!Directory.Exists(RMObserverSetting.ExportDirectory))
                 try
@@ -83,8 +79,13 @@ namespace Lithnet.ResourceManagement.Automation.ChangeObserver
 
                     foreach (var config in RMObserverSetting.ObserverObjectSettings)
                     {
-                        Host.UI.WriteLine(
-                            string.Format("{0,-35} : {1}", config.ObjectType, config.XPathExpression));
+                        // Slowup call, otherwise ResourceManagementClient cannot answer the query.
+                        if (RMObserverSetting.OnLoadDelayInterval > 0)
+                            await Task.Delay(RMObserverSetting.OnLoadDelayInterval);
+
+                        if (!hasException)
+                            Host.UI.WriteLine(
+                                string.Format("{0,-35} : {1}", config.ObjectType, config.XPathExpression));
 
                         loadingTasks.Add(Task.Run(() =>
                         {
@@ -100,6 +101,10 @@ namespace Lithnet.ResourceManagement.Automation.ChangeObserver
                     while (!Task.WhenAll(loadingTasks).IsCompleted)
                     {
                         await Task.Delay(200);
+
+                        foreach (Task t in loadingTasks.Where(t => t.IsFaulted))
+                            throw t.Exception;
+
                         Host.UI.Write(".");
                     };
 
@@ -113,9 +118,11 @@ namespace Lithnet.ResourceManagement.Automation.ChangeObserver
                     WriteError(new ErrorRecord(ex, "2", ErrorCategory.ReadError, null));
                     hasException = true;
                     loadingRetryOnException++;
+                    Host.UI.WriteLine(ConsoleColor.Green, Host.UI.RawUI.BackgroundColor, "");
                     Host.UI.WriteLine(ConsoleColor.Green, Host.UI.RawUI.BackgroundColor, String.Format("An exception has occured while loading. Retry initial load ({0} / 3)", loadingRetryOnException));
+                    Host.UI.WriteLine(ConsoleColor.Green, Host.UI.RawUI.BackgroundColor, "");
                 }
-            } while (hasException || loadingRetryOnException > 3);
+            } while (hasException && loadingRetryOnException < 3);
 
             if (!hasException)
             {
@@ -144,10 +151,17 @@ namespace Lithnet.ResourceManagement.Automation.ChangeObserver
                 while (true)
                 {
                     if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape) break;
-                                        
-                    ProcessingChanges(lastImport);
-                    lastImport = DateTime.Now;                    
-                    await Task.Delay(RMObserverSetting.ChangeDetectionInterval);                    
+
+                    try
+                    {
+                        ProcessingChanges(lastImport);
+                        lastImport = DateTime.Now;
+                        await Task.Delay(RMObserverSetting.ChangeDetectionInterval);
+                    }
+                    catch (Exception ex)
+                    {
+                        Host.UI.WriteLine("");
+                    }
                 }
             }
         }
@@ -352,12 +366,12 @@ namespace Lithnet.ResourceManagement.Automation.ChangeObserver
                 var objectID = new UniqueIdentifier(requestParameter.Element("Target").Value);
                 var objectType = observedObjects.Where(o => o.ObjectID == objectID).FirstOrDefault();
 
-                if(objectType != null)                
+                if (objectType != null)
                     observerRequests.Add(
                     new ObserverRequest(
                         objectID,
                         objectType.ObjectTypeName,
-                        requestParameter.Element("Operation").Value));                
+                        requestParameter.Element("Operation").Value));
                 else
                     WriteVerbose("msidmCompositeType RequestParameter is skipped. Could not find Target in observed objects.");
             }

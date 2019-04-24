@@ -529,13 +529,13 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
             // Processing ObjectSpecificExlusions
             if (objectSetting.ObjectSpecificExlusions != null)
             {
-                foreach (var objexclusion in objectSetting.ObjectSpecificExlusions)
+                foreach (var objectexclusion in objectSetting.ObjectSpecificExlusions)
                 {
-                    foreach (var k in objexclusion.AnchorKeyValueList)
+                    foreach (var k in objectexclusion.AnchorKeyValueList)
                     {
                         if (k.Value == resource.Attributes[k.Key].StringValue)
                         {
-                            if (objexclusion.AttributExclusions.Contains("*"))
+                            if (objectexclusion.AttributExclusions.Contains("*"))
                             {
                                 //EXCLUDE OBJECT
                                 objectExcluded = true;
@@ -543,10 +543,10 @@ namespace Lithnet.ResourceManagement.Automation.RMConfigConverter
                             }
                             else
                             {
-                                foreach (string ea in objexclusion.AttributExclusions)
+                                foreach (string ea in objectexclusion.AttributExclusions)
                                 {
                                     if (!objectSetting.AnchorAttributes.Contains(ea))
-                                        resource.Attributes[k.Key].Value = null;
+                                        resource.Attributes[ea].Value = null;
                                 }
                             }
                         }

@@ -716,13 +716,13 @@ $expression.ToString()</Cmd>
         </Example>
         <Example>
           <Name>Get a Person using its AccountName attribute, and delete it</Name>
-          <Cmd>Remove-Resource | Get-Resource -ObjectType Person -AttributeName AccountName -AttributeValue testuser</Cmd>
+          <Cmd>Get-Resource -ObjectType Person -AttributeName AccountName -AttributeValue testuser | Remove-Resource</Cmd>
           <Description />
           <Output />
         </Example>
         <Example>
           <Name>Delete all email templates one at a time</Name>
-          <Cmd>Remove-Resource | Search-Resource -Xpath "/EmailTemplate"</Cmd>
+          <Cmd>Search-Resource -Xpath "/EmailTemplate" | Remove-Resource</Cmd>
           <Description />
           <Output />
         </Example>

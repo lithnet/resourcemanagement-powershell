@@ -1512,7 +1512,7 @@ $expression.ToString()</dev:code>
 			<maml:introduction>
 				<maml:paragraph>PS C:\&gt;</maml:paragraph>
 			</maml:introduction>
-			<dev:code>Remove-Resource | Get-Resource -ObjectType Person -AttributeName AccountName -AttributeValue testuser</dev:code>
+			<dev:code>Get-Resource -ObjectType Person -AttributeName AccountName -AttributeValue testuser | Remove-Resource</dev:code>
 			<dev:remarks>
 				<maml:para />
 				<maml:para />
@@ -1532,7 +1532,7 @@ $expression.ToString()</dev:code>
 			<maml:introduction>
 				<maml:paragraph>PS C:\&gt;</maml:paragraph>
 			</maml:introduction>
-			<dev:code>Remove-Resource | Search-Resource -Xpath &quot;/EmailTemplate&quot;</dev:code>
+			<dev:code>Search-Resource -Xpath &quot;/EmailTemplate&quot; | Remove-Resource</dev:code>
 			<dev:remarks>
 				<maml:para />
 				<maml:para />

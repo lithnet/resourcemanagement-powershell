@@ -5,7 +5,6 @@ using System.Text;
 using System.Collections;
 using System.Management.Automation;
 using Lithnet.ResourceManagement.Client;
-using Microsoft.ResourceManagement.WebServices;
 
 namespace Lithnet.ResourceManagement.Automation
 {

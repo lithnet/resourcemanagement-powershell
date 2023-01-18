@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Management;
 using System.Management.Automation;
-using Microsoft.ResourceManagement.WebServices;
 using System.Collections;
 using Lithnet.ResourceManagement.Client;
 

@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lithnet.ResourceManagement.Automation", "Lithnet.ResourceManagement.Automation\Lithnet.ResourceManagement.Automation.csproj", "{4C4BEB83-82FF-4625-B8C7-D547C654228A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lithnet.ResourceManagement.Automation", "Lithnet.ResourceManagement.Automation\Lithnet.ResourceManagement.Automation.csproj", "{4C4BEB83-82FF-4625-B8C7-D547C654228A}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Lithnet.ResourceManagement.Automation.Installer", "Lithnet.ResourceManagement.Automation.Installer\Lithnet.ResourceManagement.Automation.Installer.wixproj", "{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}"
 EndProject
@@ -11,9 +11,11 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
 		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
@@ -21,22 +23,32 @@ Global
 		{4C4BEB83-82FF-4625-B8C7-D547C654228A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C4BEB83-82FF-4625-B8C7-D547C654228A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{4C4BEB83-82FF-4625-B8C7-D547C654228A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4C4BEB83-82FF-4625-B8C7-D547C654228A}.Debug|x64.ActiveCfg = Debug|x64
+		{4C4BEB83-82FF-4625-B8C7-D547C654228A}.Debug|x64.Build.0 = Debug|x64
 		{4C4BEB83-82FF-4625-B8C7-D547C654228A}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{4C4BEB83-82FF-4625-B8C7-D547C654228A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C4BEB83-82FF-4625-B8C7-D547C654228A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4C4BEB83-82FF-4625-B8C7-D547C654228A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{4C4BEB83-82FF-4625-B8C7-D547C654228A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{4C4BEB83-82FF-4625-B8C7-D547C654228A}.Release|x64.ActiveCfg = Release|x64
+		{4C4BEB83-82FF-4625-B8C7-D547C654228A}.Release|x64.Build.0 = Release|x64
 		{4C4BEB83-82FF-4625-B8C7-D547C654228A}.Release|x86.ActiveCfg = Release|Any CPU
 		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
 		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Debug|Mixed Platforms.Build.0 = Debug|x64
+		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Debug|x64.ActiveCfg = Debug|x64
 		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Debug|x86.ActiveCfg = Debug|x64
 		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Release|Any CPU.ActiveCfg = Release|x64
 		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Release|Mixed Platforms.ActiveCfg = Release|x64
 		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Release|Mixed Platforms.Build.0 = Release|x64
+		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Release|x64.ActiveCfg = Release|x64
+		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Release|x64.Build.0 = Release|x64
 		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {62DC28F5-ACF7-439F-A13C-ED684453796D}
 	EndGlobalSection
 EndGlobal

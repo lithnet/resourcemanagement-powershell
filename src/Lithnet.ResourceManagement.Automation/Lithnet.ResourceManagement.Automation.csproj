@@ -1,183 +1,125 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4C4BEB83-82FF-4625-B8C7-D547C654228A}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Lithnet.ResourceManagement.Automation</RootNamespace>
-    <AssemblyName>Lithnet.ResourceManagement.Automation</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Lithnet.ResourceManagement.Client, Version=1.0.6623.18312, Culture=neutral, PublicKeyToken=bd0636700c1e2538, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lithnet.ResourceManagement.Client.1.0.6623.18312\lib\net40\Lithnet.ResourceManagement.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.ResourceManagement, Version=4.1.3451.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lithnet.ResourceManagement.Client.1.0.6623.18312\lib\net40\Microsoft.ResourceManagement.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Management" />
-    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\WindowsPowerShell\3.0\System.Management.Automation.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Net" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AttributeValueArrayList.cs" />
-    <Compile Include="ConfigSyncControl.cs" />
-    <Compile Include="Enums\AttributeOperationType.cs" />
-    <Compile Include="Enums\ApprovalDecision.cs" />
-    <Compile Include="Enums\AttributeValueType.cs" />
-    <Compile Include="Enums\SchemaRefreshEvent.cs" />
-    <Compile Include="Enums\ResourceOperationType.cs" />
-    <Compile Include="SetPendingApprovalRequest.cs" />
-    <Compile Include="GetApprovalRequest.cs" />
-    <Compile Include="ImportRMConfig.cs" />
-    <Compile Include="NewXPathExpression.cs" />
-    <Compile Include="NewXPathQueryGroup.cs" />
-    <Compile Include="NewXPathQuery.cs" />
-    <Compile Include="NewResourceUpdateTemplate.cs" />
-    <Compile Include="GetResourceCount.cs" />
-    <Compile Include="RmaSearchPager.cs" />
-    <Compile Include="SearchResourcesPaged.cs" />
-    <Compile Include="UpdateResourceManagementClientSchema.cs" />
-    <Compile Include="RemoveResource.cs" />
-    <Compile Include="NewResource.cs" />
-    <Compile Include="RmaObject.cs" />
-    <Compile Include="SearchResources.cs" />
-    <Compile Include="SaveResource.cs" />
-    <Compile Include="GetResource.cs" />
-    <Compile Include="RmcWrapper.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SetResourceManagementClient.cs" />
-    <Compile Include="XmlConfig\AttributeOperation.cs" />
-    <Compile Include="XmlConfig\ConfigFile.cs" />
-    <Compile Include="XmlConfig\ResourceOperation.cs" />
-    <Compile Include="XmlConfig\Variable.cs" />
-    <Compile Include="XmlConfig\Variables.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="Examples\ChangeLogResource.xml">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Examples\ConfigImportExample.xml">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Examples\Email Notifications\EmailTemplateAccountExpiry.html" />
-    <None Include="Examples\Email Notifications\WFAccountExpiry.xoml" />
-    <Content Include="en-us\Lithnet.ResourceManagement.Automation.dll-help.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="FodyWeavers.xml" />
-    <Content Include="LithnetRMA.psd1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Include="Examples\Variables.xml">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="LithnetRMA.Help.pshproj">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <UsingTask TaskName="ReplaceFileText" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
-    <ParameterGroup>
-      <InputFilename ParameterType="System.String" Required="true" />
-      <OutputFilename ParameterType="System.String" Required="true" />
-      <MatchExpression ParameterType="System.String" Required="true" />
-      <ReplacementText ParameterType="System.String" Required="true" />
-    </ParameterGroup>
-    <Task>
-      <Reference Include="System.Core" />
-      <Using Namespace="System" />
-      <Using Namespace="System.IO" />
-      <Using Namespace="System.Text.RegularExpressions" />
-      <Code Type="Fragment" Language="cs"><![CDATA[
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;netstandard2.0;net472;net462</TargetFrameworks>
+		<Platforms>x64</Platforms>
+		<LangVersion>9</LangVersion>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<Version>2.0.0-beta1</Version>
+		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Lithnet.ResourceManagement.Client" Version="2.0.0-beta.4" />
+		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="7.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+		<PackageReference Include="PowerShellStandard.Library" Version="5.1.1" />
+		<PackageReference Include="System.Runtime.Loader" Version="4.0.0" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+	</PropertyGroup>
+
+	<ItemGroup Condition="$(TargetFramework)=='net472'">
+		<Reference Include="System" />
+		<Reference Include="System.Core" />
+		<Reference Include="System.Management" />
+		<Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+			<SpecificVersion>False</SpecificVersion>
+			<HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\WindowsPowerShell\3.0\System.Management.Automation.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="System.Net" />
+		<Reference Include="System.ServiceModel" />
+		<Reference Include="System.Xml.Linq" />
+		<Reference Include="System.Data.DataSetExtensions" />
+		<Reference Include="Microsoft.CSharp" />
+		<Reference Include="System.Data" />
+		<Reference Include="System.Xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="Examples\ChangeLogResource.xml">
+			<SubType>Designer</SubType>
+		</None>
+		<None Include="Examples\ConfigImportExample.xml">
+			<SubType>Designer</SubType>
+		</None>
+		<None Include="Examples\Email Notifications\EmailTemplateAccountExpiry.html" />
+		<None Include="Examples\Email Notifications\WFAccountExpiry.xoml" />
+		<Content Include="en-us\Lithnet.ResourceManagement.Automation.dll-help.xml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="LithnetRMA.psd1">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<None Include="Examples\Variables.xml">
+			<SubType>Designer</SubType>
+		</None>
+		<None Include="LithnetRMA.Help.pshproj">
+			<SubType>Designer</SubType>
+		</None>
+	</ItemGroup>
+
+	<UsingTask TaskName="ReplaceFileText" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+		<ParameterGroup>
+			<InputFilename ParameterType="System.String" Required="true" />
+			<OutputFilename ParameterType="System.String" Required="true" />
+			<MatchExpression ParameterType="System.String" Required="true" />
+			<ReplacementText ParameterType="System.String" Required="true" />
+		</ParameterGroup>
+		<Task>
+			<Reference Include="System.Core" />
+			<Using Namespace="System" />
+			<Using Namespace="System.IO" />
+			<Using Namespace="System.Text.RegularExpressions" />
+			<Code Type="Fragment" Language="cs">
+				<![CDATA[
             File.WriteAllText(
                 OutputFilename,
                 Regex.Replace(File.ReadAllText(InputFilename), MatchExpression, ReplacementText)
                 );
-          ]]></Code>
-    </Task>
-  </UsingTask>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEventDependsOn>
-      $(PostBuildEventDependsOn);
-      PostBuildMacros;
-    </PostBuildEventDependsOn>
-    <PostBuildEvent>"C:\Program Files (x86)\Microsoft SDKs\ClickOnce\SignTool\signtool.exe" sign /sha1 "$(CSCERTTHUMBPRINT)" /t http://timestamp.digicert.com /fd sha256 /v "$(TargetFileName)"
+          ]]>
+			</Code>
+		</Task>
+	</UsingTask>
 
-"C:\Program Files\Debugging Tools for Windows (x64)\symstore" add /f "$(TargetDir)*.pdb" /s \\localhost\symbols /t "$(ProjectName)" /v "@(VersionNumber)"
-</PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
-  <Import Project="..\packages\Fody.1.29.2\build\dotnet\Fody.targets" Condition="Exists('..\packages\Fody.1.29.2\build\dotnet\Fody.targets')" />
-  <Target Name="PostBuildMacros">
-    <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
-      <Output TaskParameter="Assemblies" ItemName="Targets" />
-    </GetAssemblyIdentity>
-    <ItemGroup>
-      <VersionNumber Include="@(Targets->'%(Version)')" />
-    </ItemGroup>
-  </Target>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Fody.1.29.2\build\dotnet\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.29.2\build\dotnet\Fody.targets'))" />
-  </Target>
-  <Target Name="AfterBuild">
-    <ReplaceFileText InputFilename="$(TargetDir)LithnetRMA.psd1" OutputFilename="$(TargetDir)LithnetRMA.psd1" MatchExpression="\$version\$" ReplacementText="@(VersionNumber)" />
-    <ReplaceFileText InputFilename="$(ProjectDir)LithnetRMA.Help.pshproj" OutputFilename="$(ProjectDir)LithnetRMA.Help.pshproj" MatchExpression="&lt;Version&gt;.*?&lt;\/Version&gt;" ReplacementText="&lt;Version&gt;@(VersionNumber)&lt;/Version&gt;" />
-  </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+	<PropertyGroup>
+		<PostBuildEventDependsOn>$(PostBuildEventDependsOn);PostBuildMacros;</PostBuildEventDependsOn>
+		<PostBuildEvent>
+			REM "C:\Program Files (x86)\Microsoft SDKs\ClickOnce\SignTool\signtool.exe" sign /sha1 "$(CSCERTTHUMBPRINT)" /t http://timestamp.digicert.com /fd sha256 /v "$(TargetFileName)"
+
+			REM "C:\Program Files\Debugging Tools for Windows (x64)\symstore" add /f "$(TargetDir)*.pdb" /s \\localhost\symbols /t "$(ProjectName)" /v "@(VersionNumber)"
+		</PostBuildEvent>
+	</PropertyGroup>
+	<PropertyGroup>
+		<PreBuildEvent>
+		</PreBuildEvent>
+	</PropertyGroup>
+
+	<Target Name="PostBuildMacros" BeforeTargets="PostBuildEvent">
+		<GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
+			<Output TaskParameter="Assemblies" ItemName="Targets" />
+		</GetAssemblyIdentity>
+		<ItemGroup>
+			<VersionNumber Include="@(Targets->'%(Version)')" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="AfterBuild2" AfterTargets="PostBuildMacros">
+		<ReplaceFileText InputFilename="$(TargetDir)LithnetRMA.psd1" OutputFilename="$(TargetDir)LithnetRMA.psd1" MatchExpression="\$version\$" ReplacementText="@(VersionNumber)" />
+		<ReplaceFileText InputFilename="$(ProjectDir)LithnetRMA.Help.pshproj" OutputFilename="$(ProjectDir)LithnetRMA.Help.pshproj" MatchExpression="&lt;Version&gt;.*?&lt;\/Version&gt;" ReplacementText="&lt;Version&gt;@(VersionNumber)&lt;/Version&gt;" />
+	</Target>
+
+	<Target Name="AfterResolveReferences2" AfterTargets="ResolveAssemblyReferences">
+		<ItemGroup>
+			<EmbeddedResource Include="@(ReferenceCopyLocalPaths)" Condition="'%(ReferenceCopyLocalPaths.Extension)' == '.dll'">
+				<LogicalName>%(ReferenceCopyLocalPaths.DestinationSubDirectory)%(ReferenceCopyLocalPaths.Filename)%(ReferenceCopyLocalPaths.Extension)</LogicalName>
+			</EmbeddedResource>
+			<ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" />
+		</ItemGroup>
+	</Target>
+
 </Project>

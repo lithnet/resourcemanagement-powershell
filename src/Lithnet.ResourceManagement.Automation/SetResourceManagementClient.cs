@@ -20,9 +20,6 @@ namespace Lithnet.ResourceManagement.Automation
         public string ServicePrincipalName { get; set; }
 
         [Parameter(Position = 3)]
-        public bool ForceKerberos { get; set; }
-
-        [Parameter(Position = 4)]
         public SwitchParameter RefreshSchema { get; set; }
 
         protected override void EndProcessing()
@@ -49,9 +46,9 @@ namespace Lithnet.ResourceManagement.Automation
                 return;
             }
 
-            RmcWrapper.Client = new Client.ResourceManagementClient(baseUri, creds, this.ServicePrincipalName, !this.ForceKerberos);
+            RmcWrapper.Client = new Client.ResourceManagementClient(baseUri.AbsoluteUri, creds, this.ServicePrincipalName);
 
-            if (this.RefreshSchema.IsPresent || !baseUri.Host.Equals(ResourceManagementSchema.SchemaEndpoint?.Host, StringComparison.OrdinalIgnoreCase))
+            if (this.RefreshSchema.IsPresent)
             {
                 RmcWrapper.Client.RefreshSchema();
             }

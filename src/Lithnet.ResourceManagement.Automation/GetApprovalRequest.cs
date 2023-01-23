@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Management;
-using System.Management.Automation;
-using Microsoft.ResourceManagement.WebServices;
-using System.Collections;
+﻿using System.Management.Automation;
 using Lithnet.ResourceManagement.Client;
 
 namespace Lithnet.ResourceManagement.Automation
@@ -18,7 +11,7 @@ namespace Lithnet.ResourceManagement.Automation
 
         protected override void ProcessRecord()
         {
-            ISearchResultCollection results = RmcWrapper.Client.GetApprovals(this.Status);
+            ISearchResultCollection results = RmcWrapper.Client.GetApprovals((Client.ApprovalStatus)Status);
 
             foreach (ResourceObject result in results)
             {

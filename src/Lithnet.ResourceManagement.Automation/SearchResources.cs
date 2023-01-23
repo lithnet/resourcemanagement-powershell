@@ -62,7 +62,7 @@ namespace Lithnet.ResourceManagement.Automation
                     }
                     else
                     {
-                        ObjectTypeDefinition objectType = ResourceManagementSchema.GetObjectType(this.ExpectedObjectType);
+                        ObjectTypeDefinition objectType = RmcWrapper.Client.GetObjectType(this.ExpectedObjectType);
                         attributes = objectType.Attributes.Select(t => t.SystemName);
                     }
                 }

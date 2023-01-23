@@ -9,7 +9,7 @@
 @{
 
 # Version number of this module.
-ModuleVersion = '$version$'
+ModuleVersion = '2.0.0'
 
 # ID used to uniquely identify this module
 GUID = 'd7c36446-aca6-418a-a2a3-cbfc32016a52'
@@ -82,5 +82,4 @@ FileList = @()
 
 # Private data to pass to the module specified in ModuleToProcess
 PrivateData = ''
-
 }

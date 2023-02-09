@@ -3,7 +3,6 @@ using System.Management.Automation;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Security;
-using Lithnet.ResourceManagement.Client;
 
 namespace Lithnet.ResourceManagement.Automation
 {
@@ -22,6 +21,9 @@ namespace Lithnet.ResourceManagement.Automation
         [Parameter(Position = 3)]
         public SwitchParameter RefreshSchema { get; set; }
 
+        [Parameter]
+        public SwitchParameter UsernamePassthrough { get; set; }
+
         protected override void EndProcessing()
         {
             NetworkCredential creds = null;
@@ -29,6 +31,16 @@ namespace Lithnet.ResourceManagement.Automation
             if (this.Credentials != null)
             {
                 creds = this.Credentials.GetNetworkCredential();
+                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !this.UsernamePassthrough)
+                {
+                    var i = creds.UserName.IndexOf("@");
+
+                    if (i > 0)
+                    {
+                        var parts = creds.UserName.Split('@');
+                        creds.UserName = $"{parts[0]}@{parts[1].ToUpperInvariant()}";
+                    }
+                }
             }
 
             Uri baseUri;

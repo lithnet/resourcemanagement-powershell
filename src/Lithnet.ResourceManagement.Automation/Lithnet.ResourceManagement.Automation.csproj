@@ -1,20 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0;netstandard2.0;net472;net462</TargetFrameworks>
+		<TargetFrameworks>net6.0;netstandard2.0;net472;net461</TargetFrameworks>
 		<Platforms>x64</Platforms>
 		<LangVersion>9</LangVersion>
-		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
 		<Version>2.0.0-beta1</Version>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Lithnet.ResourceManagement.Client" Version="2.0.0-beta.4" />
+		<PackageReference Include="Lithnet.ResourceManagement.Client" Version="2.0.0-beta.8" />
 		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="7.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-		<PackageReference Include="PowerShellStandard.Library" Version="5.1.1" />
+		<PackageReference Include="PowerShellStandard.Library" Version="5.1.1" PrivateAssets="all" />
 		<PackageReference Include="System.Runtime.Loader" Version="4.0.0" />
 	</ItemGroup>
 
@@ -26,11 +26,11 @@
 		<Reference Include="System" />
 		<Reference Include="System.Core" />
 		<Reference Include="System.Management" />
-		<Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+		<!--<Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
 			<SpecificVersion>False</SpecificVersion>
 			<HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\WindowsPowerShell\3.0\System.Management.Automation.dll</HintPath>
 			<Private>False</Private>
-		</Reference>
+		</Reference>-->
 		<Reference Include="System.Net" />
 		<Reference Include="System.ServiceModel" />
 		<Reference Include="System.Xml.Linq" />
@@ -110,7 +110,7 @@
 
 	<Target Name="AfterBuild2" AfterTargets="PostBuildMacros">
 		<ReplaceFileText InputFilename="$(TargetDir)LithnetRMA.psd1" OutputFilename="$(TargetDir)LithnetRMA.psd1" MatchExpression="\$version\$" ReplacementText="@(VersionNumber)" />
-		<ReplaceFileText InputFilename="$(ProjectDir)LithnetRMA.Help.pshproj" OutputFilename="$(ProjectDir)LithnetRMA.Help.pshproj" MatchExpression="&lt;Version&gt;.*?&lt;\/Version&gt;" ReplacementText="&lt;Version&gt;@(VersionNumber)&lt;/Version&gt;" />
+		<!--<ReplaceFileText InputFilename="$(ProjectDir)LithnetRMA.Help.pshproj" OutputFilename="$(ProjectDir)LithnetRMA.Help.pshproj" MatchExpression="&lt;Version&gt;.*?&lt;\/Version&gt;" ReplacementText="&lt;Version&gt;@(VersionNumber)&lt;/Version&gt;" />-->
 	</Target>
 
 	<Target Name="AfterResolveReferences2" AfterTargets="ResolveAssemblyReferences">

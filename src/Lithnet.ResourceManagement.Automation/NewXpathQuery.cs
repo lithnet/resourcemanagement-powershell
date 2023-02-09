@@ -33,18 +33,10 @@ namespace Lithnet.ResourceManagement.Automation
                 unwrappedValue = Value;
             }
 
-            WriteObject(new XPathQuery(AttributeName, (Client.ComparisonOperator)Operator, unwrappedValue, Negate.IsPresent));
+            var attribute = RmcWrapper.Client.GetAttributeDefinition(this.AttributeName);
+
+            WriteObject(new XPathQuery(attribute, (Client.ComparisonOperator)Operator, unwrappedValue, Negate.IsPresent));
         }
 
-
-        //public object GetDynamicParameters()
-        //{
-        //    var runtimeDefinedParameterDictionary = new RuntimeDefinedParameterDictionary();
-        //    RuntimeDefinedParameter parameter = RmcWrapper.GetAttributeNameParameter("AttributeName", true, 1, null, null);
-
-        //    runtimeDefinedParameterDictionary.Add(parameter.Name, parameter);
-
-        //    return runtimeDefinedParameterDictionary;
-        //}
     }
 }

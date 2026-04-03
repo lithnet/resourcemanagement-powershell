@@ -55,10 +55,6 @@ namespace Lithnet.ResourceManagement.Automation
                 return this.pager.HasMoreItems;
             }
         }
-        public RmaObject[] GetNextPage()
-        {
-            return Nito.AsyncEx.AsyncContext.Run(async () => await this.GetNextPageAsync());
-        }
 
         public async Task<RmaObject[]> GetNextPageAsync()
         {

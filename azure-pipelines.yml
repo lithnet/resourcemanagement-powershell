@@ -29,10 +29,15 @@ variables:
   - name: azureSubscription
     value: 'ProductionServices'
 
+  - name: tfmCore
+    value: 'net8.0'
+  - name: tfmDesktop
+    value: 'net48'
+
   - name: projectPath
     value: '$(Build.SourcesDirectory)/resourcemanagement-powershell/src/Lithnet.ResourceManagement.Automation/Lithnet.ResourceManagement.Automation.csproj'
-  - name: buildBase
-    value: '$(Build.SourcesDirectory)/resourcemanagement-powershell/src/Lithnet.ResourceManagement.Automation/bin/$(buildConfiguration)'
+  - name: publishDir
+    value: '$(Build.ArtifactStagingDirectory)/publish'
   - name: moduleDir
     value: '$(Build.ArtifactStagingDirectory)/LithnetRMA'
   - name: nupkgDir
@@ -66,29 +71,38 @@ stages:
           displayName: Authenticate with NuGet
 
         - task: DotNetCoreCLI@2
-          displayName: dotnet build
+          displayName: dotnet publish (core)
           inputs:
-            command: build
+            command: publish
             projects: '$(projectPath)'
-            arguments: '-c $(buildConfiguration) -p:Version=$(build.version)'
+            arguments: '-c $(buildConfiguration) -f $(tfmCore) -p:Version=$(build.version) -o $(publishDir)/$(tfmCore)'
+            publishWebProjects: false
+            zipAfterPublish: false
+
+        - task: DotNetCoreCLI@2
+          displayName: dotnet publish (desktop)
+          inputs:
+            command: publish
+            projects: '$(projectPath)'
+            arguments: '-c $(buildConfiguration) -f $(tfmDesktop) -p:Version=$(build.version) -o $(publishDir)/$(tfmDesktop)'
+            publishWebProjects: false
+            zipAfterPublish: false
 
         # Stamp the module manifest with the pipeline version.
         - pwsh: |
-            foreach ($tfm in @('net8.0', 'net48')) {
-                $psd1 = "$(buildBase)/$tfm/LithnetRMA.psd1"
-                (Get-Content -Path $psd1 -Raw) -replace "ModuleVersion = '.*'", "ModuleVersion = '$(build.version)'" | Set-Content -Path $psd1 -NoNewline
+            Get-ChildItem '$(publishDir)' -Recurse -Filter 'LithnetRMA.psd1' | ForEach-Object {
+                (Get-Content -Path $_.FullName -Raw) -replace "ModuleVersion = '.*'", "ModuleVersion = '$(build.version)'" | Set-Content -Path $_.FullName -NoNewline
+                Write-Host "Stamped $($_.FullName)"
             }
-            Write-Host "Module version set to $(build.version)"
           displayName: Stamp module version
 
         # Sign all assemblies and scripts BEFORE packaging.
         - template: templates/codesign.yaml@release_tools
           parameters:
             path:
-              - '$(buildBase)/net8.0/Lithnet.ResourceManagement.Automation.dll'
-              - '$(buildBase)/net48/Lithnet.ResourceManagement.Automation.dll'
-              - '$(buildBase)/net8.0/LithnetRMA.psd1'
-              - '$(buildBase)/net8.0/LithnetRMA.psm1'
+              - '$(publishDir)/**/Lithnet.ResourceManagement.Automation.dll'
+              - '$(publishDir)/**/LithnetRMA.psd1'
+              - '$(publishDir)/**/LithnetRMA.psm1'
             environment: 'prod'
             azureSubscription: '$(azureSubscription)'
             description: 'Lithnet Resource Management PowerShell Module'
@@ -99,16 +113,19 @@ stages:
             $nupkg = '$(nupkgDir)'
             New-Item -ItemType Directory -Force -Path "$dest/en-us", "$dest/coreclr", "$dest/desktop", $nupkg | Out-Null
 
+            $coreDir = '$(publishDir)/$(tfmCore)'
+            $desktopDir = '$(publishDir)/$(tfmDesktop)'
+
             # Module root: manifest, loader, help
-            Copy-Item '$(buildBase)/net8.0/LithnetRMA.psd1' $dest
-            Copy-Item '$(buildBase)/net8.0/LithnetRMA.psm1' $dest
-            Copy-Item '$(buildBase)/net8.0/en-us/Lithnet.ResourceManagement.Automation.dll-help.xml' "$dest/en-us/"
+            Copy-Item "$coreDir/LithnetRMA.psd1" $dest
+            Copy-Item "$coreDir/LithnetRMA.psm1" $dest
+            Copy-Item "$coreDir/en-us/Lithnet.ResourceManagement.Automation.dll-help.xml" "$dest/en-us/"
 
-            # coreclr: all net8.0 DLLs flat
-            Get-ChildItem '$(buildBase)/net8.0/*.dll' | Copy-Item -Destination "$dest/coreclr/"
+            # coreclr: all core DLLs flat
+            Get-ChildItem "$coreDir/*.dll" | Copy-Item -Destination "$dest/coreclr/"
 
-            # desktop: all net48 DLLs flat
-            Get-ChildItem '$(buildBase)/net48/*.dll' | Copy-Item -Destination "$dest/desktop/"
+            # desktop: all desktop DLLs flat
+            Get-ChildItem "$desktopDir/*.dll" | Copy-Item -Destination "$dest/desktop/"
 
             # Create the .nupkg via a local file-system PS repository.
             Register-PSRepository -Name LocalBuild -SourceLocation $nupkg -PublishLocation $nupkg -InstallationPolicy Trusted

@@ -10,13 +10,13 @@ namespace Lithnet.ResourceManagement.Automation
 {
     public class RmaObject : PSObject
     {
-        internal RmaObject(ResourceObject resource)
+        internal RmaObject(IResourceObject resource)
         {
             this.InternalObject = resource;
             this.LoadProperties();
         }
 
-        internal ResourceObject InternalObject { get; set; }
+        internal IResourceObject InternalObject { get; set; }
 
         internal void ReloadProperties()
         {
@@ -46,7 +46,7 @@ namespace Lithnet.ResourceManagement.Automation
             }
         }
 
-        internal ResourceObject GetResourceWithAppliedChanges()
+        internal IResourceObject GetResourceWithAppliedChanges()
         {
             foreach (var property in this.Properties)
             {

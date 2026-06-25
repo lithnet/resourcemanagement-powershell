@@ -27,7 +27,7 @@ Copyright = ''
 Description = 'Lithnet Resource Management Client for PowerShell'
 
 # Minimum version of the Windows PowerShell engine required by this module
-PowerShellVersion = '3.0'
+PowerShellVersion = '5.1'
 
 # Name of the Windows PowerShell host required by this module
 PowerShellHostName = ''
@@ -36,13 +36,16 @@ PowerShellHostName = ''
 PowerShellHostVersion = ''
 
 # Minimum version of the .NET Framework required by this module
-DotNetFrameworkVersion = '4.0'
+DotNetFrameworkVersion = '4.7.2'
 
 # Minimum version of the common language runtime (CLR) required by this module
 CLRVersion = ''
 
 # Processor architecture (None, X86, Amd64, IA64) required by this module
-ProcessorArchitecture = 'Amd64'
+ProcessorArchitecture = 'None'
+
+# Supported PowerShell editions
+CompatiblePSEditions = @('Desktop', 'Core')
 
 # Modules that must be imported into the global environment prior to importing this module
 RequiredModules = @()

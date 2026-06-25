@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Management;
 using System.Management.Automation;
 using System.Collections;
 using Lithnet.ResourceManagement.Client;
@@ -54,7 +53,7 @@ namespace Lithnet.ResourceManagement.Automation
         
         protected override void ProcessRecord()
         {
-            ResourceObject resource;
+            IResourceObject resource;
             CultureInfo locale = null;
 
             if (this.Locale != null)

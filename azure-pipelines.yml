@@ -1,0 +1,168 @@
+# =========================================================================
+# LithnetRMA PowerShell module build & publish pipeline
+# =========================================================================
+# Builds the PowerShell module, signs the assembly, manifest, and package
+# with the Lithnet EV code-signing certificate, publishes to the internal
+# Azure Artifacts feed, and (after approval) to the public PSGallery.
+#
+# All signing and publishing is delegated to the shared release-tools repo.
+# No signing-vault or feed details live in this file.
+# =========================================================================
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  - name: buildConfiguration
+    value: 'Release'
+  - name: build.version.major
+    value: 2
+  - name: build.version.minor
+    value: 0
+  - name: build.version.revision
+    value: $[counter(format('{0}.{1}', variables['build.version.major'], variables['build.version.minor']), 0)]
+  - name: build.version
+    value: $(build.version.major).$(build.version.minor).$(build.version.revision)
+  - name: build.date
+    value: $[format('{0:yyyy}-{0:MM}-{0:dd}T{0:HH}:{0:mm}:{0:ss}', pipeline.startTime)]
+
+  - name: azureSubscription
+    value: 'ProductionServices'
+
+  - name: projectPath
+    value: '$(Build.SourcesDirectory)/resourcemanagement-powershell/src/Lithnet.ResourceManagement.Automation/Lithnet.ResourceManagement.Automation.csproj'
+  - name: buildOutputDir
+    value: '$(Build.SourcesDirectory)/resourcemanagement-powershell/src/Lithnet.ResourceManagement.Automation/bin/$(buildConfiguration)/netstandard2.0'
+  - name: moduleDir
+    value: '$(Build.ArtifactStagingDirectory)/LithnetRMA'
+  - name: nupkgDir
+    value: '$(Build.ArtifactStagingDirectory)/nupkg'
+
+name: $(build.version.major).$(build.version.minor).$(build.version.revision)
+trigger: none
+
+resources:
+  repositories:
+  - repository: release_tools
+    type: git
+    name: release-tools/release-tools
+    ref: master
+
+stages:
+# ── Build, sign, and publish to internal feed ────────────────────────────
+- stage: build
+  displayName: Build, sign and package
+  dependsOn: []
+  jobs:
+    - job: build_job
+      displayName: Build and package
+      steps:
+        - checkout: self
+          path: s/resourcemanagement-powershell
+        - checkout: release_tools
+          path: release-tools
+
+        - task: NuGetAuthenticate@1
+          displayName: Authenticate with NuGet
+
+        - task: DotNetCoreCLI@2
+          displayName: dotnet build
+          inputs:
+            command: build
+            projects: '$(projectPath)'
+            arguments: '-c $(buildConfiguration) -p:Version=$(build.version)'
+
+        # Stamp the module manifest with the pipeline version.
+        - pwsh: |
+            $psd1 = '$(buildOutputDir)/LithnetRMA.psd1'
+            (Get-Content -Path $psd1 -Raw) -replace "ModuleVersion = '.*'", "ModuleVersion = '$(build.version)'" | Set-Content -Path $psd1 -NoNewline
+            Write-Host "Module version set to $(build.version)"
+          displayName: Stamp module version
+
+        # Sign the assembly and manifest BEFORE packaging so the .nupkg carries signed files.
+        - template: templates/codesign.yaml@release_tools
+          parameters:
+            path:
+              - '$(buildOutputDir)/Lithnet.ResourceManagement.Automation.dll'
+              - '$(buildOutputDir)/LithnetRMA.psd1'
+            environment: 'prod'
+            azureSubscription: '$(azureSubscription)'
+            description: 'Lithnet Resource Management PowerShell Module'
+
+        # Assemble the module folder and create a .nupkg from it.
+        - pwsh: |
+            $dest = '$(moduleDir)'
+            $deps = "$dest/dependencies"
+            $nupkg = '$(nupkgDir)'
+            New-Item -ItemType Directory -Force -Path "$dest/en-us", $deps, $nupkg | Out-Null
+
+            Copy-Item '$(buildOutputDir)/Lithnet.ResourceManagement.Automation.dll' $dest
+            Copy-Item '$(buildOutputDir)/LithnetRMA.psd1' $dest
+            Copy-Item '$(buildOutputDir)/en-us/Lithnet.ResourceManagement.Automation.dll-help.xml' "$dest/en-us/"
+
+            Get-ChildItem '$(buildOutputDir)/*.dll' |
+                Where-Object { $_.Name -ne 'Lithnet.ResourceManagement.Automation.dll' } |
+                Copy-Item -Destination $deps
+
+            # Create the .nupkg via a local file-system PS repository.
+            Register-PSRepository -Name LocalBuild -SourceLocation $nupkg -PublishLocation $nupkg -InstallationPolicy Trusted
+            Publish-Module -Path $dest -Repository LocalBuild -NuGetApiKey 'local'
+
+            Write-Host "Module assembled at $dest"
+            Write-Host "Package created:"
+            Get-ChildItem $nupkg | ForEach-Object { Write-Host "  $($_.Name) ($([math]::Round($_.Length / 1KB)) KB)" }
+          displayName: Assemble module and create package
+
+        # Sign the NuGet package.
+        - template: templates/codesign.yaml@release_tools
+          parameters:
+            path:
+              - '$(nupkgDir)/*.nupkg'
+            environment: 'prod'
+            azureSubscription: '$(azureSubscription)'
+
+        # Publish to the internal Azure Artifacts feed.
+        - template: templates/publish-nuget.yaml@release_tools
+          parameters:
+            nugetPackagePath: '$(nupkgDir)/*.nupkg'
+            publishInternal: true
+            publishExternal: false
+
+        - task: PublishPipelineArtifact@1
+          displayName: Publish module artifact
+          inputs:
+            targetPath: '$(moduleDir)'
+            publishLocation: 'pipeline'
+            artifact: LithnetRMA
+
+        - task: PublishPipelineArtifact@1
+          displayName: Publish nupkg artifact
+          inputs:
+            targetPath: '$(nupkgDir)'
+            publishLocation: 'pipeline'
+            artifact: nupkg
+
+# ── Publish to PSGallery (requires approval) ─────────────────────────────
+- stage: publish_psgallery
+  displayName: Publish to PSGallery
+  dependsOn: build
+  jobs:
+    - deployment: publish_module
+      displayName: Publish module to PSGallery
+      environment: 'Public PSGallery'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              - checkout: none
+              - checkout: release_tools
+                path: release-tools
+
+              - download: current
+                artifact: nupkg
+
+              - template: templates/publish-psgallery.yaml@release_tools
+                parameters:
+                  nupkgPath: '$(Pipeline.Workspace)/nupkg/*.nupkg'
+                  environment: 'prod'
+                  azureSubscription: '$(azureSubscription)'

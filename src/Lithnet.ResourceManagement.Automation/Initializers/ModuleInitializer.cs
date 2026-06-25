@@ -1,18 +1,20 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Management.Automation;
 using System.Reflection;
 using System.Runtime.Loader;
 using Lithnet.ResourceManagement.Client;
+
 namespace Lithnet.ResourceManagement.Automation
 {
     public class ModuleInitializer : IModuleAssemblyInitializer, IModuleAssemblyCleanup
     {
         public static bool IsFullFramework => typeof(object).Assembly.FullName.StartsWith("mscorlib", StringComparison.OrdinalIgnoreCase);
-        private Dictionary<string, Assembly> assemblies = new Dictionary<string, Assembly>();
+
+        private readonly Dictionary<string, Assembly> assemblies = new Dictionary<string, Assembly>(StringComparer.OrdinalIgnoreCase);
+        private DependencyAssemblyLoadContext dependencyLoadContext;
 
         public void OnImport()
         {
@@ -30,36 +32,40 @@ namespace Lithnet.ResourceManagement.Automation
 
         private void PreloadAssemblies()
         {
-            var executingAssembly = Assembly.GetExecutingAssembly();
+            string moduleDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string depsDir = Path.Combine(moduleDir, "dependencies");
 
-            foreach (string resource in executingAssembly.GetManifestResourceNames().Where(n => n.EndsWith(".dll")))
+            if (!Directory.Exists(depsDir))
             {
-                using (var stream = executingAssembly.GetManifestResourceStream(resource))
+                Trace.TraceWarning("Dependencies directory not found: {0}", depsDir);
+                return;
+            }
+
+            if (!IsFullFramework)
+            {
+                dependencyLoadContext = new DependencyAssemblyLoadContext(depsDir);
+            }
+
+            foreach (string dllPath in Directory.GetFiles(depsDir, "*.dll"))
+            {
+                string fileName = Path.GetFileName(dllPath);
+
+                try
                 {
-                    if (stream == null)
-                    {
-                        continue;
-                    }
+                    Trace.WriteLine("Preloading assembly: " + fileName);
 
-                    try
+                    if (IsFullFramework)
                     {
-                        Trace.WriteLine("Preloading assembly: " + resource);
-
-                        if (IsFullFramework)
-                        {
-                            var bytes = new byte[stream.Length];
-                            stream.Read(bytes, 0, bytes.Length);
-                            assemblies.Add(resource, Assembly.Load(bytes));
-                        }
-                        else
-                        {
-                            assemblies.Add(resource, AssemblyContextResourceLoader.LoadIntoAlc(stream));
-                        }
+                        assemblies.Add(fileName, Assembly.LoadFrom(dllPath));
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        Trace.TraceError("Failed to load: {0}\r\n", resource, ex.ToString());
+                        assemblies.Add(fileName, dependencyLoadContext.LoadFromAssemblyPath(Path.GetFullPath(dllPath)));
                     }
+                }
+                catch (Exception ex)
+                {
+                    Trace.TraceError("Failed to load {0}: {1}", fileName, ex.ToString());
                 }
             }
         }
@@ -70,7 +76,7 @@ namespace Lithnet.ResourceManagement.Automation
 
             if (!IsFullFramework)
             {
-                HookAssemblyLoadContextResolver();
+                AssemblyLoadContext.Default.Resolving += ResolveAssemblyFromAlc;
             }
         }
 
@@ -80,7 +86,7 @@ namespace Lithnet.ResourceManagement.Automation
 
             if (!IsFullFramework)
             {
-                UnhookAssemblyLoadContextResolver();
+                AssemblyLoadContext.Default.Resolving -= ResolveAssemblyFromAlc;
             }
         }
 
@@ -89,34 +95,24 @@ namespace Lithnet.ResourceManagement.Automation
             RmcConfiguration.FxHostPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         }
 
-        private void HookAssemblyLoadContextResolver()
-        {
-            AssemblyLoadContext.Default.Resolving += ResolveAssembly;
-        }
-
-        private void UnhookAssemblyLoadContextResolver()
-        {
-            AssemblyLoadContext.Default.Resolving += ResolveAssembly;
-        }
-
-        private Assembly ResolveAssembly(object s, ResolveEventArgs e)
+        private Assembly ResolveAssembly(object sender, ResolveEventArgs e)
         {
             var assemblyName = new AssemblyName(e.Name);
-            return ResolveAssemblyFromCache(assemblyName);
+            return FindCachedAssembly(assemblyName);
         }
 
-        private Assembly ResolveAssembly(AssemblyLoadContext defaultAlc, AssemblyName assemblyName)
+        private Assembly ResolveAssemblyFromAlc(AssemblyLoadContext defaultAlc, AssemblyName assemblyName)
         {
-            return ResolveAssemblyFromCache(assemblyName);
+            return FindCachedAssembly(assemblyName);
         }
 
-        private Assembly ResolveAssemblyFromCache(AssemblyName assemblyName)
+        private Assembly FindCachedAssembly(AssemblyName assemblyName)
         {
-            var path = string.Format("{0}.dll", assemblyName.Name);
+            string key = assemblyName.Name + ".dll";
 
-            if (assemblies.ContainsKey(path))
+            if (assemblies.TryGetValue(key, out Assembly assembly))
             {
-                return assemblies[path];
+                return assembly;
             }
 
             return null;

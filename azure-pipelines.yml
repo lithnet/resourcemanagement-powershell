@@ -31,8 +31,8 @@ variables:
 
   - name: projectPath
     value: '$(Build.SourcesDirectory)/resourcemanagement-powershell/src/Lithnet.ResourceManagement.Automation/Lithnet.ResourceManagement.Automation.csproj'
-  - name: buildOutputDir
-    value: '$(Build.SourcesDirectory)/resourcemanagement-powershell/src/Lithnet.ResourceManagement.Automation/bin/$(buildConfiguration)/netstandard2.0'
+  - name: buildBase
+    value: '$(Build.SourcesDirectory)/resourcemanagement-powershell/src/Lithnet.ResourceManagement.Automation/bin/$(buildConfiguration)'
   - name: moduleDir
     value: '$(Build.ArtifactStagingDirectory)/LithnetRMA'
   - name: nupkgDir
@@ -74,18 +74,21 @@ stages:
 
         # Stamp the module manifest with the pipeline version.
         - pwsh: |
-            $psd1 = '$(buildOutputDir)/LithnetRMA.psd1'
-            (Get-Content -Path $psd1 -Raw) -replace "ModuleVersion = '.*'", "ModuleVersion = '$(build.version)'" | Set-Content -Path $psd1 -NoNewline
+            foreach ($tfm in @('net8.0', 'net48')) {
+                $psd1 = "$(buildBase)/$tfm/LithnetRMA.psd1"
+                (Get-Content -Path $psd1 -Raw) -replace "ModuleVersion = '.*'", "ModuleVersion = '$(build.version)'" | Set-Content -Path $psd1 -NoNewline
+            }
             Write-Host "Module version set to $(build.version)"
           displayName: Stamp module version
 
-        # Sign the assembly and manifest BEFORE packaging so the .nupkg carries signed files.
+        # Sign all assemblies and scripts BEFORE packaging.
         - template: templates/codesign.yaml@release_tools
           parameters:
             path:
-              - '$(buildOutputDir)/Lithnet.ResourceManagement.Automation.dll'
-              - '$(buildOutputDir)/LithnetRMA.psd1'
-              - '$(buildOutputDir)/LithnetRMA.psm1'
+              - '$(buildBase)/net8.0/Lithnet.ResourceManagement.Automation.dll'
+              - '$(buildBase)/net48/Lithnet.ResourceManagement.Automation.dll'
+              - '$(buildBase)/net8.0/LithnetRMA.psd1'
+              - '$(buildBase)/net8.0/LithnetRMA.psm1'
             environment: 'prod'
             azureSubscription: '$(azureSubscription)'
             description: 'Lithnet Resource Management PowerShell Module'
@@ -93,18 +96,19 @@ stages:
         # Assemble the module folder and create a .nupkg from it.
         - pwsh: |
             $dest = '$(moduleDir)'
-            $deps = "$dest/dependencies"
             $nupkg = '$(nupkgDir)'
-            New-Item -ItemType Directory -Force -Path "$dest/en-us", $deps, $nupkg | Out-Null
+            New-Item -ItemType Directory -Force -Path "$dest/en-us", "$dest/coreclr", "$dest/desktop", $nupkg | Out-Null
 
-            Copy-Item '$(buildOutputDir)/Lithnet.ResourceManagement.Automation.dll' $dest
-            Copy-Item '$(buildOutputDir)/LithnetRMA.psd1' $dest
-            Copy-Item '$(buildOutputDir)/LithnetRMA.psm1' $dest
-            Copy-Item '$(buildOutputDir)/en-us/Lithnet.ResourceManagement.Automation.dll-help.xml' "$dest/en-us/"
+            # Module root: manifest, loader, help
+            Copy-Item '$(buildBase)/net8.0/LithnetRMA.psd1' $dest
+            Copy-Item '$(buildBase)/net8.0/LithnetRMA.psm1' $dest
+            Copy-Item '$(buildBase)/net8.0/en-us/Lithnet.ResourceManagement.Automation.dll-help.xml' "$dest/en-us/"
 
-            Get-ChildItem '$(buildOutputDir)/*.dll' |
-                Where-Object { $_.Name -ne 'Lithnet.ResourceManagement.Automation.dll' } |
-                Copy-Item -Destination $deps
+            # coreclr: all net8.0 DLLs flat
+            Get-ChildItem '$(buildBase)/net8.0/*.dll' | Copy-Item -Destination "$dest/coreclr/"
+
+            # desktop: all net48 DLLs flat
+            Get-ChildItem '$(buildBase)/net48/*.dll' | Copy-Item -Destination "$dest/desktop/"
 
             # Create the .nupkg via a local file-system PS repository.
             Register-PSRepository -Name LocalBuild -SourceLocation $nupkg -PublishLocation $nupkg -InstallationPolicy Trusted
@@ -156,7 +160,6 @@ stages:
         runOnce:
           deploy:
             steps:
-              - checkout: none
               - checkout: release_tools
                 path: release-tools
 

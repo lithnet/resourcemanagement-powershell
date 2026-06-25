@@ -62,8 +62,8 @@ TypesToProcess = @()
 # Format files (.ps1xml) to be loaded when importing this module
 FormatsToProcess = @()
 
-# Modules to import as nested modules of the module specified in ModuleToProcess
-NestedModules = 'Lithnet.ResourceManagement.Automation.dll'
+# Root module that bootstraps assembly resolution before loading the binary module
+RootModule = 'LithnetRMA.psm1'
 
 # Functions to export from this module
 FunctionsToExport = '*'

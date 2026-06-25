@@ -85,6 +85,7 @@ stages:
             path:
               - '$(buildOutputDir)/Lithnet.ResourceManagement.Automation.dll'
               - '$(buildOutputDir)/LithnetRMA.psd1'
+              - '$(buildOutputDir)/LithnetRMA.psm1'
             environment: 'prod'
             azureSubscription: '$(azureSubscription)'
             description: 'Lithnet Resource Management PowerShell Module'
@@ -98,6 +99,7 @@ stages:
 
             Copy-Item '$(buildOutputDir)/Lithnet.ResourceManagement.Automation.dll' $dest
             Copy-Item '$(buildOutputDir)/LithnetRMA.psd1' $dest
+            Copy-Item '$(buildOutputDir)/LithnetRMA.psm1' $dest
             Copy-Item '$(buildOutputDir)/en-us/Lithnet.ResourceManagement.Automation.dll-help.xml' "$dest/en-us/"
 
             Get-ChildItem '$(buildOutputDir)/*.dll' |

@@ -113,8 +113,9 @@ stages:
             $nupkg = '$(nupkgDir)'
             New-Item -ItemType Directory -Force -Path "$dest/en-us", "$dest/coreclr", "$dest/desktop", $nupkg | Out-Null
 
-            $coreDir = '$(publishDir)/$(tfmCore)'
-            $desktopDir = '$(publishDir)/$(tfmDesktop)'
+            # dotnet publish -o creates a project-named subdirectory; find it dynamically.
+            $coreDir = Get-ChildItem '$(publishDir)/$(tfmCore)' -Directory | Select-Object -First 1 -ExpandProperty FullName
+            $desktopDir = Get-ChildItem '$(publishDir)/$(tfmDesktop)' -Directory | Select-Object -First 1 -ExpandProperty FullName
 
             # Module root: manifest, loader, help
             Copy-Item "$coreDir/LithnetRMA.psd1" $dest

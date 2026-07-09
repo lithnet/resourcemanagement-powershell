@@ -1,9 +1,17 @@
 # =========================================================================
 # LithnetRMA PowerShell module build & publish pipeline
 # =========================================================================
-# Builds the PowerShell module, signs the assembly, manifest, and package
-# with the Lithnet EV code-signing certificate, publishes to the internal
-# Azure Artifacts feed, and (after approval) to the public PSGallery.
+# Builds the PowerShell module, signs the assemblies, manifest, and package
+# with the Lithnet EV code-signing certificate, builds and signs the MSI
+# installer with Advanced Installer, publishes to the internal Azure
+# Artifacts feed, and (after approval) creates a GitHub release with the
+# installer and module package, then publishes to the public PSGallery.
+#
+# Signing split:
+#   * codesign.yaml signs the module assembly, manifest, and loader before
+#     they are packaged, so both the .nupkg and the MSI embed signed files.
+#   * build-advanced-installer-package.yaml (sign: true) signs the MSI
+#     itself during the Advanced Installer build.
 #
 # All signing and publishing is delegated to the shared release-tools repo.
 # No signing-vault or feed details live in this file.
@@ -38,10 +46,18 @@ variables:
     value: '$(Build.SourcesDirectory)/resourcemanagement-powershell/src/Lithnet.ResourceManagement.Automation/Lithnet.ResourceManagement.Automation.csproj'
   - name: publishDir
     value: '$(Build.ArtifactStagingDirectory)/publish'
+  # The assembled module folder doubles as the Advanced Installer harvest
+  # source, so it must sit at the path the .aip synchronizes (next to it).
+  - name: setupDir
+    value: '$(Build.SourcesDirectory)/resourcemanagement-powershell/src/Lithnet.ResourceManagement.Automation.Setup'
+  - name: aipPath
+    value: '$(setupDir)/Lithnet.ResourceManagement.Automation.Setup.aip'
   - name: moduleDir
-    value: '$(Build.ArtifactStagingDirectory)/LithnetRMA'
+    value: '$(setupDir)/LithnetRMA'
   - name: nupkgDir
     value: '$(Build.ArtifactStagingDirectory)/nupkg'
+  - name: installerDir
+    value: '$(Build.ArtifactStagingDirectory)/installer'
 
 name: $(build.version.major).$(build.version.minor).$(build.version.revision)
 trigger: none
@@ -152,6 +168,29 @@ stages:
             publishInternal: true
             publishExternal: false
 
+        # Stamp the installer project with the pipeline version and a fresh
+        # ProductCode (required for MSI major upgrades between releases).
+        - pwsh: |
+            $aip = '$(aipPath)'
+            $productCode = [guid]::NewGuid().ToString().ToUpper()
+            $content = Get-Content -Path $aip -Raw
+            $content = $content -replace '(<ROW Property="ProductVersion" Value=")[^"]*(")', '${1}$(build.version)${2}'
+            $content = $content -replace '(<ROW Property="ProductCode" Value="1033:\{)[0-9A-F-]+(\} ")', "`${1}$productCode`${2}"
+            Set-Content -Path $aip -Value $content -NoNewline
+            Write-Host "Stamped $aip with version $(build.version), ProductCode {$productCode}"
+          displayName: Stamp installer version
+
+        # Build and sign the MSI. The .aip harvests the assembled module
+        # folder ($(moduleDir)) at build time via its synchronized folder.
+        - template: templates/build-advanced-installer-package.yaml@release_tools
+          parameters:
+            aipPath: '$(aipPath)'
+            aipPackageName: 'LithnetRMA.msi'
+            azureSubscription: '$(azureSubscription)'
+            environment: 'prod'
+            outputFolder: '$(installerDir)'
+            sign: true
+
         - task: PublishPipelineArtifact@1
           displayName: Publish module artifact
           inputs:
@@ -166,10 +205,53 @@ stages:
             publishLocation: 'pipeline'
             artifact: nupkg
 
+        - task: PublishPipelineArtifact@1
+          displayName: Publish installer artifact
+          inputs:
+            targetPath: '$(installerDir)'
+            publishLocation: 'pipeline'
+            artifact: installer
+
+# ── Publish GitHub release (requires approval) ───────────────────────────
+- stage: publish_github
+  displayName: Publish GitHub release
+  dependsOn: build
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  jobs:
+    - deployment: publish_github_job
+      displayName: Publish installer and module package to GitHub releases
+      environment: GitHub
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              - checkout: none
+              - download: current
+                artifact: installer
+              - download: current
+                artifact: nupkg
+              - task: GitHubRelease@1
+                displayName: Create GitHub release (v$(build.version))
+                inputs:
+                  gitHubConnection: github.com_lithnet
+                  repositoryName: '$(Build.Repository.Name)'
+                  action: create
+                  tagSource: userSpecifiedTag
+                  tag: v$(build.version)
+                  title: v$(build.version)
+                  assets: |
+                    $(Pipeline.Workspace)/installer/*.msi
+                    $(Pipeline.Workspace)/nupkg/*.nupkg
+                  isPreRelease: false
+                  addChangeLog: true
+                  changeLogCompareToRelease: lastFullRelease
+                  changeLogType: commitBased
+
 # ── Publish to PSGallery (requires approval) ─────────────────────────────
 - stage: publish_psgallery
   displayName: Publish to PSGallery
-  dependsOn: build
+  dependsOn: publish_github
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   jobs:
     - deployment: publish_module
       displayName: Publish module to PSGallery

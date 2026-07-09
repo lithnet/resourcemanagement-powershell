@@ -56,8 +56,10 @@ variables:
     value: '$(setupDir)/LithnetRMA'
   - name: nupkgDir
     value: '$(Build.ArtifactStagingDirectory)/nupkg'
+  # Backslash separator: Advanced Installer's SetOutputLocation rejects
+  # mixed-separator paths.
   - name: installerDir
-    value: '$(Build.ArtifactStagingDirectory)/installer'
+    value: '$(Build.ArtifactStagingDirectory)\installer'
 
 name: $(build.version.major).$(build.version.minor).$(build.version.revision)
 trigger: none
@@ -171,6 +173,7 @@ stages:
         # Stamp the installer project with the pipeline version and a fresh
         # ProductCode (required for MSI major upgrades between releases).
         - pwsh: |
+            New-Item -ItemType Directory -Force -Path '$(installerDir)' | Out-Null
             $aip = '$(aipPath)'
             $productCode = [guid]::NewGuid().ToString().ToUpper()
             $content = Get-Content -Path $aip -Raw

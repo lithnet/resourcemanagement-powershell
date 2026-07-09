@@ -15,7 +15,7 @@
     <ROW Property="Manufacturer" Value="Lithnet"/>
     <ROW Property="ProductCode" Value="1033:{287014B5-CA8A-4509-9B33-ED4C3D7EAADE} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
-    <ROW Property="ProductName" Value="Lithnet Resource Management PowerShell Module"/>
+    <ROW Property="ProductName" Value="Lithnet MIM Service PowerShell Module"/>
     <ROW Property="ProductVersion" Value="2.0.0" Options="32"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{CC6C89F6-8663-46ED-A792-15B1327D8AA8}"/>

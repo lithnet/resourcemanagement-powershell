@@ -223,7 +223,7 @@ stages:
   jobs:
     - deployment: publish_github_job
       displayName: Publish installer and module package to GitHub releases
-      environment: GitHub
+      environment: Github
       strategy:
         runOnce:
           deploy:

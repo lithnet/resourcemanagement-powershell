@@ -48,6 +48,13 @@
 				</maml:description>
 				<command:parameterValue required="true" variableLength="true">String[]</command:parameterValue>
 			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="5">
+				<maml:name>Locale</maml:name>
+				<maml:description>
+					<maml:para>Optional. The culture name of the locale to retrieve localized attribute values for (for example en-US). If not specified, the default locale values are returned</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			</command:parameter>
 		</command:syntaxItem>
 		<command:syntaxItem>
 			<maml:name>Get-Resource</maml:name>
@@ -64,6 +71,13 @@
 					<maml:para>A list of attribute names to retrieve from the resource. If the object type is known (using the -ObjectType parameter), then all attributes from the object type are returned, unless a subset of attributes are specified with this parameter. If the ObjectType parameter is not used, then only the ObjectID is returned, unless the specific attributes required are specified with this parameter</maml:para>
 				</maml:description>
 				<command:parameterValue required="true" variableLength="true">String[]</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="3">
+				<maml:name>Locale</maml:name>
+				<maml:description>
+					<maml:para>Optional. The culture name of the locale to retrieve localized attribute values for (for example en-US). If not specified, the default locale values are returned</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			</command:parameter>
 		</command:syntaxItem>
 		<command:syntaxItem>
@@ -88,6 +102,13 @@
 					<maml:para>A list of attribute names to retrieve from the resource. If the object type is known (using the -ObjectType parameter), then all attributes from the object type are returned, unless a subset of attributes are specified with this parameter. If the ObjectType parameter is not used, then only the ObjectID is returned, unless the specific attributes required are specified with this parameter</maml:para>
 				</maml:description>
 				<command:parameterValue required="true" variableLength="true">String[]</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="4">
+				<maml:name>Locale</maml:name>
+				<maml:description>
+					<maml:para>Optional. The culture name of the locale to retrieve localized attribute values for (for example en-US). If not specified, the default locale values are returned</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			</command:parameter>
 		</command:syntaxItem>
 	</command:syntax>
@@ -160,6 +181,18 @@
 			<command:parameterValue required="true" variableLength="false">Hashtable</command:parameterValue>
 			<dev:type>
 				<maml:name>Hashtable</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="5">
+			<maml:name>Locale</maml:name>
+			<maml:description>
+				<maml:para>Optional. The culture name of the locale to retrieve localized attribute values for (for example en-US). If not specified, the default locale values are returned</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
 				<maml:uri/>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
@@ -1606,6 +1639,13 @@ Remove-Resource $resources</dev:code>
 				</maml:description>
 				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
 			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>Locale</maml:name>
+				<maml:description>
+					<maml:para>Optional. The culture name of the locale to save localized attribute values for (for example en-US). If not specified, values are saved to the default locale</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			</command:parameter>
 		</command:syntaxItem>
 	</command:syntax>
 	<command:parameters>
@@ -1629,6 +1669,18 @@ Remove-Resource $resources</dev:code>
 			<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
 			<dev:type>
 				<maml:name>SwitchParameter</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>Locale</maml:name>
+			<maml:description>
+				<maml:para>Optional. The culture name of the locale to save localized attribute values for (for example en-US). If not specified, values are saved to the default locale</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
 				<maml:uri/>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
@@ -1806,6 +1858,13 @@ Save-Resource $obj</dev:code>
 				</maml:description>
 				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
 			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>Locale</maml:name>
+				<maml:description>
+					<maml:para>Optional. The culture name of the locale to retrieve localized attribute values for (for example en-US). If not specified, the default locale values are returned</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			</command:parameter>
 		</command:syntaxItem>
 		<command:syntaxItem>
 			<maml:name>Search-Resources</maml:name>
@@ -1851,6 +1910,13 @@ Save-Resource $obj</dev:code>
 				</maml:description>
 				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
 			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>Locale</maml:name>
+				<maml:description>
+					<maml:para>Optional. The culture name of the locale to retrieve localized attribute values for (for example en-US). If not specified, the default locale values are returned</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			</command:parameter>
 		</command:syntaxItem>
 		<command:syntaxItem>
 			<maml:name>Search-Resources</maml:name>
@@ -1895,6 +1961,13 @@ Save-Resource $obj</dev:code>
 					<maml:para>Specifies that the sort attributes should be sorted in descending order (default is ascending) </maml:para>
 				</maml:description>
 				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>Locale</maml:name>
+				<maml:description>
+					<maml:para>Optional. The culture name of the locale to retrieve localized attribute values for (for example en-US). If not specified, the default locale values are returned</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			</command:parameter>
 		</command:syntaxItem>
 	</command:syntax>
@@ -1991,6 +2064,18 @@ Save-Resource $obj</dev:code>
 			<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
 			<dev:type>
 				<maml:name>SwitchParameter</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>Locale</maml:name>
+			<maml:description>
+				<maml:para>Optional. The culture name of the locale to retrieve localized attribute values for (for example en-US). If not specified, the default locale values are returned</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
 				<maml:uri/>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
@@ -2190,6 +2275,13 @@ Search-Resources $expression</dev:code>
 				</maml:description>
 				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
 			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>Locale</maml:name>
+				<maml:description>
+					<maml:para>Optional. The culture name of the locale to retrieve localized attribute values for (for example en-US). If not specified, the default locale values are returned</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			</command:parameter>
 		</command:syntaxItem>
 		<command:syntaxItem>
 			<maml:name>Search-ResourcesPaged</maml:name>
@@ -2228,6 +2320,13 @@ Search-Resources $expression</dev:code>
 				</maml:description>
 				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
 			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>Locale</maml:name>
+				<maml:description>
+					<maml:para>Optional. The culture name of the locale to retrieve localized attribute values for (for example en-US). If not specified, the default locale values are returned</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			</command:parameter>
 		</command:syntaxItem>
 		<command:syntaxItem>
 			<maml:name>Search-ResourcesPaged</maml:name>
@@ -2265,6 +2364,13 @@ Search-Resources $expression</dev:code>
 					<maml:para>Optional. Specifies that the sort attributes should be sorted in descending order (default is ascending) </maml:para>
 				</maml:description>
 				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>Locale</maml:name>
+				<maml:description>
+					<maml:para>Optional. The culture name of the locale to retrieve localized attribute values for (for example en-US). If not specified, the default locale values are returned</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			</command:parameter>
 		</command:syntaxItem>
 	</command:syntax>
@@ -2349,6 +2455,18 @@ Search-Resources $expression</dev:code>
 			<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
 			<dev:type>
 				<maml:name>SwitchParameter</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>Locale</maml:name>
+			<maml:description>
+				<maml:para>Optional. The culture name of the locale to retrieve localized attribute values for (for example en-US). If not specified, the default locale values are returned</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
 				<maml:uri/>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
@@ -2465,7 +2583,6 @@ while ($pager.HasMoreItems)
 	</maml:relatedLinks>
 </command:command>
 <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
-<!--Generated by PS Cmdlet Help Editor-->
 	<command:details>
 		<command:name>Set-ResourceManagementClient</command:name>
 		<maml:description>
@@ -2479,7 +2596,8 @@ while ($pager.HasMoreItems)
 		<dev:version />
 	</command:details>
 	<maml:description>
-		<maml:para>The Set-ResourceManagementClient cmdlet allows you to control parameters of the connection to the FIM Service. </maml:para>
+		<maml:para>The Set-ResourceManagementClient cmdlet controls how the module connects to the FIM/MIM service. Call it before using other cmdlets to connect to a remote service, use alternate credentials, or select a specific connection mode. If it is not called, the client connects to the service on the local computer using default settings.</maml:para>
+		<maml:para>The client supports several connection modes. By default, the mode is selected automatically from the scheme of the BaseAddress URI: http:// connects directly to the service (Windows PowerShell only), net.tcp:// connects to the service's net.tcp endpoint, pipe:// launches the built-in local proxy (PowerShell 7 on Windows), and rmc:// connects to the Lithnet Resource Management Proxy service installed on the MIM server. See the connection guide in the related links for details of each mode and the server-side setup steps.</maml:para>
 	</maml:description>
 	<command:syntax>
 		<command:syntaxItem>
@@ -2487,30 +2605,72 @@ while ($pager.HasMoreItems)
 			<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="0">
 				<maml:name>BaseAddress</maml:name>
 				<maml:description>
-					<maml:para>Optional. Specifies the URL to the resource management web service. If not specified, the default value of http://localhost:5725 is used. The http prefix and port can be ommitted, and the just hostname provided</maml:para>
+					<maml:para>The address of the resource management service, for example http://mim-service:5725. A plain hostname is treated as http://hostname:5725. The URI scheme selects the connection mode unless the ConnectionMode parameter is specified</maml:para>
 				</maml:description>
 				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByValue)" position="1">
 				<maml:name>Credentials</maml:name>
 				<maml:description>
-					<maml:para>Optional. By default, the credentials of the currently logged on user are used. Other credentials can be specified using this parameter </maml:para>
+					<maml:para>Optional. By default, the credentials of the currently logged on user are used. Other credentials can be specified using this parameter</maml:para>
 				</maml:description>
 				<command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
 			</command:parameter>
 			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="2">
 				<maml:name>ServicePrincipalName</maml:name>
 				<maml:description>
-					<maml:para>Optional. By default the client will use FIMService/hostname for the SPN. You can override the SPN used here </maml:para>
+					<maml:para>Optional. By default the client will use FIMService/hostname for the SPN. You can override the SPN used here</maml:para>
 				</maml:description>
 				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			</command:parameter>
-			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="3">
-				<maml:name>ForceKerberos</maml:name>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>ConnectionMode</maml:name>
 				<maml:description>
-					<maml:para>Optional. A value indicating if the client should force Kerberos, and not allow NTLM authentication to the FIM service </maml:para>
+					<maml:para>Optional. Forces a specific connection mode, overriding the automatic selection based on the URI scheme and runtime. Valid values are Auto, DirectWsHttp, DirectNetTcp, LocalProxy, and RemoteProxy. The default is Auto</maml:para>
 				</maml:description>
-				<command:parameterValue required="false" variableLength="false">Boolean</command:parameterValue>
+				<command:parameterValue required="true" variableLength="false">ConnectionMode</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>RefreshSchema</maml:name>
+				<maml:description>
+					<maml:para>Optional. Forces the client to reload the service schema after the connection is established</maml:para>
+				</maml:description>
+				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>UsernamePassthrough</maml:name>
+				<maml:description>
+					<maml:para>Optional. Passes the username to the service exactly as supplied. By default on non-Windows platforms, the domain suffix of a user principal name is converted to uppercase to match the expected Kerberos realm format</maml:para>
+				</maml:description>
+				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>ConcurrentConnectionLimit</maml:name>
+				<maml:description>
+					<maml:para>Optional. The maximum number of concurrent connections the client can open to the service. If not specified, the client default is used</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>ConnectTimeoutSeconds</maml:name>
+				<maml:description>
+					<maml:para>Optional. The connection timeout, in seconds. If not specified, the client default of 30 seconds is used</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>ReceiveTimeoutSeconds</maml:name>
+				<maml:description>
+					<maml:para>Optional. How long the client waits for a response from the service, in seconds. Increase this value for long-running operations such as large exports. If not specified, the client default of 20 minutes is used</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>SendTimeoutSeconds</maml:name>
+				<maml:description>
+					<maml:para>Optional. How long the client waits for a request to be sent to the service, in seconds. If not specified, the client default of 20 minutes is used</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
 			</command:parameter>
 		</command:syntaxItem>
 	</command:syntax>
@@ -2518,19 +2678,19 @@ while ($pager.HasMoreItems)
 		<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="0">
 			<maml:name>BaseAddress</maml:name>
 			<maml:description>
-				<maml:para>Optional. Specifies the URL to the resource management web service. If not specified, the default value of http://localhost:5725 is used. The http prefix and port can be ommitted, and the just hostname provided</maml:para>
+				<maml:para>The address of the resource management service, for example http://mim-service:5725. A plain hostname is treated as http://hostname:5725. The URI scheme selects the connection mode unless the ConnectionMode parameter is specified: http:// connects directly to the service (Windows PowerShell only), net.tcp:// connects to the service's net.tcp endpoint, pipe:// launches the built-in local proxy (PowerShell 7 on Windows), and rmc:// connects to the Lithnet Resource Management Proxy service on the MIM server</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
 				<maml:name>String</maml:name>
 				<maml:uri/>
 			</dev:type>
-			<dev:defaultValue>http://localhost:5725</dev:defaultValue>
+			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="true (ByValue)" position="1">
 			<maml:name>Credentials</maml:name>
 			<maml:description>
-				<maml:para>Optional. By default, the credentials of the currently logged on user are used. Other credentials can be specified using this parameter </maml:para>
+				<maml:para>Optional. By default, the credentials of the currently logged on user are used. Other credentials can be specified using this parameter</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
 			<dev:type>
@@ -2542,7 +2702,7 @@ while ($pager.HasMoreItems)
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="2">
 			<maml:name>ServicePrincipalName</maml:name>
 			<maml:description>
-				<maml:para>Optional. By default the client will use FIMService/hostname for the SPN. You can override the SPN used here </maml:para>
+				<maml:para>Optional. By default the client will use FIMService/hostname for the SPN. You can override the SPN used here</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -2551,17 +2711,89 @@ while ($pager.HasMoreItems)
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="3">
-			<maml:name>ForceKerberos</maml:name>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>ConnectionMode</maml:name>
 			<maml:description>
-				<maml:para>Optional. A value indicating if the client should force Kerberos, and not allow NTLM authentication to the FIM service </maml:para>
+				<maml:para>Optional. Forces a specific connection mode, overriding the automatic selection based on the URI scheme and runtime. Valid values are Auto, DirectWsHttp, DirectNetTcp, LocalProxy, and RemoteProxy. The default is Auto. Note that approval operations are not supported in DirectNetTcp mode, and DirectWsHttp is only available in Windows PowerShell</maml:para>
 			</maml:description>
-			<command:parameterValue required="false" variableLength="false">Boolean</command:parameterValue>
+			<command:parameterValue required="true" variableLength="false">ConnectionMode</command:parameterValue>
 			<dev:type>
-				<maml:name>Boolean</maml:name>
+				<maml:name>ConnectionMode</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue>Auto</dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>RefreshSchema</maml:name>
+			<maml:description>
+				<maml:para>Optional. Forces the client to reload the service schema after the connection is established</maml:para>
+			</maml:description>
+			<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+			<dev:type>
+				<maml:name>SwitchParameter</maml:name>
 				<maml:uri/>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>UsernamePassthrough</maml:name>
+			<maml:description>
+				<maml:para>Optional. Passes the username to the service exactly as supplied. By default on non-Windows platforms, the domain suffix of a user principal name is converted to uppercase to match the expected Kerberos realm format</maml:para>
+			</maml:description>
+			<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+			<dev:type>
+				<maml:name>SwitchParameter</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>ConcurrentConnectionLimit</maml:name>
+			<maml:description>
+				<maml:para>Optional. The maximum number of concurrent connections the client can open to the service. If not specified, the client default is used</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+			<dev:type>
+				<maml:name>Int32</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>ConnectTimeoutSeconds</maml:name>
+			<maml:description>
+				<maml:para>Optional. The connection timeout, in seconds. If not specified, the client default of 30 seconds is used</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+			<dev:type>
+				<maml:name>Int32</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue>30</dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>ReceiveTimeoutSeconds</maml:name>
+			<maml:description>
+				<maml:para>Optional. How long the client waits for a response from the service, in seconds. Increase this value for long-running operations such as large exports. If not specified, the client default of 20 minutes is used</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+			<dev:type>
+				<maml:name>Int32</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue>1200</dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>SendTimeoutSeconds</maml:name>
+			<maml:description>
+				<maml:para>Optional. How long the client waits for a request to be sent to the service, in seconds. If not specified, the client default of 20 minutes is used</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+			<dev:type>
+				<maml:name>Int32</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue>1200</dev:defaultValue>
 		</command:parameter>
 	</command:parameters>
 	<command:inputTypes>
@@ -2598,16 +2830,14 @@ while ($pager.HasMoreItems)
 	</maml:alertSet>
 	<command:examples>
 		<command:example>
-			<maml:title>--------------------------  Connect to the FIM service with a specific URL  --------------------------</maml:title>
+			<maml:title>--------------------------  Connect to the MIM service with a specific URL  --------------------------</maml:title>
 			<maml:introduction>
 				<maml:paragraph>PS C:\&gt;</maml:paragraph>
 			</maml:introduction>
-			<dev:code>Set-ResourceManagementClient -BaseAddress http://fimservice:5725</dev:code>
+			<dev:code>Set-ResourceManagementClient -BaseAddress http://mim-service:5725</dev:code>
 			<dev:remarks>
+				<maml:para>Connects directly to the MIM service. In Windows PowerShell this uses the DirectWsHttp connection mode</maml:para>
 				<maml:para />
-				<maml:para />
-				<maml:para />
-				<maml:para></maml:para>
 			</dev:remarks>
 			<command:commandLines>
 				<command:commandLine>
@@ -2618,16 +2848,14 @@ while ($pager.HasMoreItems)
 			</command:commandLines>
 		</command:example>
 		<command:example>
-			<maml:title>--------------------------  Connect to the FIM service using only a hostname  --------------------------</maml:title>
+			<maml:title>--------------------------  Connect to the MIM service using only a hostname  --------------------------</maml:title>
 			<maml:introduction>
 				<maml:paragraph>PS C:\&gt;</maml:paragraph>
 			</maml:introduction>
-			<dev:code>Set-ResourceManagementClient -BaseAddress fimservice</dev:code>
+			<dev:code>Set-ResourceManagementClient -BaseAddress mim-service</dev:code>
 			<dev:remarks>
+				<maml:para>A plain hostname is treated as http://mim-service:5725</maml:para>
 				<maml:para />
-				<maml:para />
-				<maml:para />
-				<maml:para></maml:para>
 			</dev:remarks>
 			<command:commandLines>
 				<command:commandLine>
@@ -2638,16 +2866,14 @@ while ($pager.HasMoreItems)
 			</command:commandLines>
 		</command:example>
 		<command:example>
-			<maml:title>--------------------------  Connect to the FIM service with a specific address and SPN  --------------------------</maml:title>
+			<maml:title>--------------------------  Connect from PowerShell 7 using the local proxy  --------------------------</maml:title>
 			<maml:introduction>
 				<maml:paragraph>PS C:\&gt;</maml:paragraph>
 			</maml:introduction>
-			<dev:code>Set-ResourceManagementClient -BaseAddress http://fimservice:5725 -ServicePrincipalName FIMService/otherhostname</dev:code>
+			<dev:code>Set-ResourceManagementClient -BaseAddress pipe://mim-service</dev:code>
 			<dev:remarks>
+				<maml:para>Launches the built-in local proxy to communicate with the MIM service. This mode supports approval operations and is available in PowerShell 7 on Windows</maml:para>
 				<maml:para />
-				<maml:para />
-				<maml:para />
-				<maml:para></maml:para>
 			</dev:remarks>
 			<command:commandLines>
 				<command:commandLine>
@@ -2658,16 +2884,14 @@ while ($pager.HasMoreItems)
 			</command:commandLines>
 		</command:example>
 		<command:example>
-			<maml:title>--------------------------  Allow the client to fall back to NTLM authentication  --------------------------</maml:title>
+			<maml:title>--------------------------  Connect using the remote proxy service  --------------------------</maml:title>
 			<maml:introduction>
 				<maml:paragraph>PS C:\&gt;</maml:paragraph>
 			</maml:introduction>
-			<dev:code>Set-ResourceManagementClient -ForceKerberos $false</dev:code>
+			<dev:code>Set-ResourceManagementClient -BaseAddress rmc://mim-service</dev:code>
 			<dev:remarks>
+				<maml:para>Connects to the Lithnet Resource Management Proxy service installed on the MIM server. This mode works on all platforms</maml:para>
 				<maml:para />
-				<maml:para />
-				<maml:para />
-				<maml:para></maml:para>
 			</dev:remarks>
 			<command:commandLines>
 				<command:commandLine>
@@ -2678,16 +2902,31 @@ while ($pager.HasMoreItems)
 			</command:commandLines>
 		</command:example>
 		<command:example>
-			<maml:title>--------------------------  Connect to the FIM service with specific credentials  --------------------------</maml:title>
+			<maml:title>--------------------------  Connect to the MIM service with specific credentials  --------------------------</maml:title>
 			<maml:introduction>
 				<maml:paragraph>PS C:\&gt;</maml:paragraph>
 			</maml:introduction>
-			<dev:code>Get-Credential | Set-ResourceManagementClient -BaseAddress http://fimservice:5725 </dev:code>
+			<dev:code>Get-Credential | Set-ResourceManagementClient -BaseAddress http://mim-service:5725</dev:code>
 			<dev:remarks>
 				<maml:para />
+			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+						<maml:para />
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+		<command:example>
+			<maml:title>--------------------------  Connect with an extended receive timeout  --------------------------</maml:title>
+			<maml:introduction>
+				<maml:paragraph>PS C:\&gt;</maml:paragraph>
+			</maml:introduction>
+			<dev:code>Set-ResourceManagementClient -BaseAddress net.tcp://mim-service:5736 -ReceiveTimeoutSeconds 3600</dev:code>
+			<dev:remarks>
+				<maml:para>Connects to the service's net.tcp endpoint and allows up to an hour for long-running requests to complete</maml:para>
 				<maml:para />
-				<maml:para />
-				<maml:para></maml:para>
 			</dev:remarks>
 			<command:commandLines>
 				<command:commandLine>
@@ -2699,6 +2938,10 @@ while ($pager.HasMoreItems)
 		</command:example>
 	</command:examples>
 	<maml:relatedLinks>
+		<maml:navigationLink>
+			<maml:linkText>Connection guide</maml:linkText>
+			<maml:uri>https://github.com/lithnet/resourcemanagement-client/wiki/Connection-guide</maml:uri>
+		</maml:navigationLink>
 	</maml:relatedLinks>
 </command:command>
 <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
@@ -2768,6 +3011,258 @@ while ($pager.HasMoreItems)
 				<maml:para />
 				<maml:para />
 				<maml:para></maml:para>
+			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+						<maml:para />
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+	</command:examples>
+	<maml:relatedLinks>
+	</maml:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+	<command:details>
+		<command:name>Get-ApprovalRequest</command:name>
+		<maml:description>
+			<maml:para>Gets approval requests from the FIM/MIM service</maml:para>
+		</maml:description>
+		<maml:copyright>
+			<maml:para />
+		</maml:copyright>
+		<command:verb>Get</command:verb>
+		<command:noun>ApprovalRequest</command:noun>
+		<dev:version />
+	</command:details>
+	<maml:description>
+		<maml:para>The Get-ApprovalRequest cmdlet returns approval requests from the FIM/MIM service, filtered by their status. Requests with a status of Pending can be approved or rejected with the Set-PendingApprovalRequest cmdlet.</maml:para>
+		<maml:para>Approval operations are not supported when the client is connected using the DirectNetTcp connection mode.</maml:para>
+	</maml:description>
+	<command:syntax>
+		<command:syntaxItem>
+			<maml:name>Get-ApprovalRequest</maml:name>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="1">
+				<maml:name>Status</maml:name>
+				<maml:description>
+					<maml:para>Optional. The status of the approval requests to get. Valid values are Unknown, Pending, Approved, Rejected, and Expired</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">ApprovalStatus</command:parameterValue>
+			</command:parameter>
+		</command:syntaxItem>
+	</command:syntax>
+	<command:parameters>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="1">
+			<maml:name>Status</maml:name>
+			<maml:description>
+				<maml:para>Optional. The status of the approval requests to get. Valid values are Unknown, Pending, Approved, Rejected, and Expired</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">ApprovalStatus</command:parameterValue>
+			<dev:type>
+				<maml:name>ApprovalStatus</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+	</command:parameters>
+	<command:inputTypes>
+		<command:inputType>
+			<dev:type>
+				<maml:name></maml:name>
+				<maml:uri></maml:uri>
+				<maml:description/>
+			</dev:type>
+			<maml:description>
+<maml:para />
+			</maml:description>
+		</command:inputType>
+	</command:inputTypes>
+	<command:returnValues>
+		<command:returnValue>
+			<dev:type>
+				<maml:name></maml:name>
+				<maml:uri></maml:uri>
+				<maml:description/>
+			</dev:type>
+			<maml:description>
+<maml:para />
+			</maml:description>
+		</command:returnValue>
+	</command:returnValues>
+	<command:terminatingErrors></command:terminatingErrors>
+	<command:nonTerminatingErrors></command:nonTerminatingErrors>
+	<maml:alertSet>
+		<maml:title></maml:title>
+		<maml:alert>
+			<maml:para />
+		</maml:alert>
+	</maml:alertSet>
+	<command:examples>
+		<command:example>
+			<maml:title>--------------------------  Get pending approval requests  --------------------------</maml:title>
+			<maml:introduction>
+				<maml:paragraph>PS C:\&gt;</maml:paragraph>
+			</maml:introduction>
+			<dev:code>Get-ApprovalRequest -Status Pending</dev:code>
+			<dev:remarks>
+				<maml:para>Gets all approval requests that are awaiting a decision</maml:para>
+				<maml:para />
+			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+						<maml:para />
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+	</command:examples>
+	<maml:relatedLinks>
+	</maml:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+	<command:details>
+		<command:name>Set-PendingApprovalRequest</command:name>
+		<maml:description>
+			<maml:para>Approves or rejects a pending approval request</maml:para>
+		</maml:description>
+		<maml:copyright>
+			<maml:para />
+		</maml:copyright>
+		<command:verb>Set</command:verb>
+		<command:noun>PendingApprovalRequest</command:noun>
+		<dev:version />
+	</command:details>
+	<maml:description>
+		<maml:para>The Set-PendingApprovalRequest cmdlet submits an approve or reject decision for a pending approval request obtained from the Get-ApprovalRequest cmdlet.</maml:para>
+		<maml:para>Approval operations are not supported when the client is connected using the DirectNetTcp connection mode.</maml:para>
+	</maml:description>
+	<command:syntax>
+		<command:syntaxItem>
+			<maml:name>Set-PendingApprovalRequest</maml:name>
+			<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="true (ByValue)" position="1">
+				<maml:name>ApprovalObject</maml:name>
+				<maml:description>
+					<maml:para>The approval request to submit a decision for, as returned by the Get-ApprovalRequest cmdlet</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">RmaObject</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="2">
+				<maml:name>Decision</maml:name>
+				<maml:description>
+					<maml:para>The decision to submit. Valid values are Approve and Reject. The default is Approve</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">ApprovalDecision</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="3">
+				<maml:name>Reason</maml:name>
+				<maml:description>
+					<maml:para>Optional. The reason for the decision</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			</command:parameter>
+		</command:syntaxItem>
+	</command:syntax>
+	<command:parameters>
+		<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="true (ByValue)" position="1">
+			<maml:name>ApprovalObject</maml:name>
+			<maml:description>
+				<maml:para>The approval request to submit a decision for, as returned by the Get-ApprovalRequest cmdlet</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">RmaObject</command:parameterValue>
+			<dev:type>
+				<maml:name>RmaObject</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="2">
+			<maml:name>Decision</maml:name>
+			<maml:description>
+				<maml:para>The decision to submit. Valid values are Approve and Reject. The default is Approve</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">ApprovalDecision</command:parameterValue>
+			<dev:type>
+				<maml:name>ApprovalDecision</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue>Approve</dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="3">
+			<maml:name>Reason</maml:name>
+			<maml:description>
+				<maml:para>Optional. The reason for the decision</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+	</command:parameters>
+	<command:inputTypes>
+		<command:inputType>
+			<dev:type>
+				<maml:name></maml:name>
+				<maml:uri></maml:uri>
+				<maml:description/>
+			</dev:type>
+			<maml:description>
+<maml:para />
+			</maml:description>
+		</command:inputType>
+	</command:inputTypes>
+	<command:returnValues>
+		<command:returnValue>
+			<dev:type>
+				<maml:name></maml:name>
+				<maml:uri></maml:uri>
+				<maml:description/>
+			</dev:type>
+			<maml:description>
+<maml:para />
+			</maml:description>
+		</command:returnValue>
+	</command:returnValues>
+	<command:terminatingErrors></command:terminatingErrors>
+	<command:nonTerminatingErrors></command:nonTerminatingErrors>
+	<maml:alertSet>
+		<maml:title></maml:title>
+		<maml:alert>
+			<maml:para />
+		</maml:alert>
+	</maml:alertSet>
+	<command:examples>
+		<command:example>
+			<maml:title>--------------------------  Approve all pending requests  --------------------------</maml:title>
+			<maml:introduction>
+				<maml:paragraph>PS C:\&gt;</maml:paragraph>
+			</maml:introduction>
+			<dev:code>Get-ApprovalRequest -Status Pending | Set-PendingApprovalRequest -Decision Approve</dev:code>
+			<dev:remarks>
+				<maml:para>Approves every approval request that is currently pending</maml:para>
+				<maml:para />
+			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+						<maml:para />
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+		<command:example>
+			<maml:title>--------------------------  Reject a request with a reason  --------------------------</maml:title>
+			<maml:introduction>
+				<maml:paragraph>PS C:\&gt;</maml:paragraph>
+			</maml:introduction>
+			<dev:code>$request = Get-ApprovalRequest -Status Pending | Select-Object -First 1
+Set-PendingApprovalRequest -ApprovalObject $request -Decision Reject -Reason "Request does not meet policy"</dev:code>
+			<dev:remarks>
+				<maml:para />
 			</dev:remarks>
 			<command:commandLines>
 				<command:commandLine>

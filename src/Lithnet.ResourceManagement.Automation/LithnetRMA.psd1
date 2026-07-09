@@ -21,10 +21,10 @@ Author = 'Ryan Newington'
 CompanyName = 'Lithnet'
 
 # Copyright statement for this module
-Copyright = ''
+Copyright = 'Copyright (c) 2026 Lithnet Pty Ltd'
 
 # Description of the functionality provided by this module
-Description = 'Lithnet Resource Management Client for PowerShell'
+Description = 'PowerShell module for managing resources in the Microsoft Identity Manager (MIM) and Forefront Identity Manager (FIM) service. Runs on Windows PowerShell 5.1 and PowerShell 7.'
 
 # Minimum version of the Windows PowerShell engine required by this module
 PowerShellVersion = '5.1'
@@ -66,16 +66,33 @@ FormatsToProcess = @()
 RootModule = 'LithnetRMA.psm1'
 
 # Functions to export from this module
-FunctionsToExport = '*'
+FunctionsToExport = @()
 
 # Cmdlets to export from this module
-CmdletsToExport = '*'
+CmdletsToExport = @(
+    'Get-ApprovalRequest',
+    'Get-Resource',
+    'Get-ResourceCount',
+    'Import-RMConfig',
+    'New-Resource',
+    'New-ResourceUpdateTemplate',
+    'New-XPathExpression',
+    'New-XPathQuery',
+    'New-XPathQueryGroup',
+    'Remove-Resource',
+    'Save-Resource',
+    'Search-Resources',
+    'Search-ResourcesPaged',
+    'Set-PendingApprovalRequest',
+    'Set-ResourceManagementClient',
+    'Update-ResourceManagementClientSchema'
+)
 
 # Variables to export from this module
-VariablesToExport = '*'
+VariablesToExport = @()
 
 # Aliases to export from this module
-AliasesToExport = '*'
+AliasesToExport = @()
 
 # List of all modules packaged with this module
 ModuleList = @()
@@ -84,5 +101,19 @@ ModuleList = @()
 FileList = @()
 
 # Private data to pass to the module specified in ModuleToProcess
-PrivateData = ''
+PrivateData = @{
+    PSData = @{
+        # Tags applied to this module. These help with module discovery in online galleries.
+        Tags = @('MIM', 'FIM', 'MicrosoftIdentityManager', 'ForefrontIdentityManager', 'IdentityManagement', 'ResourceManagement')
+
+        # A URL to the license for this module.
+        LicenseUri = 'https://github.com/lithnet/resourcemanagement-powershell/blob/master/LICENSE.txt'
+
+        # A URL to the main website for this project.
+        ProjectUri = 'https://github.com/lithnet/resourcemanagement-powershell'
+
+        # ReleaseNotes of this module
+        ReleaseNotes = 'https://github.com/lithnet/resourcemanagement-powershell/releases'
+    }
+}
 }

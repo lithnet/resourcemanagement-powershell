@@ -5,8 +5,6 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lithnet.ResourceManagement.Automation", "Lithnet.ResourceManagement.Automation\Lithnet.ResourceManagement.Automation.csproj", "{4C4BEB83-82FF-4625-B8C7-D547C654228A}"
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Lithnet.ResourceManagement.Automation.Installer", "Lithnet.ResourceManagement.Automation.Installer\Lithnet.ResourceManagement.Automation.Installer.wixproj", "{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,17 +31,6 @@ Global
 		{4C4BEB83-82FF-4625-B8C7-D547C654228A}.Release|x64.ActiveCfg = Release|x64
 		{4C4BEB83-82FF-4625-B8C7-D547C654228A}.Release|x64.Build.0 = Release|x64
 		{4C4BEB83-82FF-4625-B8C7-D547C654228A}.Release|x86.ActiveCfg = Release|Any CPU
-		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
-		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Debug|Mixed Platforms.Build.0 = Debug|x64
-		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Debug|x64.ActiveCfg = Debug|x64
-		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Debug|x86.ActiveCfg = Debug|x64
-		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Release|Any CPU.ActiveCfg = Release|x64
-		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Release|Mixed Platforms.ActiveCfg = Release|x64
-		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Release|Mixed Platforms.Build.0 = Release|x64
-		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Release|x64.ActiveCfg = Release|x64
-		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Release|x64.Build.0 = Release|x64
-		{B9EB58E9-C770-4A1A-A4F5-FAC5EDE1714F}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

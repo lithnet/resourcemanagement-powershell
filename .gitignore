@@ -190,3 +190,8 @@ ModelManifest.xml
 /src/packages
 
 .vs/
+# Advanced Installer transient folders (harvest payload and build output)
+src/Lithnet.ResourceManagement.Automation.Setup/LithnetRMA/
+src/Lithnet.ResourceManagement.Automation.Setup/output/
+src/Lithnet.ResourceManagement.Automation.Setup/*-cache/
+src/Lithnet.ResourceManagement.Automation.Setup/*-SetupFiles/

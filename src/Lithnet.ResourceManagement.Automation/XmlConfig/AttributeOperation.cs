@@ -7,7 +7,6 @@ using System.IO;
 using Lithnet.ResourceManagement.Client;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using Microsoft.ResourceManagement.WebServices;
 using System.Security;
 
 namespace Lithnet.ResourceManagement.Automation
@@ -37,7 +36,7 @@ namespace Lithnet.ResourceManagement.Automation
             }
         }
 
-        internal void ExecuteOperation(ResourceObject resource, ResourceOperationType resourceOpType)
+        internal void ExecuteOperation(IResourceObject resource, ResourceOperationType resourceOpType)
         {
             if (resource == null)
             {
@@ -68,7 +67,7 @@ namespace Lithnet.ResourceManagement.Automation
             }
         }
 
-        private void PerformAttributeAdd(ResourceObject resource)
+        private void PerformAttributeAdd(IResourceObject resource)
         {
             if (!resource.Attributes[this.Name].Attribute.IsMultivalued)
             {
@@ -82,7 +81,7 @@ namespace Lithnet.ResourceManagement.Automation
             }
         }
 
-        private void PerformAttributeReplace(ResourceObject resource)
+        private void PerformAttributeReplace(IResourceObject resource)
         {
             object newValue = this.ExpandedValue;
 
@@ -100,7 +99,7 @@ namespace Lithnet.ResourceManagement.Automation
             resource.Attributes[this.Name].SetValue(newValue);
         }
 
-        private void PerformAttributeDelete(ResourceObject resource)
+        private void PerformAttributeDelete(IResourceObject resource)
         {
             object newValue = this.ExpandedValue;
 
@@ -175,7 +174,7 @@ namespace Lithnet.ResourceManagement.Automation
                 if (match.Groups.Count >= 2)
                 {
                     string xmlRefName = match.Groups[1].Value;
-                    ResourceObject xmlRef = this.GetXmlReferenceResource(xmlRefName);
+                    IResourceObject xmlRef = this.GetXmlReferenceResource(xmlRefName);
                     if (xmlRef == null)
                     {
                         throw new ArgumentException("The input string contained the xmlref pattern '{0}', but the object could not be resolved");
@@ -233,7 +232,7 @@ namespace Lithnet.ResourceManagement.Automation
                 throw new ArgumentException(string.Format("The attribute operation of {0} on attribute {1} specifies a reference type, but does not have a string in the value of ObjectType|AttributeName|AttributeValue. The invalid value was {2}", this.Name, this.Operation, this.Value));
             }
 
-            ResourceObject resource = RmcWrapper.Client.GetResourceByKey(split[0], split[1], split[2],  ResourceManagementSchema.GetObjectType(split[0]).Attributes.Select(t => t.SystemName).Except(ResourceManagementSchema.ComputedAttributes));
+            IResourceObject resource = RmcWrapper.Client.GetResourceByKey(split[0], split[1], split[2],  RmcWrapper.Client.GetObjectType(split[0]).Attributes.Select(t => t.SystemName).Except(SchemaConstants.ComputedAttributes));
 
             if (resource == null)
             {
@@ -252,12 +251,12 @@ namespace Lithnet.ResourceManagement.Automation
 
         private string GetXmlReference(string id)
         {
-            ResourceObject resource = this.GetXmlReferenceResource(id);
+            IResourceObject resource = this.GetXmlReferenceResource(id);
 
             return resource.ObjectID == null ? Guid.Empty.ToString() : resource.ObjectID.Value;
         }
 
-        private ResourceObject GetXmlReferenceResource(string id)
+        private IResourceObject GetXmlReferenceResource(string id)
         {
             ResourceOperation op =  ConfigSyncControl.CurrentConfig.Operations.FirstOrDefault(t => t.ID == id);
 
@@ -282,7 +281,7 @@ namespace Lithnet.ResourceManagement.Automation
                 throw new ArgumentException(string.Format("The attribute operation of {1} on attribute {0} specifies a reference to another operation with ID {2}, but resource failed to resolve its anchor", this.Name, this.Operation, id), ex);
             }
 
-            ResourceObject resource = RmcWrapper.Client.GetResourceByKey(op.ResourceType, anchorValues, op.AttributesToGet);
+            IResourceObject resource = RmcWrapper.Client.GetResourceByKey(op.ResourceType, anchorValues, op.AttributesToGet);
 
             if (resource == null)
             {

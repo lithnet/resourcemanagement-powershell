@@ -37,7 +37,7 @@ namespace Lithnet.ResourceManagement.Automation
             RuntimeDefinedParameter parameter = new RuntimeDefinedParameter();
             parameter.Name = paramName;
             parameter.ParameterType = typeof(string);
-            IList<ObjectTypeDefinition> objectTypes = ResourceManagementSchema.GetObjectTypes().ToList();
+            IList<ObjectTypeDefinition> objectTypes = Client.GetObjectTypes().ToList();
 
             if (objectTypes.Count > 0)
             {
@@ -69,7 +69,7 @@ namespace Lithnet.ResourceManagement.Automation
             {
                 List<string> attributeNames = new List<string>();
 
-                IList<ObjectTypeDefinition> objectTypes = ResourceManagementSchema.GetObjectTypes().ToList();
+                IList<ObjectTypeDefinition> objectTypes = Client.GetObjectTypes().ToList();
 
                 if (objectTypes.Count > 0)
                 {
@@ -88,9 +88,9 @@ namespace Lithnet.ResourceManagement.Automation
             else
             {
                 
-                if (ResourceManagementSchema.ContainsObjectType(objectType))
+                if (Client.ContainsObjectType(objectType))
                 {
-                    ValidateSetAttribute setAttribute = new ValidateSetAttribute(ResourceManagementSchema.GetObjectType(objectType).Attributes.OrderBy(t => t.SystemName).Select(t => t.SystemName).ToArray());
+                    ValidateSetAttribute setAttribute = new ValidateSetAttribute(Client.GetObjectType(objectType).Attributes.OrderBy(t => t.SystemName).Select(t => t.SystemName).ToArray());
                     parameter.Attributes.Add(setAttribute);
                 }
             }

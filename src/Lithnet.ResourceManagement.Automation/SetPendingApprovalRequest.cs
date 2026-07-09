@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Management;
 using System.Management.Automation;
-using Microsoft.ResourceManagement.WebServices;
 using System.Collections;
 using Lithnet.ResourceManagement.Client;
 
@@ -24,7 +22,7 @@ namespace Lithnet.ResourceManagement.Automation
 
         protected override void ProcessRecord()
         {
-            ResourceObject r = this.ApprovalObject.InternalObject;
+            IResourceObject r = this.ApprovalObject.InternalObject;
             RmcWrapper.Client.Approve(r, this.Decision == ApprovalDecision.Approve, this.Reason);
         }
     }

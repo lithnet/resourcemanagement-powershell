@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.Management.Automation;
 using System.Net;
 using System.Runtime.InteropServices;
-using System.Security;
 using Lithnet.ResourceManagement.Client;
 
 namespace Lithnet.ResourceManagement.Automation
@@ -19,28 +18,40 @@ namespace Lithnet.ResourceManagement.Automation
         [Parameter(Position = 2)]
         public string ServicePrincipalName { get; set; }
 
-        [Parameter(Position = 3)]
-        public bool ForceKerberos { get; set; }
-
-        [Parameter(Position = 4)]
+        [Parameter]
         public SwitchParameter RefreshSchema { get; set; }
+
+        [Parameter]
+        public SwitchParameter UsernamePassthrough { get; set; }
+
+        [Parameter]
+        public ConnectionMode ConnectionMode { get; set; }
+
+        [Parameter]
+        public int? ConcurrentConnectionLimit { get; set; }
+
+        [Parameter]
+        public int? ConnectTimeoutSeconds { get; set; }
+
+        [Parameter]
+        public int? ReceiveTimeoutSeconds { get; set; }
+
+        [Parameter]
+        public int? SendTimeoutSeconds { get; set; }
 
         protected override void EndProcessing()
         {
-            NetworkCredential creds = null;
-
-            if (this.Credentials != null)
-            {
-                creds = this.Credentials.GetNetworkCredential();
-            }
-
-            Uri baseUri;
+            ResourceManagementClientOptions options = new ResourceManagementClientOptions();
 
             try
             {
-                if (!Uri.TryCreate(this.BaseAddress, UriKind.Absolute, out baseUri))
+                if (Uri.TryCreate(this.BaseAddress, UriKind.Absolute, out _))
                 {
-                    baseUri = new Uri($"http://{this.BaseAddress}:5725");
+                    options.BaseUri = this.BaseAddress;
+                }
+                else
+                {
+                    options.BaseUri = $"http://{this.BaseAddress}:{ResourceManagementClientOptions.DefaultFimServicePort}";
                 }
             }
             catch (Exception ex)
@@ -49,31 +60,63 @@ namespace Lithnet.ResourceManagement.Automation
                 return;
             }
 
-            RmcWrapper.Client = new Client.ResourceManagementClient(baseUri, creds, this.ServicePrincipalName, !this.ForceKerberos);
+            if (this.Credentials != null)
+            {
+                NetworkCredential creds = this.Credentials.GetNetworkCredential();
 
-            if (this.RefreshSchema.IsPresent || !baseUri.Host.Equals(ResourceManagementSchema.SchemaEndpoint?.Host, StringComparison.OrdinalIgnoreCase))
+                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !this.UsernamePassthrough)
+                {
+                    int i = creds.UserName.IndexOf("@");
+
+                    if (i > 0)
+                    {
+                        string[] parts = creds.UserName.Split('@');
+                        options.Username = $"{parts[0]}@{parts[1].ToUpperInvariant()}";
+                    }
+                    else
+                    {
+                        options.Username = string.IsNullOrWhiteSpace(creds.Domain) ? creds.UserName : $"{creds.Domain}\\{creds.UserName}";
+                    }
+                }
+                else
+                {
+                    options.Username = string.IsNullOrWhiteSpace(creds.Domain) ? creds.UserName : $"{creds.Domain}\\{creds.UserName}";
+                }
+
+                options.Password = creds.Password;
+            }
+
+            options.Spn = this.ServicePrincipalName;
+            options.ConnectionMode = this.ConnectionMode;
+
+            if (this.ConcurrentConnectionLimit.HasValue)
+            {
+                options.ConcurrentConnectionLimit = this.ConcurrentConnectionLimit.Value;
+            }
+
+            if (this.ConnectTimeoutSeconds.HasValue)
+            {
+                options.ConnectTimeoutSeconds = this.ConnectTimeoutSeconds.Value;
+            }
+
+            if (this.ReceiveTimeoutSeconds.HasValue)
+            {
+                options.RecieveTimeoutSeconds = this.ReceiveTimeoutSeconds.Value;
+            }
+
+            if (this.SendTimeoutSeconds.HasValue)
+            {
+                options.SendTimeoutSeconds = this.SendTimeoutSeconds.Value;
+            }
+
+            RmcWrapper.Client = new ResourceManagementClient(options);
+
+            if (this.RefreshSchema.IsPresent)
             {
                 RmcWrapper.Client.RefreshSchema();
             }
 
             base.EndProcessing();
-        }
-
-        private string ConvertToUnsecureString(SecureString securePassword)
-        {
-            if (securePassword == null)
-                throw new ArgumentNullException(nameof(securePassword));
-
-            IntPtr unmanagedString = IntPtr.Zero;
-            try
-            {
-                unmanagedString = Marshal.SecureStringToGlobalAllocUnicode(securePassword);
-                return Marshal.PtrToStringUni(unmanagedString);
-            }
-            finally
-            {
-                Marshal.ZeroFreeGlobalAllocUnicode(unmanagedString);
-            }
         }
     }
 }

@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Management;
 using System.Management.Automation;
-using Microsoft.ResourceManagement.WebServices;
 using System.Collections;
 using Lithnet.ResourceManagement.Client;
 
@@ -32,18 +30,18 @@ namespace Lithnet.ResourceManagement.Automation
 
             if (expression != null)
             {
-                return expression.ToString(false);
+                return expression.ToString();
             }
 
             PSObject wrappedObject = this.XPath as PSObject;
-
+            
             if (wrappedObject != null)
             {
                 expression = wrappedObject.BaseObject as XPathExpression;
 
                 if (expression != null)
                 {
-                    return expression.ToString(false);
+                    return expression.ToString();
                 }
 
                 throw new ArgumentException("The XPath parameter must be a string or XPathExpression object");

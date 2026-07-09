@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Lithnet.ResourceManagement.Client;
 
 namespace Lithnet.ResourceManagement.Automation
@@ -55,11 +56,11 @@ namespace Lithnet.ResourceManagement.Automation
             }
         }
 
-        public RmaObject[] GetNextPage()
+        public async Task<RmaObject[]> GetNextPageAsync()
         {
             List<RmaObject> results = new List<RmaObject>();
 
-            foreach(ResourceObject resource in this.pager.GetNextPage())
+            await foreach(ResourceObject resource in this.pager.GetNextPageAsync())
             {
                 results.Add(new RmaObject(resource));
             }

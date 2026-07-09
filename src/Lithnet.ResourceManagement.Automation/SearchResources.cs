@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Management;
+
 using System.Management.Automation;
-using Microsoft.ResourceManagement.WebServices;
-using Microsoft.ResourceManagement.WebServices.WSEnumeration;
 using System.Collections;
 using Lithnet.ResourceManagement.Client;
 using System.Globalization;
@@ -64,7 +62,7 @@ namespace Lithnet.ResourceManagement.Automation
                     }
                     else
                     {
-                        ObjectTypeDefinition objectType = ResourceManagementSchema.GetObjectType(this.ExpectedObjectType);
+                        ObjectTypeDefinition objectType = RmcWrapper.Client.GetObjectType(this.ExpectedObjectType);
                         attributes = objectType.Attributes.Select(t => t.SystemName);
                     }
                 }
@@ -118,7 +116,7 @@ namespace Lithnet.ResourceManagement.Automation
 
             if (expression != null)
             {
-                return expression.ToString(false);
+                return expression.ToString();
             }
 
             PSObject wrappedObject = this.XPath as PSObject;
@@ -129,7 +127,7 @@ namespace Lithnet.ResourceManagement.Automation
 
                 if (expression != null)
                 {
-                    return expression.ToString(false);
+                    return expression.ToString();
                 }
 
                 throw new ArgumentException("The XPath parameter must be a string or XPathExpression object");

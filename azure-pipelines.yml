@@ -1,0 +1,276 @@
+# =========================================================================
+# LithnetRMA PowerShell module build & publish pipeline
+# =========================================================================
+# Builds the PowerShell module, signs the assemblies, manifest, and package
+# with the Lithnet EV code-signing certificate, builds and signs the MSI
+# installer with Advanced Installer, publishes to the internal Azure
+# Artifacts feed, and (after approval) creates a GitHub release with the
+# installer and module package, then publishes to the public PSGallery.
+#
+# Signing split:
+#   * codesign.yaml signs the module assembly, manifest, and loader before
+#     they are packaged, so both the .nupkg and the MSI embed signed files.
+#   * build-advanced-installer-package.yaml (sign: true) signs the MSI
+#     itself during the Advanced Installer build.
+#
+# All signing and publishing is delegated to the shared release-tools repo.
+# No signing-vault or feed details live in this file.
+# =========================================================================
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  - name: buildConfiguration
+    value: 'Release'
+  - name: build.version.major
+    value: 2
+  - name: build.version.minor
+    value: 0
+  - name: build.version.revision
+    value: $[counter(format('{0}.{1}', variables['build.version.major'], variables['build.version.minor']), 0)]
+  - name: build.version
+    value: $(build.version.major).$(build.version.minor).$(build.version.revision)
+  - name: build.date
+    value: $[format('{0:yyyy}-{0:MM}-{0:dd}T{0:HH}:{0:mm}:{0:ss}', pipeline.startTime)]
+
+  - name: azureSubscription
+    value: 'ProductionServices'
+
+  - name: tfmCore
+    value: 'net8.0'
+  - name: tfmDesktop
+    value: 'net48'
+
+  - name: projectPath
+    value: '$(Build.SourcesDirectory)/resourcemanagement-powershell/src/Lithnet.ResourceManagement.Automation/Lithnet.ResourceManagement.Automation.csproj'
+  - name: publishDir
+    value: '$(Build.ArtifactStagingDirectory)/publish'
+  # The assembled module folder doubles as the Advanced Installer harvest
+  # source, so it must sit at the path the .aip synchronizes (next to it).
+  - name: setupDir
+    value: '$(Build.SourcesDirectory)/resourcemanagement-powershell/src/Lithnet.ResourceManagement.Automation.Setup'
+  - name: aipPath
+    value: '$(setupDir)/Lithnet.ResourceManagement.Automation.Setup.aip'
+  - name: moduleDir
+    value: '$(setupDir)/LithnetRMA'
+  - name: nupkgDir
+    value: '$(Build.ArtifactStagingDirectory)/nupkg'
+  # Backslash separator: Advanced Installer's SetOutputLocation rejects
+  # mixed-separator paths.
+  - name: installerDir
+    value: '$(Build.ArtifactStagingDirectory)\installer'
+
+name: $(build.version.major).$(build.version.minor).$(build.version.revision)
+trigger: none
+
+resources:
+  repositories:
+  - repository: release_tools
+    type: git
+    name: release-tools/release-tools
+    ref: master
+
+stages:
+# ── Build, sign, and publish to internal feed ────────────────────────────
+- stage: build
+  displayName: Build, sign and package
+  dependsOn: []
+  jobs:
+    - job: build_job
+      displayName: Build and package
+      steps:
+        - checkout: self
+          path: s/resourcemanagement-powershell
+        - checkout: release_tools
+          path: release-tools
+
+        - task: NuGetAuthenticate@1
+          displayName: Authenticate with NuGet
+
+        - task: DotNetCoreCLI@2
+          displayName: dotnet publish (core)
+          inputs:
+            command: publish
+            projects: '$(projectPath)'
+            arguments: '-c $(buildConfiguration) -f $(tfmCore) -p:Version=$(build.version) -o $(publishDir)/$(tfmCore)'
+            publishWebProjects: false
+            zipAfterPublish: false
+
+        - task: DotNetCoreCLI@2
+          displayName: dotnet publish (desktop)
+          inputs:
+            command: publish
+            projects: '$(projectPath)'
+            arguments: '-c $(buildConfiguration) -f $(tfmDesktop) -p:Version=$(build.version) -o $(publishDir)/$(tfmDesktop)'
+            publishWebProjects: false
+            zipAfterPublish: false
+
+        # Stamp the module manifest with the pipeline version.
+        - pwsh: |
+            Get-ChildItem '$(publishDir)' -Recurse -Filter 'LithnetRMA.psd1' | ForEach-Object {
+                (Get-Content -Path $_.FullName -Raw) -replace "ModuleVersion = '.*'", "ModuleVersion = '$(build.version)'" | Set-Content -Path $_.FullName -NoNewline
+                Write-Host "Stamped $($_.FullName)"
+            }
+          displayName: Stamp module version
+
+        # Sign all assemblies and scripts BEFORE packaging.
+        - template: templates/codesign.yaml@release_tools
+          parameters:
+            path:
+              - '$(publishDir)/**/Lithnet.ResourceManagement.Automation.dll'
+              - '$(publishDir)/**/LithnetRMA.psd1'
+              - '$(publishDir)/**/LithnetRMA.psm1'
+            environment: 'prod'
+            azureSubscription: '$(azureSubscription)'
+            description: 'Lithnet Resource Management PowerShell Module'
+
+        # Assemble the module folder and create a .nupkg from it.
+        - pwsh: |
+            $dest = '$(moduleDir)'
+            $nupkg = '$(nupkgDir)'
+            New-Item -ItemType Directory -Force -Path "$dest/en-us", "$dest/coreclr", "$dest/desktop", $nupkg | Out-Null
+
+            # dotnet publish -o creates a project-named subdirectory; find it dynamically.
+            $coreDir = Get-ChildItem '$(publishDir)/$(tfmCore)' -Directory | Select-Object -First 1 -ExpandProperty FullName
+            $desktopDir = Get-ChildItem '$(publishDir)/$(tfmDesktop)' -Directory | Select-Object -First 1 -ExpandProperty FullName
+
+            # Module root: manifest, loader, help
+            Copy-Item "$coreDir/LithnetRMA.psd1" $dest
+            Copy-Item "$coreDir/LithnetRMA.psm1" $dest
+            Copy-Item "$coreDir/en-us/Lithnet.ResourceManagement.Automation.dll-help.xml" "$dest/en-us/"
+
+            # coreclr: all core DLLs flat
+            Get-ChildItem "$coreDir/*.dll" | Copy-Item -Destination "$dest/coreclr/"
+
+            # desktop: all desktop DLLs flat
+            Get-ChildItem "$desktopDir/*.dll" | Copy-Item -Destination "$dest/desktop/"
+
+            # Create the .nupkg via a local file-system PS repository.
+            Register-PSRepository -Name LocalBuild -SourceLocation $nupkg -PublishLocation $nupkg -InstallationPolicy Trusted
+            Publish-Module -Path $dest -Repository LocalBuild -NuGetApiKey 'local'
+
+            Write-Host "Module assembled at $dest"
+            Write-Host "Package created:"
+            Get-ChildItem $nupkg | ForEach-Object { Write-Host "  $($_.Name) ($([math]::Round($_.Length / 1KB)) KB)" }
+          displayName: Assemble module and create package
+
+        # Sign the NuGet package.
+        - template: templates/codesign.yaml@release_tools
+          parameters:
+            path:
+              - '$(nupkgDir)/*.nupkg'
+            environment: 'prod'
+            azureSubscription: '$(azureSubscription)'
+
+        # Publish to the internal Azure Artifacts feed.
+        - template: templates/publish-nuget.yaml@release_tools
+          parameters:
+            nugetPackagePath: '$(nupkgDir)/*.nupkg'
+            publishInternal: true
+            publishExternal: false
+
+        # Stamp the installer project with the pipeline version and a fresh
+        # ProductCode (required for MSI major upgrades between releases).
+        - pwsh: |
+            New-Item -ItemType Directory -Force -Path '$(installerDir)' | Out-Null
+            $aip = '$(aipPath)'
+            $productCode = [guid]::NewGuid().ToString().ToUpper()
+            $content = Get-Content -Path $aip -Raw
+            $content = $content -replace '(<ROW Property="ProductVersion" Value=")[^"]*(")', '${1}$(build.version)${2}'
+            $content = $content -replace '(<ROW Property="ProductCode" Value="1033:\{)[0-9A-F-]+(\} ")', "`${1}$productCode`${2}"
+            Set-Content -Path $aip -Value $content -NoNewline
+            Write-Host "Stamped $aip with version $(build.version), ProductCode {$productCode}"
+          displayName: Stamp installer version
+
+        # Build and sign the MSI. The .aip harvests the assembled module
+        # folder ($(moduleDir)) at build time via its synchronized folder.
+        - template: templates/build-advanced-installer-package.yaml@release_tools
+          parameters:
+            aipPath: '$(aipPath)'
+            aipPackageName: 'LithnetRMA.msi'
+            azureSubscription: '$(azureSubscription)'
+            environment: 'prod'
+            outputFolder: '$(installerDir)'
+            sign: true
+
+        - task: PublishPipelineArtifact@1
+          displayName: Publish module artifact
+          inputs:
+            targetPath: '$(moduleDir)'
+            publishLocation: 'pipeline'
+            artifact: LithnetRMA
+
+        - task: PublishPipelineArtifact@1
+          displayName: Publish nupkg artifact
+          inputs:
+            targetPath: '$(nupkgDir)'
+            publishLocation: 'pipeline'
+            artifact: nupkg
+
+        - task: PublishPipelineArtifact@1
+          displayName: Publish installer artifact
+          inputs:
+            targetPath: '$(installerDir)'
+            publishLocation: 'pipeline'
+            artifact: installer
+
+# ── Publish GitHub release (requires approval) ───────────────────────────
+- stage: publish_github
+  displayName: Publish GitHub release
+  dependsOn: build
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  jobs:
+    - deployment: publish_github_job
+      displayName: Publish installer and module package to GitHub releases
+      environment: Github
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              - checkout: none
+              - download: current
+                artifact: installer
+              - download: current
+                artifact: nupkg
+              - task: GitHubRelease@1
+                displayName: Create GitHub release (v$(build.version))
+                inputs:
+                  gitHubConnection: github.com_lithnet
+                  repositoryName: '$(Build.Repository.Name)'
+                  action: create
+                  tagSource: userSpecifiedTag
+                  tag: v$(build.version)
+                  title: v$(build.version)
+                  assets: |
+                    $(Pipeline.Workspace)/installer/*.msi
+                    $(Pipeline.Workspace)/nupkg/*.nupkg
+                  isPreRelease: false
+                  addChangeLog: true
+                  changeLogCompareToRelease: lastFullRelease
+                  changeLogType: commitBased
+
+# ── Publish to PSGallery (requires approval) ─────────────────────────────
+- stage: publish_psgallery
+  displayName: Publish to PSGallery
+  dependsOn: publish_github
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  jobs:
+    - deployment: publish_module
+      displayName: Publish module to PSGallery
+      environment: 'Public PSGallery'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              - checkout: release_tools
+                path: release-tools
+
+              - download: current
+                artifact: nupkg
+
+              - template: templates/publish-psgallery.yaml@release_tools
+                parameters:
+                  nupkgPath: '$(Pipeline.Workspace)/nupkg/*.nupkg'
+                  environment: 'prod'
+                  azureSubscription: '$(azureSubscription)'

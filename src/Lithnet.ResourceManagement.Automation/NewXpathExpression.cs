@@ -3,9 +3,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Management;
 using System.Management.Automation;
-using Microsoft.ResourceManagement.WebServices;
 using System.Collections;
 using Lithnet.ResourceManagement.Client;
 
@@ -24,7 +22,7 @@ namespace Lithnet.ResourceManagement.Automation
         //}
 
         [Parameter(Mandatory = false, Position = 2, ValueFromPipeline = true)]
-        public IXPathQueryObject QueryObject { get; set; }
+        public object QueryObject { get; set; }
 
         [Parameter(Mandatory = false, Position = 3)]
         public string DereferenceAttribute { get; set; }
@@ -36,11 +34,11 @@ namespace Lithnet.ResourceManagement.Automation
         {
             if (this.DereferenceAttribute == null)
             {
-                this.WriteObject(new XPathExpression(this.ObjectType, this.QueryObject, this.WrapFilterXml.IsPresent));
+                this.WriteObject(new XPathExpression(this.ObjectType, (IXPathQueryObject)this.QueryObject, this.WrapFilterXml.IsPresent));
             }
             else
             {
-                this.WriteObject(new XPathDereferencedExpression(this.ObjectType, this.DereferenceAttribute, this.QueryObject, this.WrapFilterXml.IsPresent));
+                this.WriteObject(new XPathDereferencedExpression(this.ObjectType, this.DereferenceAttribute, (IXPathQueryObject)this.QueryObject, this.WrapFilterXml.IsPresent));
             }
         }
 

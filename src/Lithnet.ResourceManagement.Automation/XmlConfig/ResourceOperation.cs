@@ -99,7 +99,7 @@ namespace Lithnet.ResourceManagement.Automation
         }
 
         [XmlIgnore]
-        internal ResourceObject Resource { get; private set; }
+        internal IResourceObject Resource { get; private set; }
 
         internal void ExecuteOperation()
         {

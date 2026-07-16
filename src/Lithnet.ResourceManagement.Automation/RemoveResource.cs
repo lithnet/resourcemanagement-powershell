@@ -12,6 +12,7 @@ namespace Lithnet.ResourceManagement.Automation
     public class RemoveResource : Cmdlet
     {
         [Parameter(Mandatory = true, Position = 1, ParameterSetName = "ID")]
+        [UnwrapPSObject]
         public object[] ID { get; set; }
 
         [Parameter(Mandatory = true, Position = 1, ValueFromPipeline = true, ParameterSetName = "ResourceObject")]

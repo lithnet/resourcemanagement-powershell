@@ -195,3 +195,6 @@ src/Lithnet.ResourceManagement.Automation.Setup/LithnetRMA/
 src/Lithnet.ResourceManagement.Automation.Setup/output/
 src/Lithnet.ResourceManagement.Automation.Setup/*-cache/
 src/Lithnet.ResourceManagement.Automation.Setup/*-SetupFiles/
+
+# Staged module output produced by test/LithnetRMA.Tests/Build-TestModule.ps1
+test/LithnetRMA.Tests/.module/

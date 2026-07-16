@@ -15,11 +15,11 @@ namespace Lithnet.ResourceManagement.Automation
         public GroupOperator Operator { get; set; }
 
         [Parameter(Mandatory = false, Position = 2, ValueFromPipeline = true)]
-        public object[] Queries { get; set; }
+        public IXPathQueryObject[] Queries { get; set; }
 
         protected override void ProcessRecord()
         {
-            this.WriteObject(new XPathQueryGroup((Client.GroupOperator)this.Operator, (IXPathQueryObject[])this.Queries));
+            this.WriteObject(new XPathQueryGroup((Client.GroupOperator)this.Operator, this.Queries));
         }
     }
 }

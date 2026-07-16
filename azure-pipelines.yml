@@ -247,8 +247,10 @@ stages:
         azureSubscription: $(devAzureSubscription)
         agentMode: pool
         targetPoolName: $(testEnvironment)
-        # A cold start from deallocated regularly exceeds the template's
-        # 300-second default before the agent registers.
+        # A normal cold start registers the agent in under two minutes, but
+        # boot-time outliers (Windows Update finalization, slow host
+        # allocation) can take far longer; the headroom costs nothing because
+        # the wait exits as soon as the agent is online.
         timeoutSeconds: 900
 
 # ── Test the signed module against the lab MIM service (release gate) ────

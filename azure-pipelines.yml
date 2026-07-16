@@ -291,7 +291,7 @@ stages:
             }
             Import-Module Pester -MinimumVersion 5.7.1
             $config = New-PesterConfiguration
-            $config.Run.Path = '$(Build.SourcesDirectory)/resourcemanagement-powershell/test/LithnetRMA.Tests'
+            $config.Run.Path = '$(Pipeline.Workspace)/s/resourcemanagement-powershell/test/LithnetRMA.Tests'
             $config.Run.Exit = $true
             $config.Output.Verbosity = 'Detailed'
             $config.TestResult.Enabled = $true
@@ -312,7 +312,7 @@ stages:
               }
               Import-Module Pester -MinimumVersion 5.7.1
               $config = New-PesterConfiguration
-              $config.Run.Path = '$(Build.SourcesDirectory)/resourcemanagement-powershell/test/LithnetRMA.Tests'
+              $config.Run.Path = '$(Pipeline.Workspace)/s/resourcemanagement-powershell/test/LithnetRMA.Tests'
               $config.Run.Exit = $true
               $config.Output.Verbosity = 'Detailed'
               $config.TestResult.Enabled = $true

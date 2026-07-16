@@ -3,10 +3,12 @@
 # =========================================================================
 # Builds the PowerShell module, signs the assemblies, manifest, and package
 # with the Lithnet EV code-signing certificate, builds and signs the MSI
-# installer with Advanced Installer, publishes to the internal Azure
-# Artifacts feed, runs the Pester suite against the lab MIM service as a
-# release gate, and (after approval) creates a GitHub release with the
-# installer and module package, then publishes to the public PSGallery.
+# installer with Advanced Installer, and runs the Pester suite against the
+# lab MIM service as a release gate. Publishing is gated on that test stage:
+# the internal Azure Artifacts feed only ever receives packages that have
+# passed the full suite, and (after approval) a GitHub release is created
+# with the installer and module package, then published to the public
+# PSGallery.
 #
 # Signing split:
 #   * codesign.yaml signs the module assembly, manifest, and loader before
@@ -186,13 +188,6 @@ stages:
             environment: 'prod'
             azureSubscription: '$(azureSubscription)'
 
-        # Publish to the internal Azure Artifacts feed.
-        - template: templates/publish-nuget.yaml@release_tools
-          parameters:
-            nugetPackagePath: '$(nupkgDir)/*.nupkg'
-            publishInternal: true
-            publishExternal: false
-
         # Stamp the installer project with the pipeline version and a fresh
         # ProductCode (required for MSI major upgrades between releases).
         - pwsh: |
@@ -252,6 +247,9 @@ stages:
         azureSubscription: $(devAzureSubscription)
         agentMode: pool
         targetPoolName: $(testEnvironment)
+        # A cold start from deallocated regularly exceeds the template's
+        # 300-second default before the agent registers.
+        timeoutSeconds: 900
 
 # ── Test the signed module against the lab MIM service (release gate) ────
 # The variable group supplies the second-user credential for the approval
@@ -348,10 +346,34 @@ stages:
         resourceGroup: $(testResourceGroup)
         azureSubscription: $(devAzureSubscription)
 
+# ── Publish the tested package to the internal feed ──────────────────────
+# Runs only after the test gate passes, so the internal feed never holds an
+# untested package.
+- stage: publish_internal
+  displayName: Publish to internal feed
+  dependsOn: test
+  condition: succeeded()
+  jobs:
+    - job: publish_internal_job
+      displayName: Publish module package to internal feed
+      steps:
+        - checkout: none
+
+        - download: current
+          artifact: nupkg
+
+        - template: templates/publish-nuget.yaml@release_tools
+          parameters:
+            nugetPackagePath: '$(Pipeline.Workspace)/nupkg/*.nupkg'
+            publishInternal: true
+            publishExternal: false
+
 # ── Publish GitHub release (requires approval) ───────────────────────────
+# Sequenced after the internal publish so the public release can never carry
+# a package the internal feed does not.
 - stage: publish_github
   displayName: Publish GitHub release
-  dependsOn: test
+  dependsOn: publish_internal
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   jobs:
     - deployment: publish_github_job

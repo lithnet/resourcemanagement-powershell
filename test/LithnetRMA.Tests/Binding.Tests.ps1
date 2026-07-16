@@ -54,13 +54,26 @@ Describe 'Cmdlet parameter binding (issue #45)' {
             $template | Should -Not -BeNullOrEmpty -Because 'a wrapped ID must be unwrapped, not silently dropped into a null result'
         }
 
-        It 'Remove-Resource does not silently skip a PSObject-wrapped ID' -Tag 'RequiresDelete' {
-            # The bug: a wrapped GUID fails every 'as' cast and is dropped, so DeleteResources is
-            # called with an empty list and nothing happens - no error. Proving the positive
-            # (the delete actually occurs) needs an account with delete rights and a throwaway
-            # object, which belongs in the functional tier (C5). Skipped here so the read-only
-            # binding run stays deterministic, but kept visible so the gap is not forgotten.
-            Set-ItResult -Skipped -Because 'needs an account with delete rights + a throwaway object; covered by the functional tier'
+        It 'Remove-Resource deletes the object when the ID is PSObject-wrapped' {
+            # The bug: a wrapped GUID failed every 'as' cast and was dropped, so DeleteResources
+            # was called with an empty list and the delete silently never happened - no error,
+            # wrong result. Prove the positive: create a throwaway object, delete it via a
+            # wrapped ID, and confirm it is actually gone. The suite connects with an account
+            # that owns the _unitTestObject data (the bootstrap deletes all instances), so
+            # delete rights are a given here.
+            $marker = "rmwrap_$([guid]::NewGuid().ToString('N'))"
+            $resource = New-Resource -ObjectType '_unitTestObject'
+            $resource.ut_svstring = $marker
+            Save-Resource $resource
+
+            @(Search-Resources -XPath "/_unitTestObject[ut_svstring = '$marker']" -AttributesToGet ObjectID).Count |
+                Should -Be 1 -Because 'the throwaway object must exist before the delete'
+
+            $wrappedId = [psobject]::AsPSObject($resource.ObjectID)
+            Remove-Resource -ID $wrappedId
+
+            @(Search-Resources -XPath "/_unitTestObject[ut_svstring = '$marker']" -AttributesToGet ObjectID).Count |
+                Should -Be 0 -Because 'a wrapped ID must be unwrapped and the delete performed, not silently dropped'
         }
     }
 }

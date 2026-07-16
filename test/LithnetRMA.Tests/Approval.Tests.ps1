@@ -87,6 +87,22 @@ BeforeAll {
         return $false
     }
 
+    # Same contract for the scenario preconditions (resolvable approver/requestor Persons, an
+    # approval workflow bound in the lab): on the gate these are lab regressions and must fail
+    # loudly, because approvals are mandatory gate coverage; locally they skip so the suite stays
+    # runnable against arbitrary labs.
+    function Assert-ApprovalPreconditionOrSkip
+    {
+        param([Parameter(Mandatory)] [string] $Because)
+
+        if ($env:TF_BUILD)
+        {
+            throw "Approval test precondition failed on the pipeline gate: $Because"
+        }
+
+        Set-ItResult -Skipped -Because $Because
+    }
+
     # Connects the module's shared client as an explicit user, reusing the same endpoint and
     # mode-aware SPN defaults as Connect-TestClient so only the identity differs. Used to raise the
     # membership request as the second user; the approver connection is restored afterwards with
@@ -142,7 +158,7 @@ Describe 'Get-ApprovalRequest / Set-PendingApprovalRequest' {
 
             if (-not $owner -or -not $member)
             {
-                Set-ItResult -Skipped -Because 'the approver (current user) and/or the second requestor could not be resolved as Person objects in this lab, so the approval scenario cannot be established'
+                Assert-ApprovalPreconditionOrSkip -Because 'the approver (current user) and/or the second requestor could not be resolved as Person objects in this lab, so the approval scenario cannot be established'
                 return
             }
 
@@ -173,7 +189,7 @@ Describe 'Get-ApprovalRequest / Set-PendingApprovalRequest' {
             $target = Get-GuidText $requestRef
             if (-not $target)
             {
-                Set-ItResult -Skipped -Because 'the membership change raised no pending ApprovalRequest - this lab has no approval workflow + MPR (e.g. the built-in ''Owner Approval'' workflow) bound to the target object type, so there is nothing for Get-ApprovalRequest / Set-PendingApprovalRequest to act on'
+                Assert-ApprovalPreconditionOrSkip -Because 'the membership change raised no pending ApprovalRequest - this lab has no approval workflow + MPR (e.g. the built-in ''Owner Approval'' workflow) bound to the target object type, so there is nothing for Get-ApprovalRequest / Set-PendingApprovalRequest to act on'
                 return
             }
 
@@ -230,7 +246,7 @@ Describe 'Get-ApprovalRequest / Set-PendingApprovalRequest' {
 
             if (-not $owner -or -not $member)
             {
-                Set-ItResult -Skipped -Because 'the approver (current user) and/or the second requestor could not be resolved as Person objects in this lab, so the approval scenario cannot be established'
+                Assert-ApprovalPreconditionOrSkip -Because 'the approver (current user) and/or the second requestor could not be resolved as Person objects in this lab, so the approval scenario cannot be established'
                 return
             }
 
@@ -258,7 +274,7 @@ Describe 'Get-ApprovalRequest / Set-PendingApprovalRequest' {
             $target = Get-GuidText $requestRef
             if (-not $target)
             {
-                Set-ItResult -Skipped -Because 'the membership change raised no pending ApprovalRequest - this lab has no approval workflow + MPR (e.g. the built-in ''Owner Approval'' workflow) bound to the target object type, so there is nothing for Get-ApprovalRequest / Set-PendingApprovalRequest to act on'
+                Assert-ApprovalPreconditionOrSkip -Because 'the membership change raised no pending ApprovalRequest - this lab has no approval workflow + MPR (e.g. the built-in ''Owner Approval'' workflow) bound to the target object type, so there is nothing for Get-ApprovalRequest / Set-PendingApprovalRequest to act on'
                 return
             }
 

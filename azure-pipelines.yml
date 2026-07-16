@@ -275,6 +275,9 @@ stages:
     - job: pester_job
       displayName: Run Pester suite on both PowerShell editions
       pool: UnitTest1
+      # Self-hosted jobs have no timeout by default; a hang would hold the
+      # single-agent pool indefinitely.
+      timeoutInMinutes: 120
       steps:
         - checkout: self
           path: s/resourcemanagement-powershell
@@ -283,6 +286,11 @@ stages:
           artifact: LithnetRMA
 
         - powershell: |
+            # Windows PowerShell cannot Install-Module non-interactively until the
+            # NuGet package provider has been bootstrapped for the account.
+            if (-not (Get-PackageProvider -Name NuGet -ListAvailable -ErrorAction SilentlyContinue)) {
+                Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Scope CurrentUser | Out-Null
+            }
             if (-not (Get-Module Pester -ListAvailable | Where-Object { $_.Version -ge [version]'5.7.1' })) {
                 Install-Module Pester -RequiredVersion 5.7.1 -Scope CurrentUser -Force -SkipPublisherCheck
             }

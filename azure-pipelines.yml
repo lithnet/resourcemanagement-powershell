@@ -88,6 +88,10 @@ variables:
 
 name: $(build.version.major).$(build.version.minor).$(build.version.revision)
 trigger: none
+# PR validation is disabled deliberately: the test stage owns the single-agent
+# UnitTest1 lab pool, and a PR-triggered run would race whatever gate run is
+# already using it.
+pr: none
 
 resources:
   repositories:

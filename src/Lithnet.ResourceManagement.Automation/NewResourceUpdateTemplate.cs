@@ -15,6 +15,7 @@ namespace Lithnet.ResourceManagement.Automation
         public string ObjectType { get; set; }
 
         [Parameter(Mandatory = true, Position = 2)]
+        [UnwrapPSObject]
         public object ID { get; set; }
 
         protected override void ProcessRecord()

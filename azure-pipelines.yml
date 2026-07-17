@@ -3,15 +3,28 @@
 # =========================================================================
 # Builds the PowerShell module, signs the assemblies, manifest, and package
 # with the Lithnet EV code-signing certificate, builds and signs the MSI
-# installer with Advanced Installer, publishes to the internal Azure
-# Artifacts feed, and (after approval) creates a GitHub release with the
-# installer and module package, then publishes to the public PSGallery.
+# installer with Advanced Installer, and runs the Pester suite against the
+# lab MIM service as a release gate. Publishing is gated on that test stage:
+# the internal Azure Artifacts feed only ever receives packages that have
+# passed the full suite, and (after approval) a GitHub release is created
+# with the installer and module package, then published to the public
+# PSGallery.
 #
 # Signing split:
 #   * codesign.yaml signs the module assembly, manifest, and loader before
 #     they are packaged, so both the .nupkg and the MSI embed signed files.
 #   * build-advanced-installer-package.yaml (sign: true) signs the MSI
 #     itself during the Advanced Installer build.
+#
+# Test gate:
+#   * The UnitTest1 lab VM (u1w2025x64-ad) is deallocated when idle, so the
+#     pipeline starts it by tag before testing and deallocates it afterwards
+#     using the shared release-tools VM lifecycle templates.
+#   * The test stage runs on the self-hosted UnitTest1 pool, which has line
+#     of sight to the lab MIM service (fimsvc). It tests the exact signed
+#     module artifact produced by the build stage, on both Windows
+#     PowerShell 5.1 and PowerShell 7. Publishing cannot proceed unless
+#     every test passes.
 #
 # All signing and publishing is delegated to the shared release-tools repo.
 # No signing-vault or feed details live in this file.
@@ -36,6 +49,18 @@ variables:
 
   - name: azureSubscription
     value: 'ProductionServices'
+
+  # The lab test environment: VMs tagged environment=testEnvironment in
+  # testResourceGroup back the agent pool of the same name. They are
+  # deallocated when idle; the pipeline starts and stops them around the
+  # test stage. devAzureSubscription is the service connection with rights
+  # on that resource group.
+  - name: testEnvironment
+    value: 'UnitTest1'
+  - name: testResourceGroup
+    value: 'rg-ams-testhosts'
+  - name: devAzureSubscription
+    value: 'DevEnvironment'
 
   - name: tfmCore
     value: 'net8.0'
@@ -63,6 +88,10 @@ variables:
 
 name: $(build.version.major).$(build.version.minor).$(build.version.revision)
 trigger: none
+# PR validation is disabled deliberately: the test stage owns the single-agent
+# UnitTest1 lab pool, and a PR-triggered run would race whatever gate run is
+# already using it.
+pr: none
 
 resources:
   repositories:
@@ -163,13 +192,6 @@ stages:
             environment: 'prod'
             azureSubscription: '$(azureSubscription)'
 
-        # Publish to the internal Azure Artifacts feed.
-        - template: templates/publish-nuget.yaml@release_tools
-          parameters:
-            nugetPackagePath: '$(nupkgDir)/*.nupkg'
-            publishInternal: true
-            publishExternal: false
-
         # Stamp the installer project with the pipeline version and a fresh
         # ProductCode (required for MSI major upgrades between releases).
         - pwsh: |
@@ -215,10 +237,152 @@ stages:
             publishLocation: 'pipeline'
             artifact: installer
 
+# ── Start the lab test VM (deallocated when idle) ────────────────────────
+- stage: start_test_vms
+  displayName: Start lab test VMs
+  dependsOn: build
+  jobs:
+    - template: templates/azure-vm-start.yaml@release_tools
+      parameters:
+        jobName: start_test_vms
+        deployEnvironment: $(testEnvironment)
+        distroType: win
+        resourceGroup: $(testResourceGroup)
+        azureSubscription: $(devAzureSubscription)
+        agentMode: pool
+        targetPoolName: $(testEnvironment)
+
+# ── Test the signed module against the lab MIM service (release gate) ────
+# The variable group supplies the second-user credential for the approval
+# tests (they skip without it, and approvals are the most complex flow, so
+# they must run on every gate) and the proxy SPN for RemoteProxy cases.
+#
+# The full suite runs once per transport so behavioural differences between
+# them are caught: on PowerShell 7 under LocalProxy, RemoteProxy, and
+# DirectNetTcp; on Windows PowerShell 5.1 under DirectWsHttp, the primary
+# transport for .NET Framework hosts (message-security WSHttp only works
+# there). The other transports also work on 5.1 and are exercised on it by
+# the approval tests inside the run; the client library's own pipeline
+# covers the full runtime x transport matrix via its net472/net48 test
+# targets.
+- stage: test
+  displayName: Pester suite against lab MIM
+  dependsOn: start_test_vms
+  variables:
+    - group: MIM lab test credentials
+  jobs:
+    - job: pester_job
+      displayName: Run Pester suite on both PowerShell editions
+      pool: UnitTest1
+      # Self-hosted jobs have no timeout by default; a hang would hold the
+      # single-agent pool indefinitely.
+      timeoutInMinutes: 120
+      steps:
+        - checkout: self
+          path: s/resourcemanagement-powershell
+
+        - download: current
+          artifact: LithnetRMA
+
+        - powershell: |
+            # Windows PowerShell cannot Install-Module non-interactively until the
+            # NuGet package provider has been bootstrapped for the account.
+            if (-not (Get-PackageProvider -Name NuGet -ListAvailable -ErrorAction SilentlyContinue)) {
+                Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Scope CurrentUser | Out-Null
+            }
+            if (-not (Get-Module Pester -ListAvailable | Where-Object { $_.Version -ge [version]'5.7.1' })) {
+                Install-Module Pester -RequiredVersion 5.7.1 -Scope CurrentUser -Force -SkipPublisherCheck
+            }
+            Import-Module Pester -MinimumVersion 5.7.1
+            $config = New-PesterConfiguration
+            $config.Run.Path = '$(Pipeline.Workspace)/s/resourcemanagement-powershell/test/LithnetRMA.Tests'
+            $config.Run.Exit = $true
+            $config.Output.Verbosity = 'Detailed'
+            $config.TestResult.Enabled = $true
+            $config.TestResult.OutputFormat = 'NUnitXml'
+            $config.TestResult.OutputPath = '$(Common.TestResultsDirectory)/pester-desktop-DirectWsHttp.xml'
+            Invoke-Pester -Configuration $config
+          displayName: Pester (Windows PowerShell 5.1, DirectWsHttp)
+          condition: succeededOrFailed()
+          env:
+            LITHNETRMA_MODULE_PATH: $(Pipeline.Workspace)/LithnetRMA/LithnetRMA.psd1
+            LITHNETRMA_TEST_MODE: DirectWsHttp
+            LITHNETRMA_TEST_APPROVAL_PASSWORD: $(LITHNETRMA_TEST_APPROVAL_PASSWORD)
+
+        - ${{ each mode in split('LocalProxy,RemoteProxy,DirectNetTcp', ',') }}:
+          - pwsh: |
+              if (-not (Get-Module Pester -ListAvailable | Where-Object { $_.Version -ge [version]'5.7.1' })) {
+                  Install-Module Pester -RequiredVersion 5.7.1 -Scope CurrentUser -Force -SkipPublisherCheck
+              }
+              Import-Module Pester -MinimumVersion 5.7.1
+              $config = New-PesterConfiguration
+              $config.Run.Path = '$(Pipeline.Workspace)/s/resourcemanagement-powershell/test/LithnetRMA.Tests'
+              $config.Run.Exit = $true
+              $config.Output.Verbosity = 'Detailed'
+              $config.TestResult.Enabled = $true
+              $config.TestResult.OutputFormat = 'NUnitXml'
+              $config.TestResult.OutputPath = '$(Common.TestResultsDirectory)/pester-coreclr-${{ mode }}.xml'
+              Invoke-Pester -Configuration $config
+            displayName: Pester (PowerShell 7, ${{ mode }})
+            condition: succeededOrFailed()
+            env:
+              LITHNETRMA_MODULE_PATH: $(Pipeline.Workspace)/LithnetRMA/LithnetRMA.psd1
+              LITHNETRMA_TEST_MODE: ${{ mode }}
+              LITHNETRMA_TEST_APPROVAL_PASSWORD: $(LITHNETRMA_TEST_APPROVAL_PASSWORD)
+
+        - task: PublishTestResults@2
+          displayName: Publish Pester results
+          condition: succeededOrFailed()
+          inputs:
+            testResultsFormat: 'NUnit'
+            testResultsFiles: 'pester-*.xml'
+            searchFolder: '$(Common.TestResultsDirectory)'
+            mergeTestResults: true
+            failTaskOnFailedTests: true
+            testRunTitle: 'LithnetRMA Pester suite'
+
+# ── Deallocate the lab test VM ────────────────────────────────────────────
+- stage: stop_test_vms
+  displayName: Stop lab test VMs
+  dependsOn: test
+  condition: always()
+  jobs:
+    - template: templates/azure-vm-stop.yaml@release_tools
+      parameters:
+        jobName: stop_test_vms
+        deployEnvironment: $(testEnvironment)
+        distroType: win
+        resourceGroup: $(testResourceGroup)
+        azureSubscription: $(devAzureSubscription)
+
+# ── Publish the tested package to the internal feed ──────────────────────
+# Runs only after the test gate passes, so the internal feed never holds an
+# untested package.
+- stage: publish_internal
+  displayName: Publish to internal feed
+  dependsOn: test
+  condition: succeeded()
+  jobs:
+    - job: publish_internal_job
+      displayName: Publish module package to internal feed
+      steps:
+        - checkout: none
+
+        - download: current
+          artifact: nupkg
+
+        - template: templates/publish-nuget.yaml@release_tools
+          parameters:
+            nugetPackagePath: '$(Pipeline.Workspace)/nupkg/*.nupkg'
+            publishInternal: true
+            publishExternal: false
+
 # ── Publish GitHub release (requires approval) ───────────────────────────
+# Sequenced after the internal publish so the public release can never carry
+# a package the internal feed does not.
 - stage: publish_github
   displayName: Publish GitHub release
-  dependsOn: build
+  dependsOn: publish_internal
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   jobs:
     - deployment: publish_github_job

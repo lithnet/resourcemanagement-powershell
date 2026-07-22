@@ -69,6 +69,8 @@ variables:
 
   - name: projectPath
     value: '$(Build.SourcesDirectory)/resourcemanagement-powershell/src/Lithnet.ResourceManagement.Automation/Lithnet.ResourceManagement.Automation.csproj'
+  - name: loaderProjectPath
+    value: '$(Build.SourcesDirectory)/resourcemanagement-powershell/src/Lithnet.ResourceManagement.Automation.Loader/Lithnet.ResourceManagement.Automation.Loader.csproj'
   - name: publishDir
     value: '$(Build.ArtifactStagingDirectory)/publish'
   # The assembled module folder doubles as the Advanced Installer harvest
@@ -135,6 +137,15 @@ stages:
             publishWebProjects: false
             zipAfterPublish: false
 
+        - task: DotNetCoreCLI@2
+          displayName: dotnet publish (PowerShell Core loader)
+          inputs:
+            command: publish
+            projects: '$(loaderProjectPath)'
+            arguments: '-c $(buildConfiguration) -p:Version=$(build.version) -o $(publishDir)/loader'
+            publishWebProjects: false
+            zipAfterPublish: false
+
         # Stamp the module manifest with the pipeline version.
         - pwsh: |
             Get-ChildItem '$(publishDir)' -Recurse -Filter 'LithnetRMA.psd1' | ForEach-Object {
@@ -148,6 +159,7 @@ stages:
           parameters:
             path:
               - '$(publishDir)/**/Lithnet.ResourceManagement.Automation.dll'
+              - '$(publishDir)/**/Lithnet.ResourceManagement.Automation.Loader.dll'
               - '$(publishDir)/**/LithnetRMA.psd1'
               - '$(publishDir)/**/LithnetRMA.psm1'
             environment: 'prod'
@@ -169,8 +181,19 @@ stages:
             Copy-Item "$coreDir/LithnetRMA.psm1" $dest
             Copy-Item "$coreDir/en-us/Lithnet.ResourceManagement.Automation.dll-help.xml" "$dest/en-us/"
 
-            # coreclr: all core DLLs flat
-            Get-ChildItem "$coreDir/*.dll" | Copy-Item -Destination "$dest/coreclr/"
+            # coreclr: preserve the complete publish layout. AssemblyDependencyResolver uses the
+            # deps.json and runtime asset directories to select the exact managed and native assets
+            # that belong to this module.
+            Get-ChildItem $coreDir | Where-Object { $_.Name -notin 'LithnetRMA.psd1', 'LithnetRMA.psm1', 'en-us' } |
+                Copy-Item -Destination "$dest/coreclr/" -Recurse
+
+            # The dependency-free loader is the sole assembly imported into the default ALC.
+            $loaderDll = Get-ChildItem '$(publishDir)/loader' -Recurse -Filter 'Lithnet.ResourceManagement.Automation.Loader.dll' |
+                Select-Object -First 1
+            if ($null -eq $loaderDll) {
+                throw 'The PowerShell Core loader assembly was not produced.'
+            }
+            Copy-Item $loaderDll.FullName "$dest/coreclr/"
 
             # desktop: all desktop DLLs flat
             Get-ChildItem "$desktopDir/*.dll" | Copy-Item -Destination "$dest/desktop/"

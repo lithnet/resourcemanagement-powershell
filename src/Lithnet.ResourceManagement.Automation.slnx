@@ -9,4 +9,5 @@
     <Platform Solution="*|x64" Project="x64" />
     <Build Solution="*|x86" Project="false" />
   </Project>
+  <Project Path="Lithnet.ResourceManagement.Automation.Loader/Lithnet.ResourceManagement.Automation.Loader.csproj" />
 </Solution>

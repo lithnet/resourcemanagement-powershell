@@ -25,6 +25,8 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = Resolve-Path ([System.IO.Path]::Combine($PSScriptRoot, '..', '..'))
 $project = Join-Path $repoRoot 'src\Lithnet.ResourceManagement.Automation\Lithnet.ResourceManagement.Automation.csproj'
 $projectDir = Split-Path $project -Parent
+$loaderProject = Join-Path $repoRoot 'src\Lithnet.ResourceManagement.Automation.Loader\Lithnet.ResourceManagement.Automation.Loader.csproj'
+$loaderProjectDir = Split-Path $loaderProject -Parent
 $stageRoot = Join-Path $PSScriptRoot '.module'
 $moduleDir = Join-Path $stageRoot 'LithnetRMA'
 
@@ -44,6 +46,13 @@ foreach ($edition in $editions)
     }
 }
 
+Write-Verbose 'Building the PowerShell Core dependency loader'
+& dotnet build $loaderProject -c $Configuration -v quiet | Out-Null
+if ($LASTEXITCODE -ne 0)
+{
+    throw 'dotnet build failed for the PowerShell Core dependency loader'
+}
+
 if (Test-Path $moduleDir)
 {
     Remove-Item $moduleDir -Recurse -Force
@@ -61,5 +70,9 @@ foreach ($edition in $editions)
     New-Item -ItemType Directory -Path $target -Force | Out-Null
     Copy-Item (Join-Path $source '*') $target -Recurse -Force
 }
+
+$loaderSource = Join-Path $loaderProjectDir "bin\$Configuration\net8.0\Lithnet.ResourceManagement.Automation.Loader.dll"
+$coreTarget = Join-Path $moduleDir 'coreclr'
+Copy-Item $loaderSource $coreTarget -Force
 
 Join-Path $moduleDir 'LithnetRMA.psd1'

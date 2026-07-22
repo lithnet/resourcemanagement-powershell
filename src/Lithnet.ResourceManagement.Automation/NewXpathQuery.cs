@@ -1,5 +1,4 @@
 ﻿using System.Management.Automation;
-using Lithnet.ResourceManagement.Client;
 
 namespace Lithnet.ResourceManagement.Automation
 {
@@ -20,22 +19,11 @@ namespace Lithnet.ResourceManagement.Automation
 
         protected override void ProcessRecord()
         {
-            object unwrappedValue;
-
-            PSObject wrappedObject = Value as PSObject;
-
-            if (wrappedObject != null)
-            {
-                unwrappedValue = wrappedObject.BaseObject;
-            }
-            else
-            {
-                unwrappedValue = Value;
-            }
+            object unwrappedValue = XPathObjectConverter.UnwrapPSObject(this.Value);
 
             var attribute = RmcWrapper.Client.GetAttributeDefinition(this.AttributeName);
 
-            WriteObject(new XPathQuery(attribute, (Client.ComparisonOperator)Operator, unwrappedValue, Negate.IsPresent));
+            WriteObject(new XPathQuery(attribute, this.Operator, unwrappedValue, this.Negate.IsPresent));
         }
 
     }

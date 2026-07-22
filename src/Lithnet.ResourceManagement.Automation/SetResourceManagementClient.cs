@@ -3,6 +3,7 @@ using System.Management.Automation;
 using System.Net;
 using System.Runtime.InteropServices;
 using Lithnet.ResourceManagement.Client;
+using Client = Lithnet.ResourceManagement.Client;
 
 namespace Lithnet.ResourceManagement.Automation
 {
@@ -87,7 +88,7 @@ namespace Lithnet.ResourceManagement.Automation
             }
 
             options.Spn = this.ServicePrincipalName;
-            options.ConnectionMode = this.ConnectionMode;
+            options.ConnectionMode = (Client.ConnectionMode)this.ConnectionMode;
 
             if (this.ConcurrentConnectionLimit.HasValue)
             {

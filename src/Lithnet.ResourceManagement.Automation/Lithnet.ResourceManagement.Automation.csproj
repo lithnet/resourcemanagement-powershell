@@ -28,8 +28,8 @@
 		</PackageReference>
 	</ItemGroup>
 
-	<ItemGroup Condition="$(TargetFrameworkIdentifier) == '.NETFramework'">
-		<Compile Remove="Initializers\DependencyAssemblyLoadContext.cs" />
+	<ItemGroup Condition="$(TargetFrameworkIdentifier) != '.NETFramework'">
+		<Compile Remove="Initializers\**\*.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Management.Automation;
 using System.Collections;
-using Lithnet.ResourceManagement.Client;
 
 namespace Lithnet.ResourceManagement.Automation
 {
@@ -19,7 +18,7 @@ namespace Lithnet.ResourceManagement.Automation
 
         protected override void ProcessRecord()
         {
-            this.WriteObject(new XPathQueryGroup((Client.GroupOperator)this.Operator, this.Queries));
+            this.WriteObject(new XPathQueryGroup(this.Operator, this.Queries));
         }
     }
 }

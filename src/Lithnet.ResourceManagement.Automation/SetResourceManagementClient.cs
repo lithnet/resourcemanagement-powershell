@@ -8,7 +8,7 @@ using Client = Lithnet.ResourceManagement.Client;
 namespace Lithnet.ResourceManagement.Automation
 {
     [Cmdlet(VerbsCommon.Set, "ResourceManagementClient")]
-    public class SetResourceManagementClient : Cmdlet
+    public class SetResourceManagementClient : ModuleCmdlet
     {
         [Parameter(Mandatory = true, Position = 0)]
         public string BaseAddress { get; set; }
@@ -40,7 +40,7 @@ namespace Lithnet.ResourceManagement.Automation
         [Parameter]
         public int? SendTimeoutSeconds { get; set; }
 
-        protected override void EndProcessing()
+        protected override void EndProcessingInModuleContext()
         {
             ResourceManagementClientOptions options = new ResourceManagementClientOptions();
 
@@ -117,7 +117,7 @@ namespace Lithnet.ResourceManagement.Automation
                 RmcWrapper.Client.RefreshSchema();
             }
 
-            base.EndProcessing();
+            base.EndProcessingInModuleContext();
         }
     }
 }

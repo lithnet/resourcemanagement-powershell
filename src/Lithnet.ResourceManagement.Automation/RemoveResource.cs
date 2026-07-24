@@ -9,7 +9,7 @@ using Lithnet.ResourceManagement.Client;
 namespace Lithnet.ResourceManagement.Automation
 {
     [Cmdlet(VerbsCommon.Remove, "Resource", DefaultParameterSetName="ObjectIDString")]
-    public class RemoveResource : Cmdlet
+    public class RemoveResource : ModuleCmdlet
     {
         [Parameter(Mandatory = true, Position = 1, ParameterSetName = "ID")]
         [UnwrapPSObject]
@@ -18,7 +18,7 @@ namespace Lithnet.ResourceManagement.Automation
         [Parameter(Mandatory = true, Position = 1, ValueFromPipeline = true, ParameterSetName = "ResourceObject")]
         public RmaObject[] ResourceObjects { get; set; }
                 
-        protected override void ProcessRecord()
+        protected override void ProcessRecordInModuleContext()
         {
             if (this.ID != null)
             {

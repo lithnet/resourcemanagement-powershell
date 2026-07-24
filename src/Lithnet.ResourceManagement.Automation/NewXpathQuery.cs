@@ -3,7 +3,7 @@
 namespace Lithnet.ResourceManagement.Automation
 {
     [Cmdlet(VerbsCommon.New, "XPathQuery")]
-    public class NewXPathQuery : PSCmdlet//, IDynamicParameters
+    public class NewXPathQuery : ModulePSCmdlet//, IDynamicParameters
     {
         [Parameter(Mandatory = true, Position = 1)]
         public string AttributeName { get; set; }
@@ -17,7 +17,7 @@ namespace Lithnet.ResourceManagement.Automation
         [Parameter(Mandatory = false, Position = 4)]
         public SwitchParameter Negate { get; set; }
 
-        protected override void ProcessRecord()
+        protected override void ProcessRecordInModuleContext()
         {
             object unwrappedValue = XPathObjectConverter.UnwrapPSObject(this.Value);
 

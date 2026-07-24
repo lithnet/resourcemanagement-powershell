@@ -58,14 +58,17 @@ namespace Lithnet.ResourceManagement.Automation
 
         public async Task<RmaObject[]> GetNextPageAsync()
         {
-            List<RmaObject> results = new List<RmaObject>();
-
-            await foreach(ResourceObject resource in this.pager.GetNextPageAsync())
+            return await ModuleExecutionContext.RunAsync(async () =>
             {
-                results.Add(new RmaObject(resource));
-            }
+                List<RmaObject> results = new List<RmaObject>();
 
-            return results.ToArray();
+                await foreach(ResourceObject resource in this.pager.GetNextPageAsync())
+                {
+                    results.Add(new RmaObject(resource));
+                }
+
+                return results.ToArray();
+            }).ConfigureAwait(false);
         }
     }
 }

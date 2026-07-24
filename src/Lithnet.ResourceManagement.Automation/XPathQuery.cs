@@ -8,6 +8,12 @@ namespace Lithnet.ResourceManagement.Automation
 
         internal XPathQuery(Client.AttributeTypeDefinition attribute, ComparisonOperator queryOperator, object value, bool negate)
         {
+            Client.XPathQueryValidator.Validate(
+                attribute,
+                (Client.ComparisonOperator)queryOperator,
+                value,
+                negate);
+
             this.AttributeName = attribute.SystemName;
             this.attributeType = attribute.Type;
             this.Operator = queryOperator;
@@ -15,13 +21,13 @@ namespace Lithnet.ResourceManagement.Automation
             this.Negate = negate;
         }
 
-        public bool Negate { get; set; }
+        public bool Negate { get; private set; }
 
-        public ComparisonOperator Operator { get; set; }
+        public ComparisonOperator Operator { get; private set; }
 
-        public string AttributeName { get; set; }
+        public string AttributeName { get; private set; }
 
-        public object Value { get; set; }
+        public object Value { get; private set; }
 
         public string BuildQueryString()
         {

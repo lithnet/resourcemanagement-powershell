@@ -10,9 +10,9 @@ using Lithnet.ResourceManagement.Client;
 namespace Lithnet.ResourceManagement.Automation
 {
     [Cmdlet(VerbsData.Update, "ResourceManagementClientSchema")]
-    public class UpdateResourceManagementClientSchema : Cmdlet
+    public class UpdateResourceManagementClientSchema : ModuleCmdlet
     {
-        protected override void ProcessRecord()
+        protected override void ProcessRecordInModuleContext()
         {
             RmcWrapper.Client.RefreshSchema();
         }

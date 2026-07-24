@@ -10,7 +10,7 @@ using System.Globalization;
 namespace Lithnet.ResourceManagement.Automation
 {
     [Cmdlet(VerbsCommon.Get, "Resource", DefaultParameterSetName = "GetResourceByKey")]
-    public class GetResource : PSCmdlet //, IDynamicParameters
+    public class GetResource : ModulePSCmdlet //, IDynamicParameters
     {
         [Parameter(ParameterSetName = "GetResource", ValueFromPipeline = true, Mandatory = true, Position = 1)]
         public object ID { get; set; }
@@ -51,7 +51,7 @@ namespace Lithnet.ResourceManagement.Automation
         [Parameter(ParameterSetName = "GetResource", Mandatory = false, Position = 3)]
         public string Locale { get; set; }
         
-        protected override void ProcessRecord()
+        protected override void ProcessRecordInModuleContext()
         {
             IResourceObject resource;
             CultureInfo locale = null;

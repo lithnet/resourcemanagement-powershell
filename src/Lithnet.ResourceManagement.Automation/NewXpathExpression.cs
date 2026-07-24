@@ -9,7 +9,7 @@ using System.Collections;
 namespace Lithnet.ResourceManagement.Automation
 {
     [Cmdlet(VerbsCommon.New, "XPathExpression")]
-    public class NewXPathExpression : PSCmdlet //, IDynamicParameters
+    public class NewXPathExpression : ModulePSCmdlet //, IDynamicParameters
     {
         [Parameter(Mandatory = true, Position = 1)]
         public string ObjectType {get;set;}
@@ -29,7 +29,7 @@ namespace Lithnet.ResourceManagement.Automation
         [Parameter(Mandatory = false, Position = 4)]
         public SwitchParameter WrapFilterXml { get; set; }
 
-        protected override void ProcessRecord()
+        protected override void ProcessRecordInModuleContext()
         {
             if (this.DereferenceAttribute == null)
             {

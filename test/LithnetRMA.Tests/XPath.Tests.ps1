@@ -518,8 +518,43 @@ Describe 'LithnetRMA XPath queries' {
             @{ Attr = 'ut_mvreference'; Op = 'Contains' }
             @{ Attr = 'ut_mvreference'; Op = 'StartsWith' }
             @{ Attr = 'ut_mvreference'; Op = 'EndsWith' }
+            @{ Attr = 'ut_svtext';      Op = 'Equals' }
+            @{ Attr = 'ut_mvtext';      Op = 'Equals' }
+            @{ Attr = 'ut_svbinary';    Op = 'Equals' }
+            @{ Attr = 'ut_mvbinary';    Op = 'Equals' }
         ) {
             { New-XPathQuery -AttributeName $Attr -Operator $Op -Value 'x' } | Should -Throw
+        }
+
+        It 'requires a value for <Op>' -ForEach @(
+            @{ Op = 'Equals' }
+            @{ Op = 'NotEquals' }
+            @{ Op = 'GreaterThan' }
+            @{ Op = 'GreaterThanOrEquals' }
+            @{ Op = 'LessThan' }
+            @{ Op = 'LessThanOrEquals' }
+            @{ Op = 'Contains' }
+            @{ Op = 'StartsWith' }
+            @{ Op = 'EndsWith' }
+        ) {
+            { New-XPathQuery -AttributeName ut_svinteger -Operator $Op } | Should -Throw -ExpectedMessage '*value is required*'
+        }
+
+        It 'rejects negating <Op>' -ForEach @(
+            @{ Op = 'NotEquals';    Value = 'x' }
+            @{ Op = 'IsPresent';    Value = $null }
+            @{ Op = 'IsNotPresent'; Value = $null }
+        ) {
+            { New-XPathQuery -AttributeName ut_svstring -Operator $Op -Value $Value -Negate } | Should -Throw -ExpectedMessage '*Cannot negate*'
+        }
+
+        It 'returns an immutable query definition' {
+            $query = New-XPathQuery -AttributeName ut_svstring -Operator Equals -Value 'x'
+
+            { $query.AttributeName = 'ut_svinteger' } | Should -Throw
+            { $query.Operator = 'Contains' } | Should -Throw
+            { $query.Value = 'y' } | Should -Throw
+            { $query.Negate = $true } | Should -Throw
         }
     }
 }

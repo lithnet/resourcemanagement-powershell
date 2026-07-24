@@ -9,7 +9,7 @@ using Lithnet.ResourceManagement.Client;
 namespace Lithnet.ResourceManagement.Automation
 {
     [Cmdlet(VerbsCommon.Set, "PendingApprovalRequest")]
-    public class SetPendingApprovalRequest : PSCmdlet
+    public class SetPendingApprovalRequest : ModulePSCmdlet
     {
         [Parameter(ValueFromPipeline = true, Mandatory = true, Position = 1)]
         public RmaObject ApprovalObject { get; set; }
@@ -20,7 +20,7 @@ namespace Lithnet.ResourceManagement.Automation
         [Parameter(ValueFromPipeline = false, Mandatory = false, Position = 3)]
         public string Reason { get; set; }
 
-        protected override void ProcessRecord()
+        protected override void ProcessRecordInModuleContext()
         {
             IResourceObject r = this.ApprovalObject.InternalObject;
             RmcWrapper.Client.Approve(r, this.Decision == ApprovalDecision.Approve, this.Reason);

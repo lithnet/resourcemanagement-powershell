@@ -8,7 +8,7 @@ using System.Collections;
 namespace Lithnet.ResourceManagement.Automation
 {
     [Cmdlet(VerbsCommon.New, "XPathQueryGroup")]
-    public class NewXPathQueryGroup : Cmdlet
+    public class NewXPathQueryGroup : ModuleCmdlet
     {
         [Parameter(Mandatory = true, Position = 1)]
         public GroupOperator Operator { get; set; }
@@ -16,7 +16,7 @@ namespace Lithnet.ResourceManagement.Automation
         [Parameter(Mandatory = false, Position = 2, ValueFromPipeline = true)]
         public IXPathQueryObject[] Queries { get; set; }
 
-        protected override void ProcessRecord()
+        protected override void ProcessRecordInModuleContext()
         {
             this.WriteObject(new XPathQueryGroup(this.Operator, this.Queries));
         }

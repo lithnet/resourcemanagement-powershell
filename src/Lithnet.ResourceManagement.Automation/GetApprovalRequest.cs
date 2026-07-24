@@ -4,12 +4,12 @@ using Lithnet.ResourceManagement.Client;
 namespace Lithnet.ResourceManagement.Automation
 {
     [Cmdlet(VerbsCommon.Get, "ApprovalRequest")]
-    public class GetApprovalRequest : PSCmdlet
+    public class GetApprovalRequest : ModulePSCmdlet
     {
         [Parameter(Mandatory = false, Position = 1)]
         public ApprovalStatus Status { get; set; }
 
-        protected override void ProcessRecord()
+        protected override void ProcessRecordInModuleContext()
         {
             ISearchResultCollection results = RmcWrapper.Client.GetApprovals((Client.ApprovalStatus)Status);
 

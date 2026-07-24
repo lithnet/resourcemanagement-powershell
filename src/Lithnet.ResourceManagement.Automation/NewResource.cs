@@ -9,12 +9,12 @@ using Lithnet.ResourceManagement.Client;
 namespace Lithnet.ResourceManagement.Automation
 {
     [Cmdlet(VerbsCommon.New, "Resource")]
-    public class NewResource : Cmdlet
+    public class NewResource : ModuleCmdlet
     {
         [Parameter(Mandatory = true, Position = 1)]
         public string ObjectType { get; set; }
 
-        protected override void ProcessRecord()
+        protected override void ProcessRecordInModuleContext()
         {
             this.WriteObject(new RmaObject(RmcWrapper.Client.CreateResource(this.ObjectType)));
         }

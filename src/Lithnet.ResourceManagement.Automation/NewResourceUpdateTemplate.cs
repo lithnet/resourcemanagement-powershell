@@ -9,7 +9,7 @@ using Lithnet.ResourceManagement.Client;
 namespace Lithnet.ResourceManagement.Automation
 {
     [Cmdlet(VerbsCommon.New, "ResourceUpdateTemplate")]
-    public class NewResourceUpdateTemplate : Cmdlet
+    public class NewResourceUpdateTemplate : ModuleCmdlet
     {
         [Parameter(Mandatory = true, Position = 1)]
         public string ObjectType { get; set; }
@@ -18,7 +18,7 @@ namespace Lithnet.ResourceManagement.Automation
         [UnwrapPSObject]
         public object ID { get; set; }
 
-        protected override void ProcessRecord()
+        protected override void ProcessRecordInModuleContext()
         {
             UniqueIdentifier uniqueID = this.ID as UniqueIdentifier;
 

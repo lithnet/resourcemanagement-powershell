@@ -10,7 +10,7 @@ using System.IO;
 namespace Lithnet.ResourceManagement.Automation
 {
     [Cmdlet(VerbsData.Import, "RMConfig")]
-    public class ImportRMConfig : PSCmdlet
+    public class ImportRMConfig : ModulePSCmdlet
     {
         [Parameter(ValueFromPipeline = false, Mandatory = true, Position = 1)]
         public string File { get; set; }
@@ -20,7 +20,7 @@ namespace Lithnet.ResourceManagement.Automation
 
         private ConfigFile config;
 
-        protected override void BeginProcessing()
+        protected override void BeginProcessingInModuleContext()
         {
             this.WriteVerbose("Loading rules file");
             XmlSerializer s = new XmlSerializer(typeof(ConfigFile));
@@ -50,7 +50,7 @@ namespace Lithnet.ResourceManagement.Automation
             ConfigSyncControl.Preview = this.Preview;
         }
 
-        protected override void ProcessRecord()
+        protected override void ProcessRecordInModuleContext()
         {
             int count = 0;
 
@@ -66,7 +66,7 @@ namespace Lithnet.ResourceManagement.Automation
             }
         }
 
-        protected override void EndProcessing()
+        protected override void EndProcessingInModuleContext()
         {
             ConfigSyncControl.CurrentConfig = null;
         }

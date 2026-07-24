@@ -11,7 +11,7 @@ using System.Globalization;
 namespace Lithnet.ResourceManagement.Automation
 {
     [Cmdlet(VerbsData.Save, "Resource")]
-    public class SaveResource : Cmdlet
+    public class SaveResource : ModuleCmdlet
     {
         [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 1)]
         public RmaObject[] Resources { get; set; }
@@ -22,7 +22,7 @@ namespace Lithnet.ResourceManagement.Automation
         [Parameter(Mandatory = false)]
         public string Locale { get; set; }
 
-        protected override void ProcessRecord()
+        protected override void ProcessRecordInModuleContext()
         {
             try
             {

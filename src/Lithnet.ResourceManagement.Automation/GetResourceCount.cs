@@ -9,12 +9,12 @@ using Lithnet.ResourceManagement.Client;
 namespace Lithnet.ResourceManagement.Automation
 {
     [Cmdlet(VerbsCommon.Get, "ResourceCount")]
-    public class GetResourceCount : Cmdlet
+    public class GetResourceCount : ModuleCmdlet
     {
         [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 1)]
         public object XPath { get; set; }
 
-        protected override void ProcessRecord()
+        protected override void ProcessRecordInModuleContext()
         {
             IEnumerable<string> attributes = null;
             string filter = this.GetQueryString();

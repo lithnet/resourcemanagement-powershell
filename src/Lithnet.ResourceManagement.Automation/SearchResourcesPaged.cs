@@ -10,7 +10,7 @@ using System.Globalization;
 namespace Lithnet.ResourceManagement.Automation
 {
     [Cmdlet(VerbsCommon.Search, "ResourcesPaged", DefaultParameterSetName = "ConstrainedQueryByTypeRaw")]
-    public class SearchResourcesPaged : Cmdlet
+    public class SearchResourcesPaged : ModuleCmdlet
     {
         [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 1)]
         public object XPath { get; set; }
@@ -36,7 +36,7 @@ namespace Lithnet.ResourceManagement.Automation
         [Parameter]
         public string Locale { get; set; }
 
-        protected override void ProcessRecord()
+        protected override void ProcessRecordInModuleContext()
         {
             CultureInfo locale = null;
 
